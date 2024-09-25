@@ -1,7 +1,7 @@
-name: "ASI Spatial Workshop 2024"
+name: ASI Spatial Workshop 2024
 output_dir: ../docs
 navbar:
-  title: "ASI Spatial Workshop 2024"
+  title: ASI Spatial Workshop 2024
   left:
   - text: Home
     href: index.html
@@ -9,6 +9,10 @@ navbar:
     href: about.html
   - text: License
     href: license.html
+  right:
+  - icon: fab fa-github
+    text: Source code
+    href: https://github.com/ghar1821/asi_spatial_workshop_2024
 output:
   workflowr::wflow_html:
     toc: yes
