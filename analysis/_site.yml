@@ -1,7 +1,7 @@
-name: "asi_spatial_workshop_2024"
+name: "ASI Spatial Workshop 2024"
 output_dir: ../docs
 navbar:
-  title: "asi_spatial_workshop_2024"
+  title: "ASI Spatial Workshop 2024"
   left:
   - text: Home
     href: index.html
@@ -13,5 +13,5 @@ output:
   workflowr::wflow_html:
     toc: yes
     toc_float: yes
-    theme: cosmo
+    theme: flatly
     highlight: textmate

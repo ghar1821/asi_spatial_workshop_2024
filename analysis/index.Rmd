@@ -1,5 +1,5 @@
 ---
-title: "Home"
+title: "ASI Spatial Workshop 2024"
 site: workflowr::wflow_site
 output:
   workflowr::wflow_html:
@@ -8,4 +8,8 @@ editor_options:
   chunk_output_type: console
 ---
 
-Welcome to my research website.
+```{r echo=FALSE}
+knitr::include_graphics("assets/ASI_spatial_flyer.png", error = FALSE)
+```
+
+Stay tuned for content!!
