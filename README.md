@@ -1,5 +1,4 @@
-# asi_spatial_workshop_2024
+# ASI Spatial Workshop 2024
 
-A [workflowr][] project.
-
-[workflowr]: https://github.com/workflowr/workflowr
+This website hold the analysis files for the ASI System Immunology Group's
+Spatial Transcriptomics Analysis Workshop held on 22th November 2024.
