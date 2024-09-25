@@ -12,4 +12,4 @@ editor_options:
 knitr::include_graphics("assets/ASI_spatial_flyer.png", error = FALSE)
 ```
 
-Stay tuned for content!!
+Stay tuned for content!!!

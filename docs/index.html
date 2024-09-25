@@ -32,6 +32,8 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 <link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
 <!-- Add a small amount of space between sections. -->
@@ -263,7 +265,13 @@ $(document).ready(function () {
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/ghar1821/asi_spatial_workshop_2024">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -281,7 +289,7 @@ $(document).ready(function () {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-ok text-success"
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -292,8 +300,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
-</a>
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -306,9 +314,9 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 0
+aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>asi_spatial_workshop_2024/</code>
@@ -331,18 +339,21 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
-</a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate"
+<div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git
-repository, you know the exact version of the code that produced these
-results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
 </div>
 </div>
 </div>
@@ -433,13 +444,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong51fbd8b">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree49132d44765f318aa2e6aad5715c55c68d01c008targetblank49132d4a">
 <span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>Repository version:</strong> 51fbd8b
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/49132d44765f318aa2e6aad5715c55c68d01c008" target="_blank">49132d4</a>
 </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrong51fbd8b"
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree49132d44765f318aa2e6aad5715c55c68d01c008targetblank49132d4a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -448,7 +461,8 @@ and connecting the code version to the results is critical for
 reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version 51fbd8b.
+The results in this page were generated with repository version
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/49132d44765f318aa2e6aad5715c55c68d01c008" target="_blank">49132d4</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -464,6 +478,9 @@ were generated:
 <pre><code>
 Ignored files:
     Ignored:    .DS_Store
+
+Unstaged changes:
+    Modified:   analysis/index.Rmd
 
 </code></pre>
 <p>
@@ -510,10 +527,27 @@ Message
 <tbody>
 <tr>
 <td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/ghar1821/asi_spatial_workshop_2024/4a527647528c952ccd2fd84eb86b7553aac16aeb/docs/index.html" target="_blank">4a52764</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-09-25
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
 Rmd
 </td>
 <td>
-51fbd8b
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/51fbd8b28e124dfe9265e15b0429c10c749b2bef/analysis/index.Rmd" target="_blank">51fbd8b</a>
 </td>
 <td>
 Givanna Putri
@@ -530,7 +564,7 @@ Initial commit
 Rmd
 </td>
 <td>
-95bb6dc
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/95bb6dc11067f66b5eddb7bae5387fa69ea56d6f/analysis/index.Rmd" target="_blank">95bb6dc</a>
 </td>
 <td>
 Givanna Putri
@@ -550,7 +584,44 @@ Start workflowr project.
 </div>
 </div>
 <p><img src="assets/ASI_spatial_flyer.png" style="display: block; margin: auto;" /></p>
-<p>Stay tuned for content!!</p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-ASI_spatial_flyer">
+Past versions of ASI_spatial_flyer.png
+</button>
+</p>
+<div id="fig-ASI_spatial_flyer" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/46e45965583978882f6435a5d3b4abf4bf4029da/docs/assets/ASI_spatial_flyer.png" target="_blank">46e4596</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-09-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Stay tuned for content!!!</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
