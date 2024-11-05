@@ -1,0 +1,25 @@
+---
+title: "setup"
+author: "Givanna Putri"
+date: "2024-11-04"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+To make sure packages are installed.
+
+```{r}
+
+req_packages <- c(
+  "BiocManager", "Seurat", "ggplot2", "scales", "patchwork", "qs",
+  "hdf5r", "viridis"
+)
+
+install.packages(req_packages)
+
+BiocManager::install('glmGamPoi')
+```
+
