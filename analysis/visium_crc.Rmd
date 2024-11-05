@@ -72,7 +72,8 @@ You can change the assay name by specifying the `assay` parameter when running t
 We can retrieve the spot by gene matrix like so:
 
 ```{r}
-dat[["Spatial"]]$counts
+# showing only 20 genes for 5 spots
+head(dat[["Spatial"]]$counts, c(20, 5))
 ```
 
 By default, genes (features) are stored as rows and spots (or cells) are stored as columns.
@@ -140,7 +141,7 @@ To access the metadata associated with the genes, we can use similar notation
 and also include which assay we want to retrieve the metadata from.
 
 ```{r}
-dat[['Spatial']][[]]
+head(dat[['Spatial']][[]], 20)
 ```
 
 ## Visualising the spots
@@ -536,7 +537,7 @@ dat_fil
 By default, SCTransform will store the output in a different assay called "SCT".
 
 ```{r}
-dat_fil[['SCT']]$data
+head(dat_fil[['SCT']]$data, c(20, 5))
 ```
 
 > Note on layers:
