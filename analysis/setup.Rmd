@@ -15,7 +15,7 @@ To make sure packages are installed.
 
 req_packages <- c(
   "BiocManager", "Seurat", "ggplot2", "scales", "patchwork", "qs",
-  "hdf5r", "viridis"
+  "hdf5r", "viridis", "scater"
 )
 
 install.packages(req_packages)
