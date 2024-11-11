@@ -1,0 +1,267 @@
+---
+title: "STOmics Stereo-seq introduction"
+author: John Salamon
+editor_options:
+  chunk_output_type: console
+---
+
+# Stereo-seq background
+
+Stereo-seq (SpaTial Enhanced Resolution Omics-sequencing) builds upon the chip technology already used in MGI DNA nanoball sequencing (DNBSEQ). For background on DNBSEQ, see [here](https://mgi-tech.eu/technology).
+
+More information on Stereo-seq can be found in the [paper]("https://www.cell.com/cell/fulltext/S0092-8674(22)00399-3")
+
+TODO: would be nice to include images or maybe just link to some slides
+
+# Data processing basics
+
+Once sequencing is complete and you have fastq files, you can perform basic analysis using the Stereo-seq Analysis Workflow (SAW).
+This command-line tool is more or less the STOmics equivalent of Spaceranger.
+
+As of time of writing, the latest version of SAW is [v8.1 (see documentation)](https://stereotoolss-organization.gitbook.io/saw-user-manual-v8.1).
+
+In addition, `saw --help` and subcommands (e.g. `saw count --help`) provide helpful clues for usage.
+
+## Obtaining SAW
+
+You can download the latest version of SAW from the [STOmics download page](https://en.stomics.tech/products/stomics-software/stomics-offline-software/list.html) (does require making an account).
+
+Alternatively, you can find earlier versions of SAW on [Github](https://github.com/STOmics/SAW).
+SAW has changed significantly between versions 7.x and 8.x. 
+Version 8.x introduces both internal workflow management with Snakemake, and compatibility with OMNI (FFPE-compatible Stereo-seq).
+
+
+## SAW makeRef
+
+The first step of your analysis will be to choose and [build an appropriate reference](https://stereotoolss-organization.gitbook.io/saw-user-manual-v8.1/tutorials/preparation-of-reference). This step can mostly be completed with `saw makeRef`.
+
+To build the reference for this example, here's the command I used:
+
+```{bash, eval=FALSE}
+#!/bin/bash
+
+saw makeRef \
+    --mode=STAR \
+    --fasta=/path/to/GRCm39.genome.fa \
+    --gtf=/path/to/annotation.gtf \
+    --genome=/path/to/reference/output
+```
+
+Notes:
+
+- The [GENCODE GRCm39 reference](https://www.gencodegenes.org/mouse/) was used
+- The `--genome` parameter actually specifies the name of the output directory
+- There is no way to pass parameters to STAR in this version.
+
+To have more control over the parameters used, you can use version 7.x of SAW [from Github](https://github.com/STOmics/SAW). This version is implemented as a bash
+script which calls into a container image, and is easier to customise.
+
+
+## SAW count
+
+
+Next, we want to run the main pipeline which is called via `saw count`.
+
+Documentation for this step is available for using SAW with different sample types, e.g. [fresh-frozen](https://stereotoolss-organization.gitbook.io/saw-user-manual-v8.1/tutorials/run-main-pipeline/stereo-seq-ff).
+
+Here's how it was run for this demo:
+
+```{bash, eval=FALSE}
+#!/bin/bash
+
+saw count \
+    --id=workshop_demo \
+    --sn=C04042E3 \
+    --chip-mask="/path/to/C04042E3.barcodeToPos.h5" \
+    --omics=transcriptomics \
+    --kit-version="Stereo-seq T FF V1.3" \
+    --sequencing-type="PE75_50+100" \
+    --organism=mouse \
+    --tissue=brain \
+    --fastqs=/path/to/fastq/directory/ \
+    --image-tar="/path/to/C04042E3_SC_20240925_142342_4.1.0.tar.gz" \
+    --reference=/path/to/reference/output
+```
+
+Notes:
+
+- `--reference` here should point to the directory specified in the `--genome` parameter of `saw makeRef`
+- `--image-tar` accepts image files processed by [StereoMap](#stereomap) or ImageStudio, and is optional
+- `--fastqs` points to a directory containing fastq file pairs. More than one pair can be present (e.g. if multiple sequencing runs or lanes were used) 
+- `--organism` and `--tissue` can be any string
+
+# SAW outputs
+
+Once this is complete, an `outs` directory will be created:
+
+```{bash, eval=FALSE}
+$ tree outs/
+.
+├── analysis
+│   ├── C04042E3.bin20_1.0.h5ad
+│   ├── C04042E3.bin20_1.0.marker_features.csv
+│   ├── C04042E3.bin50_1.0.h5ad
+│   ├── C04042E3.bin50_1.0.marker_features.csv
+│   ├── C04042E3.cellbin_1.0.adjusted.h5ad
+│   ├── C04042E3.cellbin_1.0.adjusted.marker_features.csv
+│   ├── C04042E3.cellbin_1.0.h5ad
+│   └── C04042E3.cellbin_1.0.marker_features.csv
+├── bam
+│   └── annotated_bam
+│       ├── C04042E3.Aligned.sortedByCoord.out.merge.q10.dedup.target.bam
+│       └── C04042E3.Aligned.sortedByCoord.out.merge.q10.dedup.target.bam.csi
+├── C04042E3.report.tar.gz
+├── feature_expression
+│   ├── C04042E3.adjusted.cellbin.gef
+│   ├── C04042E3.cellbin.gef
+│   ├── C04042E3.merge.barcodeReadsCount.txt
+│   ├── C04042E3_raw_barcode_gene_exp.txt
+│   ├── C04042E3.raw.gef
+│   └── C04042E3.tissue.gef
+├── image
+│   ├── C04042E3_HE_mask_edm_dis_10.tif
+│   ├── C04042E3_HE_mask.tif
+│   ├── C04042E3_HE_regist.tif
+│   └── C04042E3_HE_tissue_cut.tif
+├── visualization.tar.gz
+└── visualization.tar.gz.md5
+```
+
+[See here](https://stereotoolss-organization.gitbook.io/saw-user-manual-v8.1/analysis/outputs/count-outputs) for a detailed guide to these outputs.
+
+Many of these are actually HDF5 files (including the `.h5ad` (anndata-compatible analysis results) and `.gef` (count matrices) files) and can be inspected with any HDF5 compatible tool or library.
+
+## HTML report
+
+The first place to look is generally the HTML report. A detailed guide to the SAW report can be found [in the SAW manual](https://stereotoolss-organization.gitbook.io/saw-user-manual-v8.1/analysis/outputs/html-report).
+
+
+## visualization.tar.gz
+
+This packages the main outputs into a single file for visualization.
+It is also a handy file for distributing results easily, as it packages most
+of the main outputs (excluding the BAM files).
+
+Taking a look inside, we see many of the other output files have been repackaged here:
+
+```{bash, eval=FALSE}
+.
+├── C04042E3.adjusted.cellbin.gef
+├── C04042E3.bin20_1.0.h5ad
+├── C04042E3.bin50_1.0.h5ad
+├── C04042E3.cellbin_1.0.adjusted.h5ad
+├── C04042E3.rpi
+├── C04042E3_SC_20240925_142342_4.1.0.tar.gz
+├── C04042E3.stereo
+├── C04042E3.tissue.gef
+└── HE_matrix_template.txt
+```
+
+A JSON manifest of the experiment can be found in `.stereo`, which allows loading
+all of the packaged data in a single step from StereoMap.
+
+# StereoMap
+
+StereoMap is an interactive tool to examine your Stereo-seq data (similar to Loupe Browser from 10x).
+
+StereoMap can be [downloaded from STOmics directly](https://en.stomics.tech/products/stomics-software/stomics-offline-software/list.html), although it is currently only compatible with Windows.
+
+StereoMap v4.1 is compatible with SAW v8.1. Previous versions also included
+image QC in a seperate program, ImageStudio, which is now integrated with 
+StereoMap.
+
+# StereoPy
+
+[StereoPy](https://stereopy.readthedocs.io/en/latest/content/01_Usage_principles.html) is a Python library designed to work with Stereo-seq data. Internally it wraps libraries such as [scanpy](https://scanpy.readthedocs.io/en/stable/), [squidpy](https://squidpy.readthedocs.io/en/stable/) and [anndata](https://anndata.readthedocs.io/en/stable/).
+
+As most SAW outputs are anndata compatible, it is very easy to import Stereo-seq data into the Python ecosystem.
+
+TODO: show example loading code
+
+# Seurat
+
+The easiest way to load Stereo-seq data in Seurat is to use the [conversion script included with StereoPy](https://stereopy.readthedocs.io/en/latest/Tutorials/Format_Conversion.html#Working-with-Seurat).
+
+# SpatialExperiment
+
+[SpatialExperiment](https://www.bioconductor.org/packages/release/bioc/vignettes/SpatialExperiment/inst/doc/SpatialExperiment.html) library is an S4 class that extends SingleCellExperiment. 
+
+We can create this object manually with the `rhdf5` library.
+
+
+```{r}
+# for extracting data from H5 archive
+library(rhdf5)
+library(Matrix)
+library(S4Vectors)
+
+# spatial libraries
+library(SpatialExperiment)
+library(ggspavis)
+```
+
+
+## Loading the matrix
+
+First we need to read from the `.h5ad` file.
+
+```{r}
+
+# name our input file
+h5ad_file <- "data/C04042E3.bin50_1.0.h5ad"
+
+# Read in the matrix data (CSR format)
+matrix_data <- h5read(h5ad_file, "X")
+
+# Extract dimensions (this is stored as an attribute)
+shape <- h5readAttributes(h5ad_file, "X")$shape
+
+```
+
+Next, we convert the matrix data into a format compatible with R.
+
+```{r}
+
+# Extract the components
+data <- matrix_data$data        # Non-zero values
+indices <- matrix_data$indices  # Column indices of non-zero values
+indptr <- matrix_data$indptr    # Row pointers for non-zero values
+
+# Reconstruct the CSR matrix (have to add 1 to indices for R)
+csr_matrix <- sparseMatrix(
+  i = as.integer(rep(seq_len(length(indptr)-1), diff(indptr))),  # expand row indices
+  j = as.integer(indices + 1),  # R uses 1-based indexing, so add 1 to column indices
+  x = as.numeric(data),
+  dims = shape,
+)
+```
+
+We can also add in row and col data.
+
+```{r}
+obs <- h5read(h5ad_file, "obs")
+var <- h5read(h5ad_file, "var")
+```
+
+Now constructing a SpatialExperiment object is just a matter of passing in the required objects.
+```{r}
+# create SpatialExperiment object
+spe <- SpatialExperiment(
+  assays = list(counts = t(csr_matrix)), 
+  colData = DataFrame(cluster=as.factor(obs$leiden$codes), in_tissue=TRUE), # get cluster in there 
+  rowData = DataFrame(gene_id=var$`_index`),
+  spatialCoords = data.matrix(DataFrame(x=obs$x, y=obs$y))
+)
+spe
+```
+
+We can now continue to use this object as we would for other array-based experiments.
+
+```{r}
+library(ggspavis)
+
+# Get norm counts 
+colData(spe)$sums <- colSums(counts(spe))
+plotSpots(spe, annotate="sums")
+```
+
