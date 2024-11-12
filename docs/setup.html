@@ -369,7 +369,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+workflowr <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -380,8 +380,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> </a>
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -390,13 +390,13 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-11-05
+<strong>Last updated:</strong> 2024-11-12
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong> <code>asi_spatial_workshop_2024/</code>
@@ -419,21 +419,18 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
-changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges"
+<div id="strongRMarkdownfilestronguptodate"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R
-Markdown file created these results, you’ll want to first commit it to
-the Git repo. If you’re still working on the analysis, you can ignore
-this warning. When you’re finished, you can run
-<code>wflow_publish</code> to commit the R Markdown file and build the
-HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
 </div>
 </div>
 </div>
@@ -524,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024treed2a28467a5cd25a91b6688d96c09e3ed15c45267targetblankd2a2846a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024treebb6ce10efb08ee266b810e7ff13f0516c9af8515targetblankbb6ce10a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/d2a28467a5cd25a91b6688d96c09e3ed15c45267" target="_blank">d2a2846</a>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/bb6ce10efb08ee266b810e7ff13f0516c9af8515" target="_blank">bb6ce10</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024treed2a28467a5cd25a91b6688d96c09e3ed15c45267targetblankd2a2846a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024treebb6ce10efb08ee266b810e7ff13f0516c9af8515targetblankbb6ce10a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -542,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/d2a28467a5cd25a91b6688d96c09e3ed15c45267" target="_blank">d2a2846</a>.
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/bb6ce10efb08ee266b810e7ff13f0516c9af8515" target="_blank">bb6ce10</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -568,13 +565,10 @@ Ignored files:
     Ignored:    output/.DS_Store
 
 Untracked files:
-    Untracked:  analysis/setup.Rmd
-    Untracked:  analysis/visium_crc.Rmd
-    Untracked:  output/visium_data_qced.qs
-    Untracked:  output/visium_data_qced.rds
+    Untracked:  analysis/visium_ffpe_prostate.Rmd.bk
 
 Unstaged changes:
-    Modified:   analysis/visium_ffpe_prostate.Rmd
+    Modified:   analysis/visium_crc.Rmd
 
 </code></pre>
 <p>
@@ -589,10 +583,90 @@ have uncommitted changes.
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
+
 <p>
-There are no past versions. Publish this analysis with
-<code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/setup.Rmd</code>) and HTML
+(<code>docs/setup.html</code>) files. If you’ve configured a remote Git
+repository (see <code>?wflow_git_remote</code>), click on the hyperlinks
+in the table below to view the files as they were in that past version.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/695bb87a23b45f1cf5314a89c683a73d2ab0e210/analysis/setup.Rmd" target="_blank">695bb87</a>
+</td>
+<td>
+GitHub
+</td>
+<td>
+2024-11-08
+</td>
+<td>
+Update setup.Rmd
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/1a2b848a31540145d2c082a2f897d90c61dc8540/analysis/setup.Rmd" target="_blank">1a2b848</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-05
+</td>
+<td>
+Add tutorials for visium
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/ghar1821/asi_spatial_workshop_2024/1a2b848a31540145d2c082a2f897d90c61dc8540/docs/setup.html" target="_blank">1a2b848</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-05
+</td>
+<td>
+Add tutorials for visium
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
@@ -602,14 +676,18 @@ There are no past versions. Publish this analysis with
 <p>To make sure packages are installed.</p>
 <pre class="r"><code>req_packages &lt;- c(
   &quot;BiocManager&quot;, &quot;Seurat&quot;, &quot;ggplot2&quot;, &quot;scales&quot;, &quot;patchwork&quot;, &quot;qs&quot;,
-  &quot;hdf5r&quot;, &quot;viridis&quot;
+  &quot;hdf5r&quot;, &quot;viridis&quot;, &quot;scater&quot;
 )
 
 install.packages(req_packages)</code></pre>
-<pre><code>also installing the dependency &#39;RApiSerialize&#39;</code></pre>
+<pre><code>Warning: package &#39;scater&#39; is not available for this version of R
+
+A version of this package for your version of R might be available elsewhere,
+see the ideas at
+https://cran.r-project.org/doc/manuals/r-patched/R-admin.html#Installing-packages</code></pre>
 <pre><code>
 The downloaded binary packages are in
-    /var/folders/7q/lqx0fzgn1zqfmlc5tx1c0n0r0004z0/T//RtmpNC8tQC/downloaded_packages</code></pre>
+    /var/folders/7q/lqx0fzgn1zqfmlc5tx1c0n0r0004z0/T//Rtmp0ygD5Z/downloaded_packages</code></pre>
 <pre class="r"><code>BiocManager::install(&#39;glmGamPoi&#39;)</code></pre>
 <pre><code>&#39;getOption(&quot;repos&quot;)&#39; replaces Bioconductor standard repositories, see
 &#39;help(&quot;repositories&quot;, package = &quot;BiocManager&quot;)&#39; for details.
@@ -619,11 +697,12 @@ Replacement repositories:
 <pre><code>Warning: package(s) not installed when version(s) same as or greater than current; use
   `force = TRUE` to re-install: &#39;glmGamPoi&#39;</code></pre>
 <pre><code>Old packages: &#39;askpass&#39;, &#39;bitops&#39;, &#39;broom&#39;, &#39;car&#39;, &#39;commonmark&#39;, &#39;corrplot&#39;,
-  &#39;data.table&#39;, &#39;doBy&#39;, &#39;dotCall64&#39;, &#39;evaluate&#39;, &#39;fs&#39;, &#39;future.apply&#39;, &#39;git2r&#39;,
-  &#39;glue&#39;, &#39;gplots&#39;, &#39;gtable&#39;, &#39;httr2&#39;, &#39;igraph&#39;, &#39;Matrix&#39;, &#39;mvtnorm&#39;,
-  &#39;pkgbuild&#39;, &#39;progressr&#39;, &#39;ps&#39;, &#39;quantreg&#39;, &#39;R.oo&#39;, &#39;Rcpp&#39;, &#39;rmarkdown&#39;,
-  &#39;robustbase&#39;, &#39;rstudioapi&#39;, &#39;spam&#39;, &#39;spatstat.explore&#39;, &#39;spatstat.univar&#39;,
-  &#39;spatstat.utils&#39;, &#39;sys&#39;, &#39;tinytex&#39;, &#39;waldo&#39;, &#39;withr&#39;, &#39;xfun&#39;</code></pre>
+  &#39;curl&#39;, &#39;data.table&#39;, &#39;doBy&#39;, &#39;dotCall64&#39;, &#39;evaluate&#39;, &#39;fs&#39;, &#39;future.apply&#39;,
+  &#39;git2r&#39;, &#39;glue&#39;, &#39;gplots&#39;, &#39;gtable&#39;, &#39;httr2&#39;, &#39;igraph&#39;, &#39;knitr&#39;, &#39;Matrix&#39;,
+  &#39;mvtnorm&#39;, &#39;parallelly&#39;, &#39;pkgbuild&#39;, &#39;progressr&#39;, &#39;ps&#39;, &#39;quantreg&#39;, &#39;R.oo&#39;,
+  &#39;Rcpp&#39;, &#39;rmarkdown&#39;, &#39;robustbase&#39;, &#39;rstudioapi&#39;, &#39;spam&#39;, &#39;spatstat.explore&#39;,
+  &#39;spatstat.univar&#39;, &#39;spatstat.utils&#39;, &#39;sys&#39;, &#39;tinytex&#39;, &#39;waldo&#39;, &#39;withr&#39;,
+  &#39;xfun&#39;</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">

@@ -13,13 +13,17 @@ To make sure packages are installed.
 
 ```{r}
 
-req_packages <- c(
+cran_packages <- c(
   "BiocManager", "Seurat", "ggplot2", "scales", "patchwork", "qs",
   "hdf5r", "viridis", "scater"
 )
 
-install.packages(req_packages)
+install.packages(cran_packages)
 
-BiocManager::install('glmGamPoi')
+bioc_packages <- c(
+  "glmGamPoi", "scater", "SpatialExperiment"
+)
+
+BiocManager::install(bioc_packages)
 ```
 

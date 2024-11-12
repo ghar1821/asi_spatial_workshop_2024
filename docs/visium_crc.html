@@ -390,7 +390,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-11-06
+<strong>Last updated:</strong> 2024-11-12
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -524,15 +524,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree1a2b848a31540145d2c082a2f897d90c61dc8540targetblank1a2b848a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024treebb6ce10efb08ee266b810e7ff13f0516c9af8515targetblankbb6ce10a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/1a2b848a31540145d2c082a2f897d90c61dc8540" target="_blank">1a2b848</a>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/bb6ce10efb08ee266b810e7ff13f0516c9af8515" target="_blank">bb6ce10</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree1a2b848a31540145d2c082a2f897d90c61dc8540targetblank1a2b848a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024treebb6ce10efb08ee266b810e7ff13f0516c9af8515targetblankbb6ce10a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -542,7 +542,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/1a2b848a31540145d2c082a2f897d90c61dc8540" target="_blank">1a2b848</a>.
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/bb6ce10efb08ee266b810e7ff13f0516c9af8515" target="_blank">bb6ce10</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -573,6 +573,7 @@ Untracked files:
     Untracked:  output/visium_data_qced.rds
 
 Unstaged changes:
+    Modified:   analysis/setup.Rmd
     Modified:   analysis/visium_crc.Rmd
 
 </code></pre>
@@ -619,6 +620,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/425178b2fee29ac52cc8bcc6162d785fcfa6bc66/analysis/visium_crc.Rmd" target="_blank">425178b</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-06
+</td>
+<td>
+add num cols to head
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/ghar1821/asi_spatial_workshop_2024/425178b2fee29ac52cc8bcc6162d785fcfa6bc66/docs/visium_crc.html" target="_blank">425178b</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-06
+</td>
+<td>
+add num cols to head
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -681,6 +716,44 @@ library(patchwork)
 # for exporting object
 library(qs)</code></pre>
 <pre><code>qs 0.27.2. Announcement: https://github.com/qsbase/qs/issues/103</code></pre>
+</div>
+<div id="obtaining-the-spot-x-gene-matrix" class="section level2">
+<h2>Obtaining the spot x gene matrix</h2>
+<p>The data used for this tutorial is an FFPE tissue from a patient with
+colorectal cancer. It is described in a bioRxiv paper: <a
+href="https://doi.org/10.1101/2024.06.04.597233"
+class="uri">https://doi.org/10.1101/2024.06.04.597233</a></p>
+<p>The data can be downloaded from here (choose Visium CytAssist v2
+Sample P2 CRC): <a
+href="https://www.10xgenomics.com/products/visium-hd-spatial-gene-expression/dataset-human-crc"
+class="uri">https://www.10xgenomics.com/products/visium-hd-spatial-gene-expression/dataset-human-crc</a>.</p>
+<p>To get a spot x gene matrix, one typically have to process the raw
+data using 10x software spaceranger (<a
+href="https://www.10xgenomics.com/support/software/space-ranger/latest"
+class="uri">https://www.10xgenomics.com/support/software/space-ranger/latest</a>).
+Running spaceranger can be very complex (depending on your experiment),
+and it is beyond the scope of this workshop.</p>
+<p>If you are keen to try running spaceranger, here is the command you
+can use for this dataset:</p>
+<pre class="bash"><code>#!/bin/bash
+
+# make sure you specify which folder is datdir and refdir
+spaceranger count \
+    --id=&quot;Visium_FFPE_p2_crc&quot; \
+    --transcriptome=$refdir \
+    --probe-set=$datadir/Visium_V2_Human_Colon_Cancer_P2_probe_set.csv \
+    --fastqs=$datadir/Visium_V2_Human_Colon_Cancer_P2_fastqs \
+    --cytaimage=$datadir/Visium_V2_Human_Colon_Cancer_P2_image.tif \
+    --image=$datadir/Visium_V2_Human_Colon_Cancer_P2_tissue_image.btf \
+    --slide=V53A10-078 \
+    --area=B1\
+    --loupe-alignment=$datadir/Visium_V2_Human_Colon_Cancer_P2_alignment_file.json \
+    --localcores=20 \
+    --localmem=60 \
+    --create-bam=true
+</code></pre>
+<p>Note, make sure you download all the input files from 10x website and
+the relevant reference genome also from their website.</p>
 </div>
 <div id="loading-data" class="section level2">
 <h2>Loading data</h2>
@@ -896,48 +969,6 @@ place the spots on top of the tissue image and colour the spots by
 whatever features you have in the Seurat object.</p>
 <p>For example, let’s visualise the library size of the spots.</p>
 <pre class="r"><code>SpatialFeaturePlot(dat, features = &quot;nCount_Spatial&quot;)</code></pre>
-<p><img src="figure/visium_crc.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-1">
-Past versions of unnamed-chunk-12-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-12-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/1a2b848a31540145d2c082a2f897d90c61dc8540/docs/figure/visium_crc.Rmd/unnamed-chunk-12-1.png" target="_blank">1a2b848</a>
-</td>
-<td>
-Givanna Putri
-</td>
-<td>
-2024-11-05
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>You can also visualise multiple features at a time, e.g., let’s also
-visualise the number of genes expressed for each spot as well as the
-library size:</p>
-<pre class="r"><code>SpatialFeaturePlot(dat, features = c(&quot;nCount_Spatial&quot;, &quot;nFeature_Spatial&quot;))</code></pre>
 <p><img src="figure/visium_crc.Rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-13-1">
@@ -976,9 +1007,10 @@ Givanna Putri
 </table>
 </div>
 </div>
-<p>By default, the plot will focus on the the area of the tissue where
-spots containing spots. Disabling this will show entire tissue.</p>
-<pre class="r"><code>SpatialFeaturePlot(dat, features = &quot;nCount_Spatial&quot;, crop=FALSE)</code></pre>
+<p>You can also visualise multiple features at a time, e.g., let’s also
+visualise the number of genes expressed for each spot as well as the
+library size:</p>
+<pre class="r"><code>SpatialFeaturePlot(dat, features = c(&quot;nCount_Spatial&quot;, &quot;nFeature_Spatial&quot;))</code></pre>
 <p><img src="figure/visium_crc.Rmd/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-14-1">
@@ -1017,12 +1049,9 @@ Givanna Putri
 </table>
 </div>
 </div>
-<p>Often, spots may look too small, like in this case. We can increase
-it by increasing the <code>pt.size.factor</code> parameter.</p>
-<pre class="r"><code># store it so we can use the same number later on
-pt_size &lt;- 5
-SpatialFeaturePlot(dat, features = c(&quot;nCount_Spatial&quot;, &quot;nFeature_Spatial&quot;), 
-                   pt.size.factor = pt_size)</code></pre>
+<p>By default, the plot will focus on the the area of the tissue where
+spots containing spots. Disabling this will show entire tissue.</p>
+<pre class="r"><code>SpatialFeaturePlot(dat, features = &quot;nCount_Spatial&quot;, crop=FALSE)</code></pre>
 <p><img src="figure/visium_crc.Rmd/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-15-1">
@@ -1061,10 +1090,12 @@ Givanna Putri
 </table>
 </div>
 </div>
-<p>To visualise qualitative features, we can use
-<code>SpatialDimPlot</code>. For example, let’s visualise the spot by
-the patient ID metadata we added before.</p>
-<pre class="r"><code>SpatialDimPlot(dat, group.by = &#39;patient_id&#39;, pt.size.factor = pt_size)</code></pre>
+<p>Often, spots may look too small, like in this case. We can increase
+it by increasing the <code>pt.size.factor</code> parameter.</p>
+<pre class="r"><code># store it so we can use the same number later on
+pt_size &lt;- 5
+SpatialFeaturePlot(dat, features = c(&quot;nCount_Spatial&quot;, &quot;nFeature_Spatial&quot;), 
+                   pt.size.factor = pt_size)</code></pre>
 <p><img src="figure/visium_crc.Rmd/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-16-1">
@@ -1103,19 +1134,10 @@ Givanna Putri
 </table>
 </div>
 </div>
-<p>We can override the spot colour by overriding the <code>cols</code>
-parameter with a named vector mapping the discrete category in the data
-against the colour.</p>
-<pre class="r"><code># pretend we have three patients in the data
-dat[[]]$pretend_patient_id &lt;- c(
-  rep(&quot;Adam&quot;, 3000),
-  rep(&quot;Jane&quot;, 1000),
-  rep(&quot;Clare&quot;, 269)
-)
-
-SpatialDimPlot(dat, group.by = &#39;pretend_patient_id&#39;, 
-               pt.size.factor = pt_size, 
-               cols = c(&quot;Adam&quot; = &quot;blue&quot;, &quot;Jane&quot; = &quot;orange&quot;, &quot;Clare&quot; = &quot;black&quot;))</code></pre>
+<p>To visualise qualitative features, we can use
+<code>SpatialDimPlot</code>. For example, let’s visualise the spot by
+the patient ID metadata we added before.</p>
+<pre class="r"><code>SpatialDimPlot(dat, group.by = &#39;patient_id&#39;, pt.size.factor = pt_size)</code></pre>
 <p><img src="figure/visium_crc.Rmd/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-17-1">
@@ -1154,19 +1176,19 @@ Givanna Putri
 </table>
 </div>
 </div>
-<div id="tweaking-spatial-plots" class="section level3">
-<h3>Tweaking spatial plots</h3>
-<p>Often, it is helpful to tweak the opacity of the spots or the
-background image to help us better visualise the spots and their
-features.</p>
-<p>You can adjust the opacity of the spots by lowering the
-<code>alpha</code> parameter:</p>
-<pre class="r"><code>SpatialFeaturePlot(
-  dat, 
-  features = &quot;nCount_Spatial&quot;,
-  pt.size.factor = pt_size,
-  alpha = 0.5
-)</code></pre>
+<p>We can override the spot colour by overriding the <code>cols</code>
+parameter with a named vector mapping the discrete category in the data
+against the colour.</p>
+<pre class="r"><code># pretend we have three patients in the data
+dat[[]]$pretend_patient_id &lt;- c(
+  rep(&quot;Adam&quot;, 3000),
+  rep(&quot;Jane&quot;, 1000),
+  rep(&quot;Clare&quot;, 269)
+)
+
+SpatialDimPlot(dat, group.by = &#39;pretend_patient_id&#39;, 
+               pt.size.factor = pt_size, 
+               cols = c(&quot;Adam&quot; = &quot;blue&quot;, &quot;Jane&quot; = &quot;orange&quot;, &quot;Clare&quot; = &quot;black&quot;))</code></pre>
 <p><img src="figure/visium_crc.Rmd/unnamed-chunk-18-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-18-1">
@@ -1205,16 +1227,18 @@ Givanna Putri
 </table>
 </div>
 </div>
-<p>Alpha parameter can take either a single numerical value or a range
-(a vector with 2 values). If the latter, it represents the minimum and
-maximum transparency and default to c(1,1), i.e. same transparency for
-both low and high value. Thus, we can accentuate the spots with high
-value by lowering the minimum value we pass as alpha:</p>
+<div id="tweaking-spatial-plots" class="section level3">
+<h3>Tweaking spatial plots</h3>
+<p>Often, it is helpful to tweak the opacity of the spots or the
+background image to help us better visualise the spots and their
+features.</p>
+<p>You can adjust the opacity of the spots by lowering the
+<code>alpha</code> parameter:</p>
 <pre class="r"><code>SpatialFeaturePlot(
   dat, 
   features = &quot;nCount_Spatial&quot;,
-  pt.size.factor = 5,
-  alpha = c(0.1, 1)
+  pt.size.factor = pt_size,
+  alpha = 0.5
 )</code></pre>
 <p><img src="figure/visium_crc.Rmd/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
@@ -1254,17 +1278,16 @@ Givanna Putri
 </table>
 </div>
 </div>
-<p>The lower the minimum alpha value, the stronger the high expression
-will look.</p>
-<p>However, it is often the case that the background image is too
-overpowering, making it very hard to view the spots. We can make the
-background more transparent by lowering the <code>image.alpha</code>
-parameter.</p>
+<p>Alpha parameter can take either a single numerical value or a range
+(a vector with 2 values). If the latter, it represents the minimum and
+maximum transparency and default to c(1,1), i.e. same transparency for
+both low and high value. Thus, we can accentuate the spots with high
+value by lowering the minimum value we pass as alpha:</p>
 <pre class="r"><code>SpatialFeaturePlot(
   dat, 
   features = &quot;nCount_Spatial&quot;,
-  pt.size.factor = pt_size,
-  image.alpha = 0.2
+  pt.size.factor = 5,
+  alpha = c(0.1, 1)
 )</code></pre>
 <p><img src="figure/visium_crc.Rmd/unnamed-chunk-20-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
@@ -1304,13 +1327,17 @@ Givanna Putri
 </table>
 </div>
 </div>
-<p>You can also completely forgo the tissue image by setting the
-<code>image.alpha</code> to 0.</p>
+<p>The lower the minimum alpha value, the stronger the high expression
+will look.</p>
+<p>However, it is often the case that the background image is too
+overpowering, making it very hard to view the spots. We can make the
+background more transparent by lowering the <code>image.alpha</code>
+parameter.</p>
 <pre class="r"><code>SpatialFeaturePlot(
   dat, 
   features = &quot;nCount_Spatial&quot;,
-  pt.size.factor = 4,
-  image.alpha = 0
+  pt.size.factor = pt_size,
+  image.alpha = 0.2
 )</code></pre>
 <p><img src="figure/visium_crc.Rmd/unnamed-chunk-21-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
@@ -1350,37 +1377,14 @@ Givanna Putri
 </table>
 </div>
 </div>
-<p>Both <code>SpatialFeaturePlot</code> and <code>SpatialDimPlot</code>
-will return a <code>ggplot</code> object, which we can modify using the
-functionalities built into <code>ggplot2</code> package.</p>
-<p>As an example, let’s update the plot showing library size so we:</p>
-<ol style="list-style-type: decimal">
-<li>Change the colour scheme to use viridis</li>
-<li>Rename <code>nCount_Spatial</code> to <code>library_size</code></li>
-<li>Have a black background and axes</li>
-</ol>
-<p>Let’s update the plot so we have a black background and white letters
-and axes.</p>
-<pre class="r"><code>plt_dark_bg &lt;- SpatialFeaturePlot(
+<p>You can also completely forgo the tissue image by setting the
+<code>image.alpha</code> to 0.</p>
+<pre class="r"><code>SpatialFeaturePlot(
   dat, 
   features = &quot;nCount_Spatial&quot;,
-  pt.size.factor = pt_size,
+  pt.size.factor = 4,
   image.alpha = 0
-) + scale_fill_viridis_c(option = &#39;viridis&#39;) + 
-  labs(fill=&#39;library_size&#39;) +
-  theme_minimal() + 
-  theme(
-  legend.text = element_text(colour = &quot;white&quot;),
-  legend.title = element_text(colour = &quot;white&quot;),
-  legend.background = element_rect(fill = &quot;black&quot;),
-  plot.background = element_rect(fill = &quot;black&quot;),
-  panel.grid = element_blank(),
-  axis.text = element_text(colour = &quot;white&quot;),
-  axis.line = element_line(colour = &quot;white&quot;)
-) </code></pre>
-<pre><code>Scale for fill is already present.
-Adding another scale for fill, which will replace the existing scale.</code></pre>
-<pre class="r"><code>plt_dark_bg</code></pre>
+)</code></pre>
 <p><img src="figure/visium_crc.Rmd/unnamed-chunk-22-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-22-1">
@@ -1419,6 +1423,38 @@ Givanna Putri
 </table>
 </div>
 </div>
+<p>Both <code>SpatialFeaturePlot</code> and <code>SpatialDimPlot</code>
+will return a <code>ggplot</code> object, which we can modify using the
+functionalities built into <code>ggplot2</code> package.</p>
+<p>As an example, let’s update the plot showing library size so we:</p>
+<ol style="list-style-type: decimal">
+<li>Change the colour scheme to use viridis</li>
+<li>Rename <code>nCount_Spatial</code> to <code>library_size</code></li>
+<li>Have a black background and axes</li>
+</ol>
+<p>Let’s update the plot so we have a black background and white letters
+and axes.</p>
+<pre class="r"><code>plt_dark_bg &lt;- SpatialFeaturePlot(
+  dat, 
+  features = &quot;nCount_Spatial&quot;,
+  pt.size.factor = pt_size,
+  image.alpha = 0
+) + scale_fill_viridis_c(option = &#39;viridis&#39;) + 
+  labs(fill=&#39;library_size&#39;) +
+  theme_minimal() + 
+  theme(
+  legend.text = element_text(colour = &quot;white&quot;),
+  legend.title = element_text(colour = &quot;white&quot;),
+  legend.background = element_rect(fill = &quot;black&quot;),
+  plot.background = element_rect(fill = &quot;black&quot;),
+  panel.grid = element_blank(),
+  axis.text = element_blank(),
+  axis.line = element_line(colour = &quot;white&quot;)
+) </code></pre>
+<pre><code>Scale for fill is already present.
+Adding another scale for fill, which will replace the existing scale.</code></pre>
+<pre class="r"><code>plt_dark_bg</code></pre>
+<p><img src="figure/visium_crc.Rmd/unnamed-chunk-23-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Since the plot is a ggplot object, we can export them using either
 the export button in Rstudio’s panel, or the ggsave function:</p>
 <pre class="r"><code>ggsave(filename=&quot;output/spatial_plot_darkbg.png&quot;, plot=plt_dark_bg)</code></pre>
@@ -1458,44 +1494,7 @@ ggplot(data.frame(spots = spots_per_gene), aes(x=spots)) +
        y = &quot;Number of Genes&quot;) +
   scale_x_continuous(breaks = pretty_breaks(10)) +
   scale_y_continuous(breaks = pretty_breaks(10))</code></pre>
-<p><img src="figure/visium_crc.Rmd/unnamed-chunk-24-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-24-1">
-Past versions of unnamed-chunk-24-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-24-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/1a2b848a31540145d2c082a2f897d90c61dc8540/docs/figure/visium_crc.Rmd/unnamed-chunk-24-1.png" target="_blank">1a2b848</a>
-</td>
-<td>
-Givanna Putri
-</td>
-<td>
-2024-11-05
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/visium_crc.Rmd/unnamed-chunk-25-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>From the histogram, we can see that we have some genes that are
 expressed only by a handful of spots, e.g., there are 12 genes that are
 not expressed by any spots at all.</p>
@@ -1528,9 +1527,56 @@ fit.</p>
 to make sure the spots overlap with tissue sections that are stained
 with the fluorescence dyes, and that we do not have spots that lie
 outside the tissue.</p>
+<div id="using-imagej" class="section level4">
+<h4>Using ImageJ</h4>
 <blockquote>
 <p>Tom O’neil demo using ImageJ</p>
 </blockquote>
+</div>
+<div id="using-loupe-browser" class="section level4">
+<h4>Using Loupe Browser</h4>
+<p>Loupe browser is a visualisation software produced by 10x to make it
+easier for users to interact with their data. It can be downloaded from
+10x website: <a
+href="https://www.10xgenomics.com/support/software/loupe-browser/latest"
+class="uri">https://www.10xgenomics.com/support/software/loupe-browser/latest</a>.</p>
+<p>To load the data up to Loupe browser, you need to have on hand the
+Loupe browser file generated by spaceranger count. For this dataset, you
+can download it from 10x website (choose Visium CytoAssist v2 P2 crc on
+the right panel): <a
+href="https://www.10xgenomics.com/products/visium-hd-spatial-gene-expression/dataset-human-crc"
+class="uri">https://www.10xgenomics.com/products/visium-hd-spatial-gene-expression/dataset-human-crc</a>.</p>
+<p>Demo on how to use Loupe browser to select spots to remove:</p>
+<video width="600" height="500" controls>
+<source src="assets/visium_loupe_demo.mp4" type="video/mp4">
+</video>
+<p>After saving the spots barcode in a csv file, we can load it up and
+remove them from the seurat object:</p>
+<pre class="r"><code>spots_to_remove &lt;- read.csv(&quot;data/visium_human_crc/spots_to_remove.csv&quot;)
+
+# add it as a metadata
+dat_fil[[]]$remove_spot_from_loupe &lt;- Cells(dat_fil) %in% spots_to_remove$Barcode
+
+# store as separate object just for demo
+dat_fil_loupe &lt;- subset(x = dat_fil, remove_spot_from_loupe == FALSE)</code></pre>
+<pre><code>Warning: Not validating Centroids objects
+Not validating Centroids objects</code></pre>
+<pre><code>Warning: Not validating FOV objects
+Not validating FOV objects
+Not validating FOV objects
+Not validating FOV objects
+Not validating FOV objects
+Not validating FOV objects</code></pre>
+<pre><code>Warning: Not validating Seurat objects</code></pre>
+<pre class="r"><code>dat_fil_loupe</code></pre>
+<pre><code>An object of class Seurat 
+17991 features across 4236 samples within 1 assay 
+Active assay: Spatial (17991 features, 0 variable features)
+ 1 layer present: counts
+ 1 spatial field of view present: slice1</code></pre>
+</div>
+<div id="using-interactive-spatialdimplot" class="section level4">
+<h4>Using interactive SpatialDimPlot</h4>
 <p>To check whether the spots lie on top of the tissues, we can
 interactively inspect <code>SpatialDimPlot</code> and note the ID of the
 spots we need to remove.</p>
@@ -1567,35 +1613,58 @@ spot_17 SeuratProject          54057            11153         P2
 spot_18 SeuratProject         117303            12414         P2
 spot_19 SeuratProject          11350             5506         P2
 spot_20 SeuratProject         146713            12389         P2
-        pretend_patient_id numeric_spot_id       orig_spot_id
-spot_1                Adam          spot_1 AACAATGTGCTCCGAG-1
-spot_2                Adam          spot_2 AACACCATTCGCATAC-1
-spot_3                Adam          spot_3 AACACGACAACGGAGT-1
-spot_4                Adam          spot_4 AACACGCAGATAACAA-1
-spot_5                Adam          spot_5 AACACGTTGATACCGC-1
-spot_6                Adam          spot_6 AACACTCGTGAGCTTC-1
-spot_7                Adam          spot_7 AACAGCCTCCTGACTA-1
-spot_8                Adam          spot_8 AACAGGAATTCTGTGA-1
-spot_9                Adam          spot_9 AACAGGCCAGGCCGCT-1
-spot_10               Adam         spot_10 AACAGGCCATTGTCAC-1
-spot_11               Adam         spot_11 AACAGTCGAGGTAGAT-1
-spot_12               Adam         spot_12 AACAGTCTGACGAATT-1
-spot_13               Adam         spot_13 AACATACTCCAGCTGA-1
-spot_14               Adam         spot_14 AACATAGAAGACTGTT-1
-spot_15               Adam         spot_15 AACATAGAAGGTGAGT-1
-spot_16               Adam         spot_16 AACATAGAAGTGCGCA-1
-spot_17               Adam         spot_17 AACATAGGAGGCGTCC-1
-spot_18               Adam         spot_18 AACATAGGTCCATAGC-1
-spot_19               Adam         spot_19 AACATAGGTTCCGCAC-1
-spot_20               Adam         spot_20 AACATAGGTTGGCACC-1</code></pre>
-<p>Let’s interactively visualise the tissue and the spot:</p>
+        pretend_patient_id remove_spot_from_loupe numeric_spot_id
+spot_1                Adam                  FALSE          spot_1
+spot_2                Adam                  FALSE          spot_2
+spot_3                Adam                  FALSE          spot_3
+spot_4                Adam                  FALSE          spot_4
+spot_5                Adam                  FALSE          spot_5
+spot_6                Adam                  FALSE          spot_6
+spot_7                Adam                  FALSE          spot_7
+spot_8                Adam                  FALSE          spot_8
+spot_9                Adam                  FALSE          spot_9
+spot_10               Adam                  FALSE         spot_10
+spot_11               Adam                  FALSE         spot_11
+spot_12               Adam                  FALSE         spot_12
+spot_13               Adam                  FALSE         spot_13
+spot_14               Adam                  FALSE         spot_14
+spot_15               Adam                  FALSE         spot_15
+spot_16               Adam                  FALSE         spot_16
+spot_17               Adam                  FALSE         spot_17
+spot_18               Adam                  FALSE         spot_18
+spot_19               Adam                  FALSE         spot_19
+spot_20               Adam                  FALSE         spot_20
+              orig_spot_id
+spot_1  AACAATGTGCTCCGAG-1
+spot_2  AACACCATTCGCATAC-1
+spot_3  AACACGACAACGGAGT-1
+spot_4  AACACGCAGATAACAA-1
+spot_5  AACACGTTGATACCGC-1
+spot_6  AACACTCGTGAGCTTC-1
+spot_7  AACAGCCTCCTGACTA-1
+spot_8  AACAGGAATTCTGTGA-1
+spot_9  AACAGGCCAGGCCGCT-1
+spot_10 AACAGGCCATTGTCAC-1
+spot_11 AACAGTCGAGGTAGAT-1
+spot_12 AACAGTCTGACGAATT-1
+spot_13 AACATACTCCAGCTGA-1
+spot_14 AACATAGAAGACTGTT-1
+spot_15 AACATAGAAGGTGAGT-1
+spot_16 AACATAGAAGTGCGCA-1
+spot_17 AACATAGGAGGCGTCC-1
+spot_18 AACATAGGTCCATAGC-1
+spot_19 AACATAGGTTCCGCAC-1
+spot_20 AACATAGGTTGGCACC-1</code></pre>
+<p>Let’s interactively visualise the tissue and the spot, and hover over
+each spot that lies outside of the tissue to note their ID.</p>
 <pre class="r"><code># unfortunately, the spot size and colour cannot be changed here. 
 SpatialDimPlot(
   dat_fil,
   group.by = &quot;patient_id&quot;,
   interactive = TRUE
 )</code></pre>
-<p>Note the ID of the spots we want to remove and then remove them.</p>
+<p>Store the ID somewhere safe and paste them in as a vector below so we
+can remove them.</p>
 <pre class="r"><code>spots_to_remove &lt;- paste0(&quot;spot_&quot;, c(
   4030, 1810, 1168, 3110, 44, 513, 2278, 3126, 2803, 3828, 2147, 1879, 3828, 2021, 
   4215, 3631, 3225, 3631, 3843, 4035, 1076, 93, 2615, 2041, 749, 3629, 3155, 3683, 
@@ -1618,6 +1687,7 @@ Not validating FOV objects
 Not validating FOV objects
 Not validating FOV objects</code></pre>
 <pre><code>Warning: Not validating Seurat objects</code></pre>
+</div>
 </div>
 <div id="check-spots-library-size-and-genes-expressed"
 class="section level3">
@@ -1644,13 +1714,13 @@ utilizing &quot;counts&quot; layer instead.</code></pre>
   theme_bw()
 
 plt1 + plt2 + plt3 + plt4</code></pre>
-<p><img src="figure/visium_crc.Rmd/unnamed-chunk-29-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/visium_crc.Rmd/unnamed-chunk-31-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-29-1">
-Past versions of unnamed-chunk-29-1.png
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-31-1">
+Past versions of unnamed-chunk-31-1.png
 </button>
 </p>
-<div id="fig-unnamed-chunk-29-1" class="collapse">
+<div id="fig-unnamed-chunk-31-1" class="collapse">
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
 <thead>
@@ -1669,7 +1739,7 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/1a2b848a31540145d2c082a2f897d90c61dc8540/docs/figure/visium_crc.Rmd/unnamed-chunk-29-1.png" target="_blank">1a2b848</a>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/1a2b848a31540145d2c082a2f897d90c61dc8540/docs/figure/visium_crc.Rmd/unnamed-chunk-31-1.png" target="_blank">1a2b848</a>
 </td>
 <td>
 Givanna Putri
@@ -1732,44 +1802,7 @@ utilizing &quot;counts&quot; layer instead.</code></pre>
 <pre class="r"><code>plt2 &lt;- FeatureScatter(dat_fil, feature1 = &#39;nCount_Spatial&#39;, feature2 = &#39;percent_mt&#39;)
 
 plt1 + plt2</code></pre>
-<p><img src="figure/visium_crc.Rmd/unnamed-chunk-31-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-31-1">
-Past versions of unnamed-chunk-31-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-31-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/1a2b848a31540145d2c082a2f897d90c61dc8540/docs/figure/visium_crc.Rmd/unnamed-chunk-31-1.png" target="_blank">1a2b848</a>
-</td>
-<td>
-Givanna Putri
-</td>
-<td>
-2024-11-05
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/visium_crc.Rmd/unnamed-chunk-33-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>We will remove spots that have &gt; 12% mitochondria genes.</p>
 <pre class="r"><code>dat_fil &lt;- subset(dat_fil, subset = percent_mt &lt; 12)</code></pre>
 <pre><code>Warning: Not validating Centroids objects
@@ -1845,7 +1878,7 @@ dat_fil &lt;- SCTransform(dat_fil, assay = &quot;Spatial&quot;, verbose = TRUE, 
 <pre><code>Second step: Get residuals using fitted parameters for 17991 genes</code></pre>
 <pre><code>Computing corrected count matrix for 17991 genes</code></pre>
 <pre><code>Calculating gene attributes</code></pre>
-<pre><code>Wall clock passed: Time difference of 11.48468 secs</code></pre>
+<pre><code>Wall clock passed: Time difference of 10.3567 secs</code></pre>
 <pre><code>Determine variable features</code></pre>
 <pre><code>Centering data matrix</code></pre>
 <pre><code>Set default assay to SCT</code></pre>
@@ -1947,44 +1980,7 @@ plt_raw &lt;- SpatialFeaturePlot(
 
 # Put all 3 plots side by side for comparison
 plt_raw + plt_sct + plt_lognorm</code></pre>
-<p><img src="figure/visium_crc.Rmd/unnamed-chunk-37-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-37-1">
-Past versions of unnamed-chunk-37-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-37-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/1a2b848a31540145d2c082a2f897d90c61dc8540/docs/figure/visium_crc.Rmd/unnamed-chunk-37-1.png" target="_blank">1a2b848</a>
-</td>
-<td>
-Givanna Putri
-</td>
-<td>
-2024-11-05
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/visium_crc.Rmd/unnamed-chunk-39-1.png" width="672" style="display: block; margin: auto;" /></p>
 <blockquote>
 <p>Good to know: There are pros and cons on choosing either SCT or log
 normalisation. From the plot, you can see they are different.
@@ -2095,113 +2091,6 @@ another.</p>
   pt.size.factor = pt_size,
   image.alpha = 0.3
 )</code></pre>
-<p><img src="figure/visium_crc.Rmd/unnamed-chunk-40-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-40-1">
-Past versions of unnamed-chunk-40-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-40-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/1a2b848a31540145d2c082a2f897d90c61dc8540/docs/figure/visium_crc.Rmd/unnamed-chunk-40-1.png" target="_blank">1a2b848</a>
-</td>
-<td>
-Givanna Putri
-</td>
-<td>
-2024-11-05
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>We do have some overlap on the top left and middle right. Having
-generic endothelial module ensure that the HEV-CXCL10 subsets lie on the
-appropriate region (where endothelial cells are).</p>
-<p>The paper also discovered myeloid regions neighbouring fibroblast
-regions which suggests positive correlation between macrophages and
-fibroblast in tumour samples. Also positive correlation between
-macro-ISG15 and macro-SPP1 with tumour cells.</p>
-<pre class="r"><code>SpatialFeaturePlot(
-  dat_fil,
-  features = c(
-    &quot;malignant_score&quot;, &quot;fibroblast_score&quot;, &quot;macro_score&quot;, &quot;ISG15&quot;, &quot;SPP1&quot;
-  ),
-  pt.size.factor = pt_size,
-  image.alpha = 0.3
-)</code></pre>
-<p><img src="figure/visium_crc.Rmd/unnamed-chunk-41-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-41-1">
-Past versions of unnamed-chunk-41-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-41-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/1a2b848a31540145d2c082a2f897d90c61dc8540/docs/figure/visium_crc.Rmd/unnamed-chunk-41-1.png" target="_blank">1a2b848</a>
-</td>
-<td>
-Givanna Putri
-</td>
-<td>
-2024-11-05
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div id="inferring-cell-cell-communications" class="section level3">
-<h3>Inferring cell-cell communications</h3>
-<p>SIRPA and CD47 is a common receptor ligand pair between macrophages
-and tumour cells. CD47 ligand is commonly sent out by tumour cells to
-tell macrophages to not eat them. This is quite a well known immune
-mechanism employed by tumour cells.</p>
-<pre class="r"><code>SpatialFeaturePlot(
-  dat_fil,
-  features = c(
-    &quot;macro_score&quot;, &quot;malignant_score&quot;, &quot;SIRPA&quot;, &quot;CD47&quot;
-  ),
-  ncol = 2,
-  pt.size.factor = pt_size,
-  image.alpha = 0.3
-)</code></pre>
 <p><img src="figure/visium_crc.Rmd/unnamed-chunk-42-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-42-1">
@@ -2240,16 +2129,123 @@ Givanna Putri
 </table>
 </div>
 </div>
+<p>We do have some overlap on the top left and middle right. Having
+generic endothelial module ensure that the HEV-CXCL10 subsets lie on the
+appropriate region (where endothelial cells are).</p>
+<p>The paper also discovered myeloid regions neighbouring fibroblast
+regions which suggests positive correlation between macrophages and
+fibroblast in tumour samples. Also positive correlation between
+macro-ISG15 and macro-SPP1 with tumour cells.</p>
+<pre class="r"><code>SpatialFeaturePlot(
+  dat_fil,
+  features = c(
+    &quot;malignant_score&quot;, &quot;fibroblast_score&quot;, &quot;macro_score&quot;, &quot;ISG15&quot;, &quot;SPP1&quot;
+  ),
+  pt.size.factor = pt_size,
+  image.alpha = 0.3
+)</code></pre>
+<p><img src="figure/visium_crc.Rmd/unnamed-chunk-43-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-43-1">
+Past versions of unnamed-chunk-43-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-43-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/1a2b848a31540145d2c082a2f897d90c61dc8540/docs/figure/visium_crc.Rmd/unnamed-chunk-43-1.png" target="_blank">1a2b848</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="inferring-cell-cell-communications" class="section level3">
+<h3>Inferring cell-cell communications</h3>
+<p>SIRPA and CD47 is a common receptor ligand pair between macrophages
+and tumour cells. CD47 ligand is commonly sent out by tumour cells to
+tell macrophages to not eat them. This is quite a well known immune
+mechanism employed by tumour cells.</p>
+<pre class="r"><code>SpatialFeaturePlot(
+  dat_fil,
+  features = c(
+    &quot;macro_score&quot;, &quot;malignant_score&quot;, &quot;SIRPA&quot;, &quot;CD47&quot;
+  ),
+  ncol = 2,
+  pt.size.factor = pt_size,
+  image.alpha = 0.3
+)</code></pre>
+<p><img src="figure/visium_crc.Rmd/unnamed-chunk-44-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-44-1">
+Past versions of unnamed-chunk-44-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-44-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/1a2b848a31540145d2c082a2f897d90c61dc8540/docs/figure/visium_crc.Rmd/unnamed-chunk-44-1.png" target="_blank">1a2b848</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>From the plot, we can infer the following:</p>
 <ol style="list-style-type: decimal">
-<li>There are regions where macrophages and tumour cells co-exist (top
-right) where there are high SIRPA and CD47 expression. As the SIRPA
+<li><p>There are regions where macrophages and tumour cells co-exist
+(top right) where there are high SIRPA and CD47 expression. As the SIRPA
 signal is highly expressed, macrophages’ inhibitory receptor is
-activated, signalling it against phagocytosis.</li>
-<li>There are regions in middle bottom (the strip) where there are
+activated, signalling it against phagocytosis.</p></li>
+<li><p>There are regions in middle bottom (the strip) where there are
 tumour cells with low expression of CD47, and macrophages with low
 expression of SIRPA. This is the region where phagocytosis might happen
-because the tumour cells are lacking the CD47 ligand.</li>
+because the tumour cells are lacking the CD47 ligand.</p></li>
 </ol>
 </div>
 <div id="pca-and-umap" class="section level3">
@@ -2297,62 +2293,25 @@ Negative:  MYLK, CKB, CNN1, MYL9, CSRP1, FLNA, TPM2, CALD1, ACTG2, LMOD1
        SYNPO2, CRYAB, PDLIM7, LIMS2, PRUNE2, FXYD3, PPP1R12B, DPYSL3, MSRB3, MAB21L2 </code></pre>
 <pre class="r"><code># just to pick how many PCs to use to calculate UMAP.
 ElbowPlot(dat_fil, ndims=50)</code></pre>
-<p><img src="figure/visium_crc.Rmd/unnamed-chunk-43-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-43-1">
-Past versions of unnamed-chunk-43-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-43-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/1a2b848a31540145d2c082a2f897d90c61dc8540/docs/figure/visium_crc.Rmd/unnamed-chunk-43-1.png" target="_blank">1a2b848</a>
-</td>
-<td>
-Givanna Putri
-</td>
-<td>
-2024-11-05
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/visium_crc.Rmd/unnamed-chunk-45-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>dat_fil &lt;- RunUMAP(dat_fil, reduction = &#39;pca&#39;, dims=1:20)</code></pre>
 <pre><code>Warning: The default method for RunUMAP has changed from calling Python UMAP via reticulate to the R-native UWOT using the cosine metric
 To use Python UMAP via reticulate, set umap.method to &#39;umap-learn&#39; and metric to &#39;correlation&#39;
 This message will be shown once per session</code></pre>
-<pre><code>10:49:28 UMAP embedding parameters a = 0.9922 b = 1.112</code></pre>
-<pre><code>10:49:28 Read 4137 rows and found 20 numeric columns</code></pre>
-<pre><code>10:49:28 Using Annoy for neighbor search, n_neighbors = 30</code></pre>
-<pre><code>10:49:28 Building Annoy index with metric = cosine, n_trees = 50</code></pre>
+<pre><code>14:29:09 UMAP embedding parameters a = 0.9922 b = 1.112</code></pre>
+<pre><code>14:29:09 Read 4137 rows and found 20 numeric columns</code></pre>
+<pre><code>14:29:09 Using Annoy for neighbor search, n_neighbors = 30</code></pre>
+<pre><code>14:29:09 Building Annoy index with metric = cosine, n_trees = 50</code></pre>
 <pre><code>0%   10   20   30   40   50   60   70   80   90   100%</code></pre>
 <pre><code>[----|----|----|----|----|----|----|----|----|----|</code></pre>
 <pre><code>**************************************************|
-10:49:28 Writing NN index file to temp file /var/folders/7q/lqx0fzgn1zqfmlc5tx1c0n0r0004z0/T//RtmpnyRGZ5/file538732943bf7
-10:49:28 Searching Annoy index using 1 thread, search_k = 3000
-10:49:29 Annoy recall = 100%
-10:49:29 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30
-10:49:29 Initializing from normalized Laplacian + noise (using RSpectra)
-10:49:29 Commencing optimization for 500 epochs, with 162824 positive edges
-10:49:32 Optimization finished</code></pre>
+14:29:09 Writing NN index file to temp file /var/folders/7q/lqx0fzgn1zqfmlc5tx1c0n0r0004z0/T//RtmpF6UW8T/file160da30290c99
+14:29:09 Searching Annoy index using 1 thread, search_k = 3000
+14:29:09 Annoy recall = 100%
+14:29:09 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30
+14:29:10 Initializing from normalized Laplacian + noise (using RSpectra)
+14:29:10 Commencing optimization for 500 epochs, with 162824 positive edges
+14:29:13 Optimization finished</code></pre>
 <pre class="r"><code>FeaturePlot(
   dat_fil, 
   features = c(
@@ -2360,52 +2319,100 @@ This message will be shown once per session</code></pre>
   ),
   cols = viridis::viridis(50)
 )</code></pre>
-<p><img src="figure/visium_crc.Rmd/unnamed-chunk-44-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-44-1">
-Past versions of unnamed-chunk-44-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-44-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/1a2b848a31540145d2c082a2f897d90c61dc8540/docs/figure/visium_crc.Rmd/unnamed-chunk-44-1.png" target="_blank">1a2b848</a>
-</td>
-<td>
-Givanna Putri
-</td>
-<td>
-2024-11-05
-</td>
-</tr>
-</tbody>
-</table>
+<p><img src="figure/visium_crc.Rmd/unnamed-chunk-46-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 </div>
-</div>
+<div id="spatially-variable-genes" class="section level2">
+<h2>Spatially variable genes</h2>
+<p>Common analysis perform on spatial data is finding spatially variable
+genes.</p>
+<p>It is slightly different from <em>highly variable genes</em> commonly
+identified in single cell data where we find genes which expressions
+show high variability across cells or samples. It adds an extra spatial
+dimension to the analysis in that its purpose is to find genes which
+expression level not only vary but also show pattern of variability that
+is dependent on their location in the tissue. Specifically, it means,
+SVGs’ expression is not randomly distributed, but rather, correlated
+with the spatial structure of the tissue. It can show the biological
+processes that are happening in different part of the tissue.</p>
+<pre class="r"><code># require HVGs to already be detected.
+# the function below takes a while to run. consider reducing the number of HVGs
+dat_fil &lt;- FindSpatiallyVariableFeatures(
+  dat_fil,
+  assay = &quot;SCT&quot;,
+  features = VariableFeatures(dat_fil)[1:500],
+  selection.method = &#39;moransi&#39;
+)</code></pre>
+<pre><code>Computing Moran&#39;s I</code></pre>
+<pre><code>Warning in dist(x = pos): NAs introduced by coercion</code></pre>
+<pre><code>Found more than one class &quot;dist&quot; in cache; using the first, from namespace &#39;spam&#39;</code></pre>
+<pre><code>Also defined by &#39;BiocGenerics&#39;</code></pre>
+<pre><code>Found more than one class &quot;dist&quot; in cache; using the first, from namespace &#39;spam&#39;</code></pre>
+<pre><code>Also defined by &#39;BiocGenerics&#39;</code></pre>
+<p>Visualise top 10 SVGs:</p>
+<pre class="r"><code># a bit of data wrangling to get SVGs
+svgs_meta &lt;- dat_fil[[&#39;SCT&#39;]][[]]
+svgs_meta &lt;- subset(svgs_meta, moransi.spatially.variable == TRUE)
+svgs_meta &lt;- svgs_meta[order(svgs_meta$moransi.spatially.variable.rank), ]
+
+svg_plt &lt;- SpatialFeaturePlot(
+  dat_fil,
+  features = head(rownames(svgs_meta), 10),
+  ncol = 5,
+  image.alpha = 0.3,
+  pt.size.factor = pt_size
+) + ggtitle(&quot;SVGs&quot;)
+svg_plt</code></pre>
+<p><img src="figure/visium_crc.Rmd/unnamed-chunk-48-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Compare this with non-SVGs (TMEM200B and CLEC10A are HVGs but not
+SVGs):</p>
+<pre class="r"><code># TMEM200B, CLEC10A are HVGs but not SVGs
+# SYNM, MGP are HVGs
+SpatialFeaturePlot(
+  dat_fil,
+  features = c(head(rownames(svgs_meta), 2), &quot;TMEM200B&quot;, &quot;CLEC10A&quot;),
+  ncol = 2,
+  image.alpha = 0.3,
+  pt.size.factor = pt_size
+)</code></pre>
+<p><img src="figure/visium_crc.Rmd/unnamed-chunk-49-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>We can inspect SVGs against the module scoring to see if there are
+relationship between the different cell types and the genes:</p>
+<pre class="r"><code>SpatialFeaturePlot(
+  dat_fil,
+  features = c(
+    head(rownames(svgs_meta), 9), &quot;malignant_score&quot;
+  ),
+  ncol = 5,
+  image.alpha = 0.3,
+  pt.size.factor = pt_size
+)</code></pre>
+<p><img src="figure/visium_crc.Rmd/unnamed-chunk-50-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>We can see CD24 is highly correlated with the module score for tumour
+cells, that are often associated with cancer stemness, immune evasion,
+metastasis, and tumour progression. GPX2 also show some correlation with
+tumour module score that promotes tumour growth and metastasis. CXCL2
+and CXCL3 also highly expressed in tumour modules. The latter promotes
+malignant behaviour in tumour cells.</p>
+<p>We can also grab top few hundred genes and run pathway analysis to
+see which biological processes are commonly associated with those genes.
+There are many softwares to do this, <a
+href="https://metascape.org/">Metascape</a> is one of them.</p>
+<p><img src="assets/visium_metascape_go.png" style="display: block; margin: auto;" /></p>
+<p>The bar above was generated by Metascape to show the some biological
+pathways associated with top 500 SVGs we found. From example, ECM
+organisation NABA core matrisome may suggest some changes in ECM
+structure and composition that may be crucial in tumour progression or
+metastasis. Epithelial Cell Differentiation may mean there are changes
+in the normal differentiation process of epithelial cells in the
+colon.</p>
 </div>
 <div id="extra-stuff" class="section level2">
 <h2>Extra stuff</h2>
-<p>Maybe spatially variable genes? and deconvolution - if there is a
-nice single cell data we can use. Maybe the h5ad cancer data from <a
+<p>Deconvolution - if there is a nice single cell data we can use. Maybe
+the h5ad cancer data from <a
 href="https://www.nature.com/articles/s43018-024-00807-z">this paper</a>
-can be used. Also merging two tissues?</p>
+can be used.</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -2437,81 +2444,83 @@ other attached packages:
 [5] Seurat_5.1.0       SeuratObject_5.0.2 sp_2.1-4           workflowr_1.7.1   
 
 loaded via a namespace (and not attached):
-  [1] RColorBrewer_1.1-3          rstudioapi_0.16.0          
-  [3] jsonlite_1.8.9              magrittr_2.0.3             
-  [5] spatstat.utils_3.1-0        farver_2.1.2               
-  [7] rmarkdown_2.28              zlibbioc_1.50.0            
-  [9] fs_1.6.4                    vctrs_0.6.5                
- [11] ROCR_1.0-11                 DelayedMatrixStats_1.26.0  
- [13] spatstat.explore_3.3-2      S4Arrays_1.4.1             
- [15] htmltools_0.5.8.1           SparseArray_1.4.8          
- [17] sass_0.4.9                  sctransform_0.4.1          
- [19] parallelly_1.38.0           KernSmooth_2.23-24         
- [21] bslib_0.8.0                 htmlwidgets_1.6.4          
- [23] ica_1.0-3                   plyr_1.8.9                 
- [25] plotly_4.10.4               zoo_1.8-12                 
- [27] cachem_1.1.0                whisker_0.4.1              
- [29] igraph_2.0.3                mime_0.12                  
- [31] lifecycle_1.0.4             pkgconfig_2.0.3            
- [33] Matrix_1.7-0                R6_2.5.1                   
- [35] fastmap_1.2.0               GenomeInfoDbData_1.2.12    
- [37] MatrixGenerics_1.16.0       fitdistrplus_1.2-1         
- [39] future_1.34.0               shiny_1.9.1                
- [41] digest_0.6.37               colorspace_2.1-1           
- [43] S4Vectors_0.42.1            ps_1.8.0                   
- [45] rprojroot_2.0.4             tensor_1.5                 
- [47] RSpectra_0.16-2             irlba_2.3.5.1              
- [49] GenomicRanges_1.56.2        labeling_0.4.3             
- [51] progressr_0.14.0            fansi_1.0.6                
- [53] spatstat.sparse_3.1-0       httr_1.4.7                 
- [55] polyclip_1.10-7             abind_1.4-8                
- [57] compiler_4.4.1              bit64_4.5.2                
- [59] withr_3.0.1                 viridis_0.6.5              
- [61] fastDummies_1.7.4           highr_0.11                 
- [63] MASS_7.3-61                 DelayedArray_0.30.1        
- [65] tools_4.4.1                 lmtest_0.9-40              
- [67] httpuv_1.6.15               future.apply_1.11.2        
- [69] goftest_1.2-3               glmGamPoi_1.16.0           
- [71] glue_1.7.0                  callr_3.7.6                
- [73] nlme_3.1-166                promises_1.3.0             
- [75] grid_4.4.1                  Rtsne_0.17                 
- [77] getPass_0.2-4               cluster_2.1.6              
- [79] reshape2_1.4.4              generics_0.1.3             
- [81] hdf5r_1.3.11                gtable_0.3.5               
- [83] spatstat.data_3.1-2         tidyr_1.3.1                
- [85] RApiSerialize_0.1.4         data.table_1.16.0          
- [87] XVector_0.44.0              stringfish_0.16.0          
- [89] utf8_1.2.4                  BiocGenerics_0.50.0        
- [91] spatstat.geom_3.3-3         RcppAnnoy_0.0.22           
- [93] ggrepel_0.9.6               RANN_2.6.2                 
- [95] pillar_1.9.0                stringr_1.5.1              
- [97] spam_2.10-0                 RcppHNSW_0.6.0             
- [99] later_1.3.2                 splines_4.4.1              
-[101] dplyr_1.1.4                 lattice_0.22-6             
-[103] bit_4.5.0                   survival_3.7-0             
-[105] deldir_2.0-4                tidyselect_1.2.1           
-[107] miniUI_0.1.1.1              pbapply_1.7-2              
-[109] knitr_1.48                  git2r_0.33.0               
-[111] gridExtra_2.3               IRanges_2.38.1             
-[113] SummarizedExperiment_1.34.0 scattermore_1.2            
-[115] stats4_4.4.1                xfun_0.47                  
-[117] Biobase_2.64.0              matrixStats_1.4.1          
-[119] UCSC.utils_1.0.0            stringi_1.8.4              
-[121] lazyeval_0.2.2              yaml_2.3.10                
-[123] evaluate_1.0.0              codetools_0.2-20           
-[125] tibble_3.2.1                cli_3.6.3                  
-[127] RcppParallel_5.1.9          uwot_0.2.2                 
-[129] xtable_1.8-4                reticulate_1.39.0          
-[131] munsell_0.5.1               processx_3.8.4             
-[133] jquerylib_0.1.4             GenomeInfoDb_1.40.1        
-[135] Rcpp_1.0.13                 globals_0.16.3             
-[137] spatstat.random_3.3-2       png_0.1-8                  
-[139] spatstat.univar_3.0-1       parallel_4.4.1             
-[141] dotCall64_1.1-1             sparseMatrixStats_1.16.0   
-[143] listenv_0.9.1               viridisLite_0.4.2          
-[145] ggridges_0.5.6              crayon_1.5.3               
-[147] leiden_0.4.3.1              purrr_1.0.2                
-[149] rlang_1.1.4                 cowplot_1.1.3              </code></pre>
+  [1] RcppAnnoy_0.0.22            splines_4.4.1              
+  [3] later_1.3.2                 tibble_3.2.1               
+  [5] polyclip_1.10-7             fastDummies_1.7.4          
+  [7] lifecycle_1.0.4             rprojroot_2.0.4            
+  [9] Rnanoflann_0.0.3            globals_0.16.3             
+ [11] processx_3.8.4              lattice_0.22-6             
+ [13] hdf5r_1.3.11                MASS_7.3-61                
+ [15] magrittr_2.0.3              plotly_4.10.4              
+ [17] sass_0.4.9                  rmarkdown_2.28             
+ [19] jquerylib_0.1.4             yaml_2.3.10                
+ [21] httpuv_1.6.15               glmGamPoi_1.16.0           
+ [23] sctransform_0.4.1           spam_2.10-0                
+ [25] spatstat.sparse_3.1-0       reticulate_1.39.0          
+ [27] cowplot_1.1.3               pbapply_1.7-2              
+ [29] RColorBrewer_1.1-3          abind_1.4-8                
+ [31] zlibbioc_1.50.0             Rtsne_0.17                 
+ [33] GenomicRanges_1.56.2        purrr_1.0.2                
+ [35] BiocGenerics_0.50.0         git2r_0.33.0               
+ [37] GenomeInfoDbData_1.2.12     IRanges_2.38.1             
+ [39] S4Vectors_0.42.1            ggrepel_0.9.6              
+ [41] irlba_2.3.5.1               listenv_0.9.1              
+ [43] spatstat.utils_3.1-0        goftest_1.2-3              
+ [45] RSpectra_0.16-2             spatstat.random_3.3-2      
+ [47] fitdistrplus_1.2-1          parallelly_1.38.0          
+ [49] DelayedMatrixStats_1.26.0   leiden_0.4.3.1             
+ [51] codetools_0.2-20            DelayedArray_0.30.1        
+ [53] RApiSerialize_0.1.4         tidyselect_1.2.1           
+ [55] UCSC.utils_1.0.0            farver_2.1.2               
+ [57] viridis_0.6.5               matrixStats_1.4.1          
+ [59] stats4_4.4.1                spatstat.explore_3.3-2     
+ [61] jsonlite_1.8.9              progressr_0.14.0           
+ [63] ggridges_0.5.6              survival_3.7-0             
+ [65] tools_4.4.1                 ica_1.0-3                  
+ [67] Rcpp_1.0.13                 glue_1.7.0                 
+ [69] gridExtra_2.3               SparseArray_1.4.8          
+ [71] xfun_0.47                   MatrixGenerics_1.16.0      
+ [73] GenomeInfoDb_1.40.1         dplyr_1.1.4                
+ [75] withr_3.0.1                 fastmap_1.2.0              
+ [77] fansi_1.0.6                 callr_3.7.6                
+ [79] digest_0.6.37               R6_2.5.1                   
+ [81] mime_0.12                   colorspace_2.1-1           
+ [83] scattermore_1.2             tensor_1.5                 
+ [85] spatstat.data_3.1-2         Rfast2_0.1.5.2             
+ [87] utf8_1.2.4                  tidyr_1.3.1                
+ [89] generics_0.1.3              data.table_1.16.0          
+ [91] httr_1.4.7                  htmlwidgets_1.6.4          
+ [93] S4Arrays_1.4.1              whisker_0.4.1              
+ [95] uwot_0.2.2                  pkgconfig_2.0.3            
+ [97] gtable_0.3.5                lmtest_0.9-40              
+ [99] XVector_0.44.0              htmltools_0.5.8.1          
+[101] dotCall64_1.1-1             Biobase_2.64.0             
+[103] png_0.1-8                   spatstat.univar_3.0-1      
+[105] knitr_1.48                  rstudioapi_0.16.0          
+[107] reshape2_1.4.4              nlme_3.1-166               
+[109] cachem_1.1.0                zoo_1.8-12                 
+[111] stringr_1.5.1               KernSmooth_2.23-24         
+[113] parallel_4.4.1              miniUI_0.1.1.1             
+[115] RcppZiggurat_0.1.6          pillar_1.9.0               
+[117] grid_4.4.1                  vctrs_0.6.5                
+[119] RANN_2.6.2                  promises_1.3.0             
+[121] stringfish_0.16.0           xtable_1.8-4               
+[123] cluster_2.1.6               evaluate_1.0.0             
+[125] cli_3.6.3                   compiler_4.4.1             
+[127] rlang_1.1.4                 crayon_1.5.3               
+[129] future.apply_1.11.2         labeling_0.4.3             
+[131] ps_1.8.0                    getPass_0.2-4              
+[133] plyr_1.8.9                  fs_1.6.4                   
+[135] stringi_1.8.4               viridisLite_0.4.2          
+[137] deldir_2.0-4                munsell_0.5.1              
+[139] lazyeval_0.2.2              spatstat.geom_3.3-3        
+[141] Matrix_1.7-0                RcppHNSW_0.6.0             
+[143] sparseMatrixStats_1.16.0    bit64_4.5.2                
+[145] future_1.34.0               shiny_1.9.1                
+[147] SummarizedExperiment_1.34.0 highr_0.11                 
+[149] ROCR_1.0-11                 Rfast_2.1.0                
+[151] igraph_2.0.3                RcppParallel_5.1.9         
+[153] bslib_0.8.0                 bit_4.5.0                  </code></pre>
 </div>
 </div>
 
