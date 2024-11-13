@@ -201,8 +201,9 @@ library(ggspavis)
 ```
 
 
-## Loading the matrix
+## Loading the matrix from raw SAW outputs
 
+Unfortunately, there 
 First we need to read from the `.h5ad` file.
 
 ```{r}
@@ -216,9 +217,11 @@ matrix_data <- h5read(h5ad_file, "X")
 # Extract dimensions (this is stored as an attribute)
 shape <- h5readAttributes(h5ad_file, "X")$shape
 
+shape
 ```
 
 Next, we convert the matrix data into a format compatible with R.
+***TODO***: I should make this into a script
 
 ```{r}
 
@@ -264,4 +267,244 @@ library(ggspavis)
 colData(spe)$sums <- colSums(counts(spe))
 plotSpots(spe, annotate="sums")
 ```
+
+## Loading non-processed h5ad
+
+It's kind of tricky doing the conversion correctly.
+But as we'll see, the data are all there:
+
+```{r}
+
+h5ad_file <- "data/DY1_D0_stereo-seq.h5ad"
+
+# Read in the matrix data (CSR format)
+matrix_data <- h5read(h5ad_file, "X")
+obs <- h5read(h5ad_file, "obs")
+var <- h5read(h5ad_file, "var")
+
+spatial_coords <- h5read(h5ad_file, "/obsm/spatial")
+
+
+dim(matrix_data)
+```
+
+```{r}
+spe <- SpatialExperiment(
+  assays = list(counts = matrix_data), 
+  colData = DataFrame(spot_id=obs$`_index`, cluster=obs$annotation, in_tissue=TRUE), # get cluster in there 
+  rowData = DataFrame(gene_id=var$`_index`), # genes
+  spatialCoords = data.matrix(DataFrame(x=spatial_coords[1,], y=spatial_coords[2,]))
+)
+colnames(spe) <- colData(spe)$spot_id
+rownames(spe) <- rowData(spe)$gene_id
+spe
+```
+
+```{r}
+library(ggspavis)
+
+# Get norm counts 
+colData(spe)$sums <- colSums(counts(spe))
+plotSpots(spe, annotate="sums")
+```
+
+```{r}
+library(ggspavis)
+library(viridis)
+
+# Get norm counts 
+# TODO: this isn't really set up correctly...
+plotSpots(spe, annotate="cluster", pal=viridis(2))
+```
+
+## Alternatives## Alternativesviridis_pal()
+
+The other way to accomplish this is using `reticulate`.
+
+```{r}
+#library(Seurat)
+library(reticulate)
+
+ad <- import("anndata", convert = FALSE)
+hc_scrnaseq <- ad$read_h5ad("data/Homeostasis_hepatic_immune_cell_scRNAseq.h5ad")
+
+```
+
+
+# Cell-type decomposition
+
+This experiment has matched and annotated single cell data. We'll be using 
+this to generate Figure 1A from the paper using robust cell-type decomposition
+(RCTD).
+
+
+## Loading single cell reference 
+
+```{r}
+sc_reference <- "data/Homeostasis_hepatic_immune_cell_scRNAseq.h5ad"
+
+h5ls(sc_reference)
+str(h5read(sc_reference, "var"))
+
+```
+
+```{r}
+
+# name our input file
+h5ad_file <- "data/Homeostasis_hepatic_cell_scRNAseq.h5ad"
+
+# Read in the matrix data (CSR format)
+sc_matrix_data <- h5read(sc_reference, "/raw/X")
+
+# Extract dimensions (this is stored as an attribute)
+shape <- h5readAttributes(sc_reference, "/raw/X")$shape
+
+shape
+```
+
+Next, we convert the matrix data into a format compatible with R.
+
+```{r}
+
+# Extract the components
+data <- sc_matrix_data$data        # Non-zero values
+indices <- sc_matrix_data$indices  # Column indices of non-zero values
+indptr <- sc_matrix_data$indptr    # Row pointers for non-zero values
+
+# Reconstruct the CSR matrix (have to add 1 to indices for R)
+csr_matrix <- sparseMatrix(
+  i = as.integer(rep(seq_len(length(indptr)-1), diff(indptr))),  # expand row indices
+  j = as.integer(indices + 1),  # R uses 1-based indexing, so add 1 to column indices
+  x = as.numeric(data),
+  dims = shape,
+)
+
+obs <- h5read(sc_reference, "obs")
+var <- h5read(sc_reference, "var")
+
+
+colnames(csr_matrix) <- var$gene
+rownames(csr_matrix) <- obs$`_index`
+
+
+```
+
+Now we extract the annotation
+
+```{r}
+annotation <- h5read(sc_reference, "obs")$annotation
+celltype <- factor(annotation$codes)
+levels(celltype) <- annotation$categories
+
+table(celltype)
+
+
+names(celltype) <- obs$`_index`
+```
+
+## RCTD
+
+```{r}
+
+# Unfortunately installing from source seems to be the only supported method...
+if (!requireNamespace("spacexr", quietly = TRUE)) {
+  devtools::install_github("dmcable/spacexr", build_vignettes = FALSE)
+}
+
+```
+
+```{r}
+
+library(spacexr)
+
+# Create RCTD object
+reference <- Reference(t(csr_matrix), celltype)
+
+counts <- assays(spe)$counts
+rownames(counts) <- rownames(spe)
+colnames(counts) <- colnames(spe)
+
+
+coords <- spatialCoords(spe)
+rownames(coords) <- colnames(spe)
+puck <- SpatialRNA(data.frame(coords), counts)
+
+# Clean the environment
+#rm(sc)
+#rm(SeuObj)
+#gc()
+```
+
+Now we can run RCTD
+
+```{r}
+# Prepare for? RCTD analysis
+RCTD <- create.RCTD(puck, reference, max_cores = 8)
+
+# Multi mode allows us to define >2 cell types per tissue
+RCTD <- run.RCTD(RCTD, doublet_mode = 'multi')
+
+# Save the output as it can take a while to run
+saveRDS(RCTD, "RCTD.rds")
+```
+
+# It actually worked
+
+I think that setting colnames on the thingy was what did it
+
+
+```{r}
+# RCTD <- readRDS("RCTD.rds")
+
+# We get back a list of results
+length(RCTD@results)
+
+# But not all spots have results
+dim(RCTD@spatialRNA@counts)
+dim(counts)
+
+
+celltypes <- lapply(RCTD@results, \(x) x$cell_type_list[which.max(x$sub_weights)])
+names(celltypes) <- colnames(RCTD@spatialRNA@counts)
+
+table(unlist(celltypes))
+```
+
+```{r}
+library(tidyverse)
+
+cell_types <- tibble(names = colnames(spe)) |>
+  left_join(
+    enframe(unlist(celltypes), name="names", value = "values"),
+    by = "names"
+  ) |>
+  deframe()
+  
+
+
+# Get norm counts 
+colData(spe)$cell_types <- cell_types
+#plotSpots(spe, annotate="cell_types", pal=rainbow_hcl(15))
+plotSpots(spe, annotate="cell_types")
+
+# 36x36 um resolution
+```
+
+
+```{r}
+results <- RCTD@results
+# normalize the cell type proportions to sum to 1.
+norm_weights = normalize_weights(results$weights) 
+cell_type_names <- RCTD@cell_type_info$info[[2]] #list of cell type names
+spatialRNA <- RCTD@spatialRNA
+```
+
+# TODO: 
+
+- get the zonation layer info out (that's the annotation actaully)
+- plots
+- flip the y axis
+- umap / pca?
+- normalisation?
+
 
