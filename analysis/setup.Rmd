@@ -7,11 +7,26 @@ editor_options:
   chunk_output_type: console
 ---
 
-## Introduction
+The Spatial Transcriptomics Analysis Workshop will be run on the 22nd November 2024 by:
 
-To make sure packages are installed.
+- [Felix Marsh-Wakefield](ref)
+- [Cathal King](ref)
+- [Givanna Putri](ref)
+- [John Salamon](ref)
+- [Thomas O'Neil](https://github.com/DrThomasOneil))
 
-```{r}
+Please ensure you follow the instructions below **prior** to attending the workshop.
+
+If you have any problems, please reach out to either:
+
+- felix.marsh-wakefield@sydney.edu.au
+- thomas,oneil@sydney.edu.au
+
+## Packages
+
+To make sure packages are installed:
+
+```{r, eval=F}
 
 cran_packages <- c(
   "BiocManager", "Seurat", "ggplot2", "scales", "patchwork", "qs",
@@ -26,4 +41,74 @@ bioc_packages <- c(
 
 BiocManager::install(bioc_packages)
 ```
+
+## Folder structure
+
+```{r, eval=F}
+knitr::opts_knit$set(root.dir = dirname(rstudioapi::getActiveDocumentContext()$path))
+
+if(!dir.exists("visium")){dir.create("visium")}
+if(!dir.exists("visium/raw")){dir.create("visium/raw")}
+if(!dir.exists("visium/data")){dir.create("visium/data")}
+
+if(!dir.exists("xenium")){dir.create("xenium")}
+if(!dir.exists("xenium/raw")){dir.create("xenium/raw")}
+if(!dir.exists("xenium/data")){dir.create("xenium/data")}
+
+if(!dir.exists("stomics")){dir.create("stomics")}
+if(!dir.exists("stomics/raw")){dir.create("stomics/raw")}
+if(!dir.exists("stomics/data")){dir.create("stomics/data")}
+
+```
+
+## Data Download{.tabset}
+
+### Visium
+```{r eval=F}
+
+download.file("https://cf.10xgenomics.com/samples/spatial-exp/3.0.0/Visium_V2_Human_Colon_Cancer_P2/Visium_V2_Human_Colon_Cancer_P2_filtered_feature_bc_matrix.h5", 
+              destfile = "visium/raw/Visium_V2_Human_Colon_Cancer_P2_filtered_feature_bc_matrix.h5", 
+              method = "curl")
+download.file("https://cf.10xgenomics.com/samples/spatial-exp/3.0.0/Visium_V2_Human_Colon_Cancer_P2/Visium_V2_Human_Colon_Cancer_P2_spatial.tar.gz", 
+              destfile = "visium/raw/spatial.tar.gz", 
+              method = "curl")
+
+untar("visium/raw/spatial.tar",compressed = "gzip", exdir ="visium/raw")
+
+```
+
+## Final checks
+
+Running this chunk will let you know if the packages have been installed properly. 
+
+```{r eval=F}
+checkSetup <- function() {
+  library(cli)
+  cat("\n--------------------------------------\n")
+  cat(style_bold(col_magenta("\n***Installing General Packages***\n\n")))
+  not <- c(); not2 <- c()
+  packages1 <- c(cran_packages, bioc_packages)#, "Test")
+  for (i in 1:length(packages1)){
+    if(requireNamespace(packages1[i], quietly = TRUE)==F) {
+      cat(paste(style_bold(col_red(packages1[i])), "has not been installed\n"))
+      not <- c(not,i)
+    } else {
+      suppressWarnings(suppressMessages(library(as.character(packages1[i]), character.only = TRUE)))
+      cat(col_yellow(packages1[i]), "is loaded!\n")
+    }
+  }
+  cat("\n--------------------------------------\n")
+  if (length(not) > 0){
+    cat(style_bold(bg_red("\n  **IMPORTANT**  ")),
+        style_bold(col_yellow("\n\nYou need to install: \n")),
+        paste(paste(c(packages1[not]), collapse=", ")),
+        "\n\n--------------------------------------",
+        "\n\n Use:\n - install.packages(),\n - BiocManager::install() or, \n - use Google to find installation instructions.\n\n", style_bold(col_green("Then run this function again!\n\n")))
+  } else {
+    cat("",col_green(style_bold("\n All packages are loaded!\n\n Happy Coding! :)\n\n")))
+  }
+}
+checkSetup()
+```
+
 
