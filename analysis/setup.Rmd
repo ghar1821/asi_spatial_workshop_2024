@@ -30,16 +30,19 @@ To make sure packages are installed:
 
 cran_packages <- c(
   "BiocManager", "Seurat", "ggplot2", "scales", "patchwork", "qs",
-  "hdf5r", "viridis", "scater"
+  "hdf5r", "viridis", "scater", "devtools"
 )
 
 install.packages(cran_packages)
 
 bioc_packages <- c(
-  "glmGamPoi", "scater", "SpatialExperiment"
+  "glmGamPoi", "scater", "SpatialExperiment", "ggspavis", "scran", "nnSVG"
 )
 
 BiocManager::install(bioc_packages)
+
+# RCTD only available via devtools install
+devtools::install_github("dmcable/spacexr", build_vignettes = FALSE)
 ```
 
 ## Folder structure
@@ -75,6 +78,24 @@ download.file("https://cf.10xgenomics.com/samples/spatial-exp/3.0.0/Visium_V2_Hu
 
 untar("visium/raw/spatial.tar",compressed = "gzip", exdir ="visium/raw")
 
+```
+
+### STOmics
+
+```{r eval=F}
+
+# Raw data from SAW (4.6GB, optional download!)
+download.file("https://filesender.aarnet.edu.au/download.php?token=32ffcb63-24df-47e2-bdce-7341fe86082a&files_ids=23595450",
+              destfile = "stomics/raw/visualization.tar.gz")
+untar("stomics/raw/visualization.tar.gz",compressed = "gzip", exdir ="stomics/raw")
+
+# LISTA paper, processed tissue slice (4.1GB)
+download.file("https://ftp.cngb.org/pub/SciRAID/stomics/STDS0000059/Stereo-seq/DY1_D0_stereo-seq.h5ad",
+              destfile = "stomics/raw/DY1_D0_stereo-seq.h5ad")
+
+# LISTA single cell dataset (1.7GB)
+download.file("https://ftp.cngb.org/pub/SciRAID/stomics/STDS0000059/scRNAseq/Homeostasis_hepatic_cell_scRNAseq.h5ad",
+              destfile = "stomics/raw/Homeostasis_hepatic_cell_scRNAseq.h5ad")
 ```
 
 ## Final checks
