@@ -2,8 +2,21 @@
 title: "STOmics Stereo-seq introduction"
 author: John Salamon
 editor_options:
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
+
+# TODO: 
+
+- get the zonation layer info out (that's the annotation actaully)
+  - try and reconstruct what was done in the paper
+- plots
+  - flip the y axis
+  - umap / pca?
+  - normalisation?
+- just run the gef to seurat script, see how well it does
+- if it's no better than my approach, just use that
+
+
 
 # Stereo-seq background
 
@@ -174,9 +187,15 @@ StereoMap.
 
 [StereoPy](https://stereopy.readthedocs.io/en/latest/content/01_Usage_principles.html) is a Python library designed to work with Stereo-seq data. Internally it wraps libraries such as [scanpy](https://scanpy.readthedocs.io/en/stable/), [squidpy](https://squidpy.readthedocs.io/en/stable/) and [anndata](https://anndata.readthedocs.io/en/stable/).
 
-As most SAW outputs are anndata compatible, it is very easy to import Stereo-seq data into the Python ecosystem.
+As most SAW outputs are anndata compatible, it is very easy to import Stereo-seq 
+data into the Python ecosystem. For example, here's how you might load a GEF file:
 
-TODO: show example loading code
+```{python, eval=FALSE}
+import stereo as st
+
+data = st.io.read_gef(file_path='C04042E3.tissue.gef', bin_size=50)
+
+```
 
 # Seurat
 
@@ -201,111 +220,149 @@ library(ggspavis)
 ```
 
 
+```{r shared-code}
+# custom helper code
+source("code/stomicsFunctions.R")
+```
+
 ## Loading the matrix from raw SAW outputs
 
-Unfortunately, there 
-First we need to read from the `.h5ad` file.
+We started with multiple h5ad files, and a very large .gef.
+Rather than try to load the gef directly, we'll use the conversion tools in
+SAW to produce a smaller h5ad file.
 
-```{r}
+```{bash, eval=FALSE}
 
-# name our input file
-h5ad_file <- "data/C04042E3.bin50_1.0.h5ad"
+saw convert gef2h5ad \
+  --bin-size 50 \
+  --gef feature_expression/C04042E3.raw.gef \
+  --h5ad C04042E3_bin50_raw.h5ad
 
-# Read in the matrix data (CSR format)
-matrix_data <- h5read(h5ad_file, "X")
-
-# Extract dimensions (this is stored as an attribute)
-shape <- h5readAttributes(h5ad_file, "X")$shape
-
-shape
 ```
 
-Next, we convert the matrix data into a format compatible with R.
-***TODO***: I should make this into a script
 
-```{r}
 
-# Extract the components
-data <- matrix_data$data        # Non-zero values
-indices <- matrix_data$indices  # Column indices of non-zero values
-indptr <- matrix_data$indptr    # Row pointers for non-zero values
+## Loading processed h5ad
 
-# Reconstruct the CSR matrix (have to add 1 to indices for R)
-csr_matrix <- sparseMatrix(
-  i = as.integer(rep(seq_len(length(indptr)-1), diff(indptr))),  # expand row indices
-  j = as.integer(indices + 1),  # R uses 1-based indexing, so add 1 to column indices
-  x = as.numeric(data),
-  dims = shape,
-)
+### More notes on compressing anndata
+
+The LISTA h5ad files are much larger when downloaded directly from the original
+source - I compressed them using the following Python function:
+
+```{python, eval=FALSE}
+import anndata
+from scipy import sparse
+from os import path
+
+def h5ad_compressor(in_file):
+    # Read input h5ad
+    adata = anndata.read_h5ad(in_file)
+    # Create CSR matrix
+    sparse_X = sparse.csr_matrix(adata.X)
+    # Set adata matrix to CSR
+    adata.X = sparse_X
+    # Write compressed h5ad to file, with additional gzip compression
+    out_file = f'{path.splitext(in_file)[0]}_compress.h5ad'
+    adata.write_h5ad(out_file, compression="gzip")
 ```
 
-We can also add in row and col data.
 
-```{r}
-obs <- h5read(h5ad_file, "obs")
-var <- h5read(h5ad_file, "var")
+## Alternatives
+
+The other way to accomplish this is using `reticulate` and the Python `anndata`
+package. This does require setting up a Python environment, so we won't go
+into it now.
+
+```{r, eval=FALSE}
+
+library(reticulate)
+
+# import anndata library from Python
+ad <- import("anndata", convert = FALSE)
+# now calling into Python
+hc_scrnaseq <- ad$read_h5ad("data/Homeostasis_hepatic_immune_cell_scRNAseq.h5ad")
 ```
 
-Now constructing a SpatialExperiment object is just a matter of passing in the required objects.
-```{r}
-# create SpatialExperiment object
-spe <- SpatialExperiment(
-  assays = list(counts = t(csr_matrix)), 
-  colData = DataFrame(cluster=as.factor(obs$leiden$codes), in_tissue=TRUE), # get cluster in there 
-  rowData = DataFrame(gene_id=var$`_index`),
-  spatialCoords = data.matrix(DataFrame(x=obs$x, y=obs$y))
-)
-spe
-```
-
-We can now continue to use this object as we would for other array-based experiments.
-
-```{r}
-library(ggspavis)
-
-# Get norm counts 
-colData(spe)$sums <- colSums(counts(spe))
-plotSpots(spe, annotate="sums")
-```
-
-## Loading non-processed h5ad
+## Directly reading anndata
 
 It's kind of tricky doing the conversion correctly.
+
+One thing to consider is that in anndata, rows are observations, and columns are features,
+while for SpatialExperiment and Seurat, the opposite is true.
+
 But as we'll see, the data are all there:
 
 ```{r}
+source("code/stomicsFunctions.R")
 
-h5ad_file <- "data/DY1_D0_stereo-seq.h5ad"
+h5ad_file <- "stomics/raw/DY1_D0_stereo-seq_compress.h5ad"
+#h5ad_file <- "stomics/raw/C04042E3.bin50_1.0.h5ad"
 
 # Read in the matrix data (CSR format)
-matrix_data <- h5read(h5ad_file, "X")
+matrix_data <- h5adMatrixLoad(h5ad_file)
+
+# Take a look at the size
+dim(matrix_data)
+```
+
+Next let's get the observations (bin/spots)
+
+```{r}
+# In anndata this is stored as "obs", and is actually the row data
 obs <- h5read(h5ad_file, "obs")
+
+
+# Process anndata
+coldata <- anndataDataframe(obs)
+
+coldata$in_tissue = TRUE # some libs expect this
+coldata
+```
+# Extract features (genes)
+
+```{r}
+# In anndata this is stored as "var", and is actually the column data
 var <- h5read(h5ad_file, "var")
 
+rowdata <- anndataDataframe(var)
+
+rowdata
+```
+
+Finally, let's extract the spatial coordinates.
+
+```{r}
 spatial_coords <- h5read(h5ad_file, "/obsm/spatial")
 
+spatial_coords <- data.matrix(data.frame(
+  x=spatial_coords[1,],
+  y=spatial_coords[2,],
+  row.names = rownames(coldata)
+))
+dim(spatial_coords)
+```
+TODO: one more thing, uns
+```{r}
+# This contains misc unstructured data
+uns <- h5read(h5ad_file, "uns")
 
-dim(matrix_data)
 ```
 
 ```{r}
 spe <- SpatialExperiment(
-  assays = list(counts = matrix_data), 
-  colData = DataFrame(spot_id=obs$`_index`, cluster=obs$annotation, in_tissue=TRUE), # get cluster in there 
-  rowData = DataFrame(gene_id=var$`_index`), # genes
-  spatialCoords = data.matrix(DataFrame(x=spatial_coords[1,], y=spatial_coords[2,]))
+  assays = list(counts = matrix_data),
+  colData = coldata, # spatial bins
+  rowData = rowdata, # features
+  spatialCoords = spatial_coords
 )
-colnames(spe) <- colData(spe)$spot_id
-rownames(spe) <- rowData(spe)$gene_id
 spe
 ```
 
 ```{r}
 library(ggspavis)
-
+library(viridis)
 # Get norm counts 
-colData(spe)$sums <- colSums(counts(spe))
-plotSpots(spe, annotate="sums")
+plotSpots(spe, annotate = "annotation", pal=viridis(2))
 ```
 
 ```{r}
@@ -316,195 +373,5 @@ library(viridis)
 # TODO: this isn't really set up correctly...
 plotSpots(spe, annotate="cluster", pal=viridis(2))
 ```
-
-## Alternatives## Alternativesviridis_pal()
-
-The other way to accomplish this is using `reticulate`.
-
-```{r}
-#library(Seurat)
-library(reticulate)
-
-ad <- import("anndata", convert = FALSE)
-hc_scrnaseq <- ad$read_h5ad("data/Homeostasis_hepatic_immune_cell_scRNAseq.h5ad")
-
-```
-
-
-# Cell-type decomposition
-
-This experiment has matched and annotated single cell data. We'll be using 
-this to generate Figure 1A from the paper using robust cell-type decomposition
-(RCTD).
-
-
-## Loading single cell reference 
-
-```{r}
-sc_reference <- "data/Homeostasis_hepatic_immune_cell_scRNAseq.h5ad"
-
-h5ls(sc_reference)
-str(h5read(sc_reference, "var"))
-
-```
-
-```{r}
-
-# name our input file
-h5ad_file <- "data/Homeostasis_hepatic_cell_scRNAseq.h5ad"
-
-# Read in the matrix data (CSR format)
-sc_matrix_data <- h5read(sc_reference, "/raw/X")
-
-# Extract dimensions (this is stored as an attribute)
-shape <- h5readAttributes(sc_reference, "/raw/X")$shape
-
-shape
-```
-
-Next, we convert the matrix data into a format compatible with R.
-
-```{r}
-
-# Extract the components
-data <- sc_matrix_data$data        # Non-zero values
-indices <- sc_matrix_data$indices  # Column indices of non-zero values
-indptr <- sc_matrix_data$indptr    # Row pointers for non-zero values
-
-# Reconstruct the CSR matrix (have to add 1 to indices for R)
-csr_matrix <- sparseMatrix(
-  i = as.integer(rep(seq_len(length(indptr)-1), diff(indptr))),  # expand row indices
-  j = as.integer(indices + 1),  # R uses 1-based indexing, so add 1 to column indices
-  x = as.numeric(data),
-  dims = shape,
-)
-
-obs <- h5read(sc_reference, "obs")
-var <- h5read(sc_reference, "var")
-
-
-colnames(csr_matrix) <- var$gene
-rownames(csr_matrix) <- obs$`_index`
-
-
-```
-
-Now we extract the annotation
-
-```{r}
-annotation <- h5read(sc_reference, "obs")$annotation
-celltype <- factor(annotation$codes)
-levels(celltype) <- annotation$categories
-
-table(celltype)
-
-
-names(celltype) <- obs$`_index`
-```
-
-## RCTD
-
-```{r}
-
-# Unfortunately installing from source seems to be the only supported method...
-if (!requireNamespace("spacexr", quietly = TRUE)) {
-  devtools::install_github("dmcable/spacexr", build_vignettes = FALSE)
-}
-
-```
-
-```{r}
-
-library(spacexr)
-
-# Create RCTD object
-reference <- Reference(t(csr_matrix), celltype)
-
-counts <- assays(spe)$counts
-rownames(counts) <- rownames(spe)
-colnames(counts) <- colnames(spe)
-
-
-coords <- spatialCoords(spe)
-rownames(coords) <- colnames(spe)
-puck <- SpatialRNA(data.frame(coords), counts)
-
-# Clean the environment
-#rm(sc)
-#rm(SeuObj)
-#gc()
-```
-
-Now we can run RCTD
-
-```{r}
-# Prepare for? RCTD analysis
-RCTD <- create.RCTD(puck, reference, max_cores = 8)
-
-# Multi mode allows us to define >2 cell types per tissue
-RCTD <- run.RCTD(RCTD, doublet_mode = 'multi')
-
-# Save the output as it can take a while to run
-saveRDS(RCTD, "RCTD.rds")
-```
-
-# It actually worked
-
-I think that setting colnames on the thingy was what did it
-
-
-```{r}
-# RCTD <- readRDS("RCTD.rds")
-
-# We get back a list of results
-length(RCTD@results)
-
-# But not all spots have results
-dim(RCTD@spatialRNA@counts)
-dim(counts)
-
-
-celltypes <- lapply(RCTD@results, \(x) x$cell_type_list[which.max(x$sub_weights)])
-names(celltypes) <- colnames(RCTD@spatialRNA@counts)
-
-table(unlist(celltypes))
-```
-
-```{r}
-library(tidyverse)
-
-cell_types <- tibble(names = colnames(spe)) |>
-  left_join(
-    enframe(unlist(celltypes), name="names", value = "values"),
-    by = "names"
-  ) |>
-  deframe()
-  
-
-
-# Get norm counts 
-colData(spe)$cell_types <- cell_types
-#plotSpots(spe, annotate="cell_types", pal=rainbow_hcl(15))
-plotSpots(spe, annotate="cell_types")
-
-# 36x36 um resolution
-```
-
-
-```{r}
-results <- RCTD@results
-# normalize the cell type proportions to sum to 1.
-norm_weights = normalize_weights(results$weights) 
-cell_type_names <- RCTD@cell_type_info$info[[2]] #list of cell type names
-spatialRNA <- RCTD@spatialRNA
-```
-
-# TODO: 
-
-- get the zonation layer info out (that's the annotation actaully)
-- plots
-- flip the y axis
-- umap / pca?
-- normalisation?
 
 
