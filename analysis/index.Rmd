@@ -14,7 +14,7 @@ knitr::include_graphics("assets/ASI_spatial_flyer.png", error = FALSE)
 
 The Spatial Transcriptomics Analysis Workshop will be run on the 22nd November 2024 by:
 
-- [Felix Marsh-Wakefield](ref)
+- [Felix Marsh-Wakefield](https://github.com/Felixillion)
 - [Cathal King](https://www.linkedin.com/in/cathal-king/)
 - [Givanna Putri](https://github.com/ghar1821)
 - [John Salamon](https://github.com/human9)

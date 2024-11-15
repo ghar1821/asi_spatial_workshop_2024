@@ -1,6 +1,6 @@
 ---
-title: "setup"
-author: "Givanna Putri, Thomas O'Neil, John Salamon", "Cathal King"
+title: "Setup"
+author: "Givanna Putri, Thomas O'Neil, John Salamon, Cathal King"
 date: "2024-11-04"
 output: workflowr::wflow_html
 editor_options:
@@ -21,7 +21,7 @@ If you have any problems, please reach out to either:
 - [Felix Marsh-Wakefield](mailto:felix.marsh-wakefield@sydney.edu.au)
 - [Thomas O'Neil](mailto:thomas.oneil@sydney.edu.au)
 - [Givanna Putri](mailto:putri.g@wehi.edu.au)
-- [Cathal King] (mailto:cathal.king@sahmri.com)
+- [Cathal King](mailto:cathal.king@sahmri.com)
 
 ## Packages
 
@@ -193,6 +193,8 @@ md5sum_str <- c(
 check_md5(md5sum_str)
 ```
 
+Install Loupe Browser at this link:
+https://www.10xgenomics.com/support/software/loupe-browser/latest
 
 ### STOmics
 
@@ -226,34 +228,46 @@ File size: 4.6GB
 # Raw data from SAW (4.6GB, optional download!)
 download.file("https://filesender.aarnet.edu.au/download.php?token=32ffcb63-24df-47e2-bdce-7341fe86082a&files_ids=23595450",
               destfile = "stomics/raw/visualization.tar.gz")
-untar("stomics/raw/visualization.tar.gz", exdir ="stomics/raw")
-```
-
-
-```{r eval=FALSE}
 
 # check md5sum of the downloaded files.
 md5sum_str <- c(
     "stomics/raw/visualization.tar.gz" = "7d3daa224de7ca1244711531270546d3"
 )
 check_md5(md5sum_str)
-
 ```
 
-### 10x Xenium
+If there are no warning from the code block above, proceed to untar the `visualization.tar.gz` file 
+using the code block below.
+
+```{r eval=FALSE}
+untar("stomics/raw/visualization.tar.gz", exdir ="stomics/raw")
+```
+
+### Xenium
 
 Install Xenium Explorer v3.1.1 at this link:
 https://www.10xgenomics.com/support/software/xenium-explorer/downloads
 
-Please also install the raw xenium data by using the below code. The file size is large so it might take a few minutes to complete. 
+Please also install the raw xenium data by using the below code. 
+The file size is large so it might take a few minutes to complete. 
 
 ```{r eval=F}
 # Sample P5 CRC
 # This file is ~12GB so will take a few minutes to download.
-download.file("https://cf.10xgenomics.com/samples/xenium/2.0.0/Xenium_V1_Human_Colon_Cancer_P5_CRC_Add_on_FFPE/Xenium_V1_Human_Colon_Cancer_P5_CRC_Add_on_FFPE_outs.zip", 
-              destfile = "xenium/raw/Xenium_V1_Human_Colon_Cancer_P5_CRC_Add_on_FFPE_outs.zip", 
-              method = "curl")
+download.file(
+  url = "https://cf.10xgenomics.com/samples/xenium/2.0.0/Xenium_V1_Human_Colon_Cancer_P5_CRC_Add_on_FFPE/Xenium_V1_Human_Colon_Cancer_P5_CRC_Add_on_FFPE_outs.zip", 
+  destfile = "xenium/raw/Xenium_V1_Human_Colon_Cancer_P5_CRC_Add_on_FFPE_outs.zip", 
+  method = "curl"
+)
+
+# check md5sum of the downloaded files.
+md5sum_str <- c(
+    "xenium/raw/Xenium_V1_Human_Colon_Cancer_P5_CRC_Add_on_FFPE_outs.zip" = "1069cb6b67a596e0011a4b3f5d3b7c08"
+)
+check_md5(md5sum_str)
+
 ```
 
-
+Make sure there are no warning from the code block above.
+If there are, please redownload the file by re-running `download.file` command.
 
