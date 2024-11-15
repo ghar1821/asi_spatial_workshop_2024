@@ -220,7 +220,7 @@ untar("stomics/raw/visualization.tar.gz", exdir ="stomics/raw")
 Install Xenium Explorer v3.1.1 at this link:
 https://www.10xgenomics.com/support/software/xenium-explorer/downloads
 
-The code block below will download the Xenium output data.
+Please also install the raw xenium data by using the below code. The file size is large so it might take a few minutes to complete. 
 
 ```{r eval=F}
 # Sample P5 CRC
