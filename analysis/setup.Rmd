@@ -32,13 +32,16 @@ the code block below.
 
 cran_packages <- c(
   "BiocManager", "Seurat", "ggplot2", "scales", "patchwork", "qs",
-  "hdf5r", "viridis", "devtools", "cli", "fs", "sf", "terra", "scales", "plotly"
+  "hdf5r", "viridis", "devtools", "cli", "fs", "sf", "terra", "scales",
+  "plotly", "hexbin"
 )
 
 install.packages(cran_packages)
 
 bioc_packages <- c(
-  "glmGamPoi", "scater", "scran" "SpatialExperiment", "ggspavis", "scran", "nnSVG", "SpatialFeatureExperiment", "Voyager", "RBioFormats", "BiocParallel", "bluster", "EBImage"
+  "glmGamPoi", "scater", "scran" "SpatialExperiment", "ggspavis", "scran",
+  "nnSVG", "SpatialFeatureExperiment", "Voyager", "RBioFormats", "BiocParallel",
+  "bluster", "EBImage"
 )
 
 BiocManager::install(bioc_packages)
