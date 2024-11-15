@@ -32,7 +32,7 @@ the code block below.
 
 cran_packages <- c(
   "BiocManager", "Seurat", "ggplot2", "scales", "patchwork", "qs",
-  "hdf5r", "viridis", "devtools", "cli", "fs", "sf", "terra", "scales"
+  "hdf5r", "viridis", "devtools", "cli", "fs", "sf", "terra", "scales", "plotly"
 )
 
 install.packages(cran_packages)
