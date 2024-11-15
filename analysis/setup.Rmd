@@ -1,6 +1,6 @@
 ---
 title: "setup"
-author: "Givanna Putri, Thomas O'Neil, John Salamon"
+author: "Givanna Putri, Thomas O'Neil, John Salamon", "Cathal King"
 date: "2024-11-04"
 output: workflowr::wflow_html
 editor_options:
@@ -21,6 +21,7 @@ If you have any problems, please reach out to either:
 - [Felix Marsh-Wakefield](mailto:felix.marsh-wakefield@sydney.edu.au)
 - [Thomas O'Neil](mailto:thomas.oneil@sydney.edu.au)
 - [Givanna Putri](mailto:putri.g@wehi.edu.au)
+- [Cathal King] (mailto:cathal.king@sahmri.com)
 
 ## Packages
 
@@ -31,13 +32,13 @@ the code block below.
 
 cran_packages <- c(
   "BiocManager", "Seurat", "ggplot2", "scales", "patchwork", "qs",
-  "hdf5r", "viridis", "scater", "devtools", "cli"
+  "hdf5r", "viridis", "devtools", "cli", "fs", "sf", "terra", "scales"
 )
 
 install.packages(cran_packages)
 
 bioc_packages <- c(
-  "glmGamPoi", "scater", "SpatialExperiment", "ggspavis", "scran", "nnSVG"
+  "glmGamPoi", "scater", "scran" "SpatialExperiment", "ggspavis", "scran", "nnSVG", "SpatialFeatureExperiment", "Voyager", "RBioFormats", "BiocParallel", "bluster", "EBImage"
 )
 
 BiocManager::install(bioc_packages)
