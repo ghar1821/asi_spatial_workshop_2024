@@ -1,6 +1,6 @@
 ---
 title: "setup"
-author: "Givanna Putri"
+author: "Givanna Putri, Thomas O'Neil, John Salamon"
 date: "2024-11-04"
 output: workflowr::wflow_html
 editor_options:
@@ -11,26 +11,28 @@ The Spatial Transcriptomics Analysis Workshop will be run on the 22nd November 2
 
 - [Felix Marsh-Wakefield](ref)
 - [Cathal King](ref)
-- [Givanna Putri](ref)
+- [Givanna Putri](https://github.com/ghar1821)
 - [John Salamon](ref)
-- [Thomas O'Neil](https://github.com/DrThomasOneil))
+- [Thomas O'Neil](https://github.com/DrThomasOneil)
 
 Please ensure you follow the instructions below **prior** to attending the workshop.
 
 If you have any problems, please reach out to either:
 
-- felix.marsh-wakefield@sydney.edu.au
-- thomas,oneil@sydney.edu.au
+- [Felix Marsh-Wakefield](mailto:felix.marsh-wakefield@sydney.edu.au)
+- [Thomas O'Neil](mailto:thomas.oneil@sydney.edu.au)
+- [Givanna Putri](mailto:putri.g@wehi.edu.au)
 
 ## Packages
 
-To make sure packages are installed:
+Please install the packages that we will be using in the workshop by running
+the code block below.
 
 ```{r, eval=F}
 
 cran_packages <- c(
   "BiocManager", "Seurat", "ggplot2", "scales", "patchwork", "qs",
-  "hdf5r", "viridis", "scater", "devtools"
+  "hdf5r", "viridis", "scater", "devtools", "cli"
 )
 
 install.packages(cran_packages)
@@ -44,61 +46,6 @@ BiocManager::install(bioc_packages)
 # RCTD only available via devtools install
 devtools::install_github("dmcable/spacexr", build_vignettes = FALSE)
 ```
-
-## Folder structure
-
-```{r, eval=F}
-knitr::opts_knit$set(root.dir = dirname(rstudioapi::getActiveDocumentContext()$path))
-
-if(!dir.exists("visium")){dir.create("visium")}
-if(!dir.exists("visium/raw")){dir.create("visium/raw")}
-if(!dir.exists("visium/data")){dir.create("visium/data")}
-
-if(!dir.exists("xenium")){dir.create("xenium")}
-if(!dir.exists("xenium/raw")){dir.create("xenium/raw")}
-if(!dir.exists("xenium/data")){dir.create("xenium/data")}
-
-if(!dir.exists("stomics")){dir.create("stomics")}
-if(!dir.exists("stomics/raw")){dir.create("stomics/raw")}
-if(!dir.exists("stomics/data")){dir.create("stomics/data")}
-
-```
-
-## Data Download{.tabset}
-
-### Visium
-```{r eval=F}
-
-download.file("https://cf.10xgenomics.com/samples/spatial-exp/3.0.0/Visium_V2_Human_Colon_Cancer_P2/Visium_V2_Human_Colon_Cancer_P2_filtered_feature_bc_matrix.h5", 
-              destfile = "visium/raw/Visium_V2_Human_Colon_Cancer_P2_filtered_feature_bc_matrix.h5", 
-              method = "curl")
-download.file("https://cf.10xgenomics.com/samples/spatial-exp/3.0.0/Visium_V2_Human_Colon_Cancer_P2/Visium_V2_Human_Colon_Cancer_P2_spatial.tar.gz", 
-              destfile = "visium/raw/spatial.tar.gz", 
-              method = "curl")
-
-untar("visium/raw/spatial.tar",compressed = "gzip", exdir ="visium/raw")
-
-```
-
-### STOmics
-
-```{r eval=F}
-
-# Raw data from SAW (4.6GB, optional download!)
-download.file("https://filesender.aarnet.edu.au/download.php?token=32ffcb63-24df-47e2-bdce-7341fe86082a&files_ids=23595450",
-              destfile = "stomics/raw/visualization.tar.gz")
-untar("stomics/raw/visualization.tar.gz",compressed = "gzip", exdir ="stomics/raw")
-
-# LISTA paper, processed tissue slice (4.1GB)
-download.file("https://ftp.cngb.org/pub/SciRAID/stomics/STDS0000059/Stereo-seq/DY1_D0_stereo-seq.h5ad",
-              destfile = "stomics/raw/DY1_D0_stereo-seq.h5ad")
-
-# LISTA single cell dataset (1.7GB)
-download.file("https://ftp.cngb.org/pub/SciRAID/stomics/STDS0000059/scRNAseq/Homeostasis_hepatic_cell_scRNAseq.h5ad",
-              destfile = "stomics/raw/Homeostasis_hepatic_cell_scRNAseq.h5ad")
-```
-
-## Final checks
 
 Running this chunk will let you know if the packages have been installed properly. 
 
@@ -131,5 +78,137 @@ checkSetup <- function() {
 }
 checkSetup()
 ```
+
+## Folder structure
+
+```{r, eval=F}
+# This sets the working directory for all subsequent code chunks to be run
+# to the location of this file.
+knitr::opts_knit$set(root.dir = dirname(rstudioapi::getActiveDocumentContext()$path))
+
+if(!dir.exists("visium")){dir.create("visium")}
+if(!dir.exists("visium/raw")){dir.create("visium/raw")}
+if(!dir.exists("visium/data")){dir.create("visium/data")}
+
+if(!dir.exists("xenium")){dir.create("xenium")}
+if(!dir.exists("xenium/raw")){dir.create("xenium/raw")}
+if(!dir.exists("xenium/data")){dir.create("xenium/data")}
+
+if(!dir.exists("stomics")){dir.create("stomics")}
+if(!dir.exists("stomics/raw")){dir.create("stomics/raw")}
+if(!dir.exists("stomics/data")){dir.create("stomics/data")}
+
+```
+
+## Data Download{.tabset}
+
+Please source the code block below to load a function to check integrity of the downloaded files.
+
+```{r eval=F}
+check_md5 <- function(files_expected_md5sum) {
+    # files_expected_md5sum must be a named vector where the name is the path to the file
+    # and the value is the expected md5sum
+    library(cli)
+    library(tools)
+    
+    error <- combine_ansi_styles("red", "bold")
+    
+    need_redownload <- FALSE
+    for (filename in names(files_expected_md5sum)) {
+        actual_md5sum <- md5sum(filename)
+        expected_md5sum <- files_expected_md5sum[filename]
+        if (actual_md5sum != expected_md5sum) {
+            cat(error(paste(
+                filename, "is corrupted. Actual md5sum:", actual_md5sum, "!= Expected md5sum:", expected_md5sum, "\n"
+                )
+            ))
+            
+            need_redownload <- TRUE
+        }
+    }
+    if (need_redownload) {
+        cat(error("Some files are corrupted. Please redownload"))
+    }
+}
+```
+
+### Visium
+
+```{r eval=F}
+download.file("https://cf.10xgenomics.com/samples/spatial-exp/3.0.0/Visium_V2_Human_Colon_Cancer_P2/Visium_V2_Human_Colon_Cancer_P2_filtered_feature_bc_matrix.h5", 
+              destfile = "visium/raw/Visium_V2_Human_Colon_Cancer_P2_filtered_feature_bc_matrix.h5", 
+              method = "curl")
+
+
+download.file("https://cf.10xgenomics.com/samples/spatial-exp/3.0.0/Visium_V2_Human_Colon_Cancer_P2/Visium_V2_Human_Colon_Cancer_P2_spatial.tar.gz", 
+              destfile = "visium/raw/spatial.tar.gz", 
+              method = "curl")
+```
+
+The code below will check the integrity of the downloaded files.
+If you get any red warning, please re-download the files that were found to be corrupted.
+
+```{r eval=FALSE}
+
+# check md5sum of the downloaded files.
+md5sum_str <- c(
+    "visium/raw/Visium_V2_Human_Colon_Cancer_P2_filtered_feature_bc_matrix.h5" = "0a9733cf0dfd3dfaa3b6c1c5c24bcbed",
+    "visium/raw/spatial.tar.gz" = "a32edc825ab7089fca7848fc80cd5113"
+)
+check_md5(md5sum_str)
+
+```
+
+If there are no warning from the code block above, proceed to untar the spatial.tar.gz file 
+using the code block below.
+
+```{r}
+untar("visium/raw/spatial.tar.gz", exdir ="visium/raw")
+```
+
+
+#### Optional loupe browser file
+
+The following file is optional and is only required if you would like to try out
+the demo we will be showing on how to use loupe browser to make some QC step simpler.
+
+```{r eval=FALSE}
+download.file(
+    "https://cf.10xgenomics.com/samples/spatial-exp/3.0.0/Visium_V2_Human_Colon_Cancer_P2/Visium_V2_Human_Colon_Cancer_P2_cloupe.cloupe",
+    destfile = "visium/raw/Visium_V2_Human_Colon_Cancer_P2_cloupe.cloupe",
+    method = "curl"
+)
+md5sum_str <- c(
+    "visium/raw/Visium_V2_Human_Colon_Cancer_P2_cloupe.cloupe" = "c5726e203c21a2fc3432831ea7c74252"
+)
+check_md5(md5sum_str)
+```
+
+
+### STOmics
+
+```{r eval=F}
+# LISTA paper, processed tissue slice (4.1GB)
+download.file("https://ftp.cngb.org/pub/SciRAID/stomics/STDS0000059/Stereo-seq/DY1_D0_stereo-seq.h5ad",
+              destfile = "stomics/raw/DY1_D0_stereo-seq.h5ad")
+
+# LISTA single cell dataset (1.7GB)
+download.file("https://ftp.cngb.org/pub/SciRAID/stomics/STDS0000059/scRNAseq/Homeostasis_hepatic_cell_scRNAseq.h5ad",
+              destfile = "stomics/raw/Homeostasis_hepatic_cell_scRNAseq.h5ad")
+```
+
+#### OPTIONAL raw data download from SAW
+
+File size: 4.6GB
+
+```{r eval=F}
+# Raw data from SAW (4.6GB, optional download!)
+download.file("https://filesender.aarnet.edu.au/download.php?token=32ffcb63-24df-47e2-bdce-7341fe86082a&files_ids=23595450",
+              destfile = "stomics/raw/visualization.tar.gz")
+untar("stomics/raw/visualization.tar.gz", exdir ="stomics/raw")
+```
+
+
+
 
 
