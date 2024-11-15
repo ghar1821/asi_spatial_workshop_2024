@@ -3,9 +3,13 @@ output_dir: ../docs
 navbar:
   title: ASI Spatial Workshop 2024
   left:
-  - text: Home
+  - text: "Home"
     href: index.html
-  - text: About
+  - text: "Analysis Files"
+    menu:
+      - text: "Setup"
+        href: setup.html
+  - text: "About"
     href: about.html
   - text: License
     href: license.html
