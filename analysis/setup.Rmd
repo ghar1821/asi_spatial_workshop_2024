@@ -215,6 +215,20 @@ untar("stomics/raw/visualization.tar.gz", exdir ="stomics/raw")
 ```
 
 
+### 10x Xenium
+
+Install Xenium Explorer v3.1.1 at this link:
+https://www.10xgenomics.com/support/software/xenium-explorer/downloads
+
+The code block below will download the Xenium output data.
+
+```{r eval=F}
+# Sample P5 CRC
+# This file is ~12GB so will take a few minutes to download.
+download.file("https://cf.10xgenomics.com/samples/xenium/2.0.0/Xenium_V1_Human_Colon_Cancer_P5_CRC_Add_on_FFPE/Xenium_V1_Human_Colon_Cancer_P5_CRC_Add_on_FFPE_outs.zip", 
+              destfile = "xenium/raw/Xenium_V1_Human_Colon_Cancer_P5_CRC_Add_on_FFPE_outs.zip", 
+              method = "curl")
+```
 
 
 
