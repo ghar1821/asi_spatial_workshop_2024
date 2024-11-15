@@ -7,15 +7,14 @@ editor_options:
   chunk_output_type: console
 ---
 
-The Spatial Transcriptomics Analysis Workshop will be run on the 22nd November 2024 by:
-
-- [Felix Marsh-Wakefield](ref)
-- [Cathal King](ref)
-- [Givanna Putri](https://github.com/ghar1821)
-- [John Salamon](ref)
-- [Thomas O'Neil](https://github.com/DrThomasOneil)
-
 Please ensure you follow the instructions below **prior** to attending the workshop.
+
+You can either create a new R script and copy paste the content of the code blocks
+or download [this Rmd file](https://github.com/ghar1821/asi_spatial_workshop_2024/blob/master/analysis/setup.Rmd) 
+and run each code block step by step.
+
+***Do not just blindly run the code! Make sure you read the description above each
+of the code block to understand what the code is doing before running them!***
 
 If you have any problems, please reach out to either:
 
@@ -81,6 +80,9 @@ checkSetup()
 
 ## Folder structure
 
+The code block below will create a bunch of folders in the location where
+this script is stored.
+
 ```{r, eval=F}
 # This sets the working directory for all subsequent code chunks to be run
 # to the location of this file.
@@ -102,7 +104,7 @@ if(!dir.exists("stomics/data")){dir.create("stomics/data")}
 
 ## Data Download{.tabset}
 
-Please source the code block below to load a function to check integrity of the downloaded files.
+Please source the code block below to load a function to check the integrity of the downloaded files.
 
 ```{r eval=F}
 check_md5 <- function(files_expected_md5sum) {
@@ -134,6 +136,9 @@ check_md5 <- function(files_expected_md5sum) {
 
 ### Visium
 
+The code block below will download the count matrix and spatial information
+required to load the visium data in.
+
 ```{r eval=F}
 download.file("https://cf.10xgenomics.com/samples/spatial-exp/3.0.0/Visium_V2_Human_Colon_Cancer_P2/Visium_V2_Human_Colon_Cancer_P2_filtered_feature_bc_matrix.h5", 
               destfile = "visium/raw/Visium_V2_Human_Colon_Cancer_P2_filtered_feature_bc_matrix.h5", 
@@ -146,7 +151,7 @@ download.file("https://cf.10xgenomics.com/samples/spatial-exp/3.0.0/Visium_V2_Hu
 ```
 
 The code below will check the integrity of the downloaded files.
-If you get any red warning, please re-download the files that were found to be corrupted.
+If you get any red warning, please re-download the files that were found to be corrupted using the code block above.
 
 ```{r eval=FALSE}
 
@@ -159,10 +164,10 @@ check_md5(md5sum_str)
 
 ```
 
-If there are no warning from the code block above, proceed to untar the spatial.tar.gz file 
+If there are no warning from the code block above, proceed to untar the `spatial.tar.gz` file 
 using the code block below.
 
-```{r}
+```{r eval=FALSE}
 untar("visium/raw/spatial.tar.gz", exdir ="visium/raw")
 ```
 

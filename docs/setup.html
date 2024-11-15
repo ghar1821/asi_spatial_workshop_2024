@@ -524,15 +524,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree9ca58ba9a60f9cd243cae3c92fe87a1407fb1f6btargetblank9ca58baa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree5b7ca36572a1aa8952c61b168d52fdc08d7ba8e5targetblank5b7ca36a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/9ca58ba9a60f9cd243cae3c92fe87a1407fb1f6b" target="_blank">9ca58ba</a>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/5b7ca36572a1aa8952c61b168d52fdc08d7ba8e5" target="_blank">5b7ca36</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree9ca58ba9a60f9cd243cae3c92fe87a1407fb1f6btargetblank9ca58baa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree5b7ca36572a1aa8952c61b168d52fdc08d7ba8e5targetblank5b7ca36a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -542,7 +542,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/9ca58ba9a60f9cd243cae3c92fe87a1407fb1f6b" target="_blank">9ca58ba</a>.
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/5b7ca36572a1aa8952c61b168d52fdc08d7ba8e5" target="_blank">5b7ca36</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -572,6 +572,7 @@ Untracked files:
     Untracked:  analysis/visium_ffpe_prostate.Rmd.bk
 
 Unstaged changes:
+    Modified:   analysis/index.Rmd
     Modified:   analysis/setup.Rmd
     Modified:   analysis/visium_crc.Rmd
 
@@ -618,6 +619,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/5b7ca36572a1aa8952c61b168d52fdc08d7ba8e5/analysis/setup.Rmd" target="_blank">5b7ca36</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-15
+</td>
+<td>
+update setup
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/ghar1821/asi_spatial_workshop_2024/5b7ca36572a1aa8952c61b168d52fdc08d7ba8e5/docs/setup.html" target="_blank">5b7ca36</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-15
+</td>
+<td>
+update setup
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -744,17 +779,15 @@ Add tutorials for visium
 </div>
 </div>
 </div>
-<p>The Spatial Transcriptomics Analysis Workshop will be run on the 22nd
-November 2024 by:</p>
-<ul>
-<li><a href="ref">Felix Marsh-Wakefield</a></li>
-<li><a href="ref">Cathal King</a></li>
-<li><a href="https://github.com/ghar1821">Givanna Putri</a></li>
-<li><a href="ref">John Salamon</a></li>
-<li><a href="https://github.com/DrThomasOneil">Thomas O’Neil</a></li>
-</ul>
 <p>Please ensure you follow the instructions below
 <strong>prior</strong> to attending the workshop.</p>
+<p>You can either create a new R script and copy paste the content of
+the code blocks or download <a
+href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/master/analysis/setup.Rmd">this
+Rmd file</a> and run each code block step by step.</p>
+<p><strong><em>Do not just blindly run the code! Make sure you read the
+description above each of the code block to understand what the code is
+doing before running them!</em></strong></p>
 <p>If you have any problems, please reach out to either:</p>
 <ul>
 <li><a href="mailto:felix.marsh-wakefield@sydney.edu.au">Felix
@@ -813,6 +846,8 @@ checkSetup()</code></pre>
 </div>
 <div id="folder-structure" class="section level2">
 <h2>Folder structure</h2>
+<p>The code block below will create a bunch of folders in the location
+where this script is stored.</p>
 <pre class="r"><code># This sets the working directory for all subsequent code chunks to be run
 # to the location of this file.
 knitr::opts_knit$set(root.dir = dirname(rstudioapi::getActiveDocumentContext()$path))
@@ -831,7 +866,7 @@ if(!dir.exists(&quot;stomics/data&quot;)){dir.create(&quot;stomics/data&quot;)}<
 </div>
 <div id="data-download" class="section level2 tabset">
 <h2 class="tabset">Data Download</h2>
-<p>Please source the code block below to load a function to check
+<p>Please source the code block below to load a function to check the
 integrity of the downloaded files.</p>
 <pre class="r"><code>check_md5 &lt;- function(files_expected_md5sum) {
     # files_expected_md5sum must be a named vector where the name is the path to the file
@@ -860,6 +895,8 @@ integrity of the downloaded files.</p>
 }</code></pre>
 <div id="visium" class="section level3">
 <h3>Visium</h3>
+<p>The code block below will download the count matrix and spatial
+information required to load the visium data in.</p>
 <pre class="r"><code>download.file(&quot;https://cf.10xgenomics.com/samples/spatial-exp/3.0.0/Visium_V2_Human_Colon_Cancer_P2/Visium_V2_Human_Colon_Cancer_P2_filtered_feature_bc_matrix.h5&quot;, 
               destfile = &quot;visium/raw/Visium_V2_Human_Colon_Cancer_P2_filtered_feature_bc_matrix.h5&quot;, 
               method = &quot;curl&quot;)
@@ -870,7 +907,7 @@ download.file(&quot;https://cf.10xgenomics.com/samples/spatial-exp/3.0.0/Visium_
               method = &quot;curl&quot;)</code></pre>
 <p>The code below will check the integrity of the downloaded files. If
 you get any red warning, please re-download the files that were found to
-be corrupted.</p>
+be corrupted using the code block above.</p>
 <pre class="r"><code># check md5sum of the downloaded files.
 md5sum_str &lt;- c(
     &quot;visium/raw/Visium_V2_Human_Colon_Cancer_P2_filtered_feature_bc_matrix.h5&quot; = &quot;0a9733cf0dfd3dfaa3b6c1c5c24bcbed&quot;,
@@ -878,11 +915,8 @@ md5sum_str &lt;- c(
 )
 check_md5(md5sum_str)</code></pre>
 <p>If there are no warning from the code block above, proceed to untar
-the spatial.tar.gz file using the code block below.</p>
+the <code>spatial.tar.gz</code> file using the code block below.</p>
 <pre class="r"><code>untar(&quot;visium/raw/spatial.tar.gz&quot;, exdir =&quot;visium/raw&quot;)</code></pre>
-<pre><code>Warning in untar(&quot;visium/raw/spatial.tar.gz&quot;, exdir = &quot;visium/raw&quot;):
-&#39;/usr/bin/tar -xf &#39;visium/raw/spatial.tar.gz&#39; -C &#39;visium/raw&#39;&#39; returned error
-code 1</code></pre>
 <div id="optional-loupe-browser-file" class="section level4">
 <h4>Optional loupe browser file</h4>
 <p>The following file is optional and is only required if you would like
