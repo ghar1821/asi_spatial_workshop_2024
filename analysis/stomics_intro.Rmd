@@ -361,17 +361,13 @@ spe
 ```{r}
 library(ggspavis)
 library(viridis)
-# Get norm counts 
-plotSpots(spe, annotate = "annotation", pal=viridis(2))
+# Plot the current annotation
+# These were created using AddModuleScore in Seurat with lists of genes.. 
+# https://github.com/haoshijie13/LISTA/blob/main/00.cut_zonation_layer_and_pathway_module_score.R
+plotSpots(spe[,spe$annotation == 2], annotate = "annotation", pal="blue")
+
+plotSpots(spe[,spe$annotation == 5], annotate = "annotation", pal="blue")
+
+ggplot
 ```
-
-```{r}
-library(ggspavis)
-library(viridis)
-
-# Get norm counts 
-# TODO: this isn't really set up correctly...
-plotSpots(spe, annotate="cluster", pal=viridis(2))
-```
-
 

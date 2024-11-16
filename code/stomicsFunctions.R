@@ -18,8 +18,8 @@ convertCSR <- function(matrix_data) {
 }
 
 # h5ad can have dense matrices already, we'll test if we actually need to convert here
-h5adMatrixLoad <- function(path, sparse = TRUE) {
-  data <- h5read(path, "X", read.attributes = TRUE)
+h5adMatrixLoad <- function(path, group = "X", sparse = TRUE) {
+  data <- h5read(path, group, read.attributes = TRUE)
   if (is.matrix(data)) {
     # Anndata matrix uses columns for features, opposite of R
     message("Matrix already in dense format")
@@ -38,29 +38,68 @@ h5adMatrixLoad <- function(path, sparse = TRUE) {
   return(data)
 }
 
-# You can pass the anndata obs or var to this as data to get a data.frame back
-# It won't try and do any data conversion, so you might have with chr dtypes
-anndataDataframe <- function(data) {
-  index <- data$`_index`
+anndataDataframe <- function(path, group) {
+
+  data <- h5read(path, group, read.attributes = TRUE)
+
+  if (!"_index" %in% names(data)) {
+    warning("No _index found in data, using sequential row names")
+    index <- seq_len(length(data[[1]]))
+  } else {
+    index <- data$`_index`
+  }
 
   processLists <- function(item) {
-    ret <- if(is.list(item) && all(c("categories", "codes") %in% names(item))) {
-      colFactor <- factor(item$codes)
-      levels(colFactor) <- item$categories
-      colFactor
+    if (is.list(item)) {
+      if (all(c("categories", "codes") %in% names(item))) {
+        # Handle categorical data
+        colFactor <- factor(item$codes + 1)
+        levels(colFactor) <- item$categories
+        return(colFactor)
+      } else if ("dtype" %in% names(item)) {
+        # Handle typed data
+        switch(item$dtype,
+               "int32" = as.integer(item$values),
+               "int64" = as.integer(item$values),
+               "float32" = as.numeric(item$values),
+               "float64" = as.numeric(item$values),
+               "bool" = as.logical(item$values),
+               item$values  # default case
+        )
+      } else {
+        warning("Unknown list structure encountered")
+        return(unlist(item))
+      }
     } else {
-      as.numeric(item)
+      # Preserve numeric types
+      if (is.numeric(item)) {
+        storage.mode(item) <- if (all(item == floor(item))) "integer" else "double"
+      }
+      return(item)
     }
-    return(ret)
   }
-  # Convert relevant data to factors
+
+  # Process each column while maintaining structure
   listdata <- lapply(data, processLists)
-  dataframe <- data.frame(Reduce(cbind, listdata), row.names = index)
-  colnames(dataframe) <- names(listdata)
-  # remove index
-  dataframe$`_index` <- NULL
-  # Remove redundant x and y if present
-  dataframe$x <- NULL
-  dataframe$y <- NULL
+
+  # Create empty dataframe with correct number of rows
+  n_rows <- length(index)
+  dataframe <- data.frame(row.names = index,
+                          check.names = FALSE,  # Preserve column names as-is
+                          stringsAsFactors = FALSE)  # Don't auto-convert strings to factors
+
+  # Add columns one by one to preserve types and attributes
+  excluded_cols <- c("_index", "x", "y")
+  for (col_name in names(listdata)) {
+    if (!col_name %in% excluded_cols) {
+      dataframe[[col_name]] <- listdata[[col_name]]
+    }
+  }
+
+  # Add attributes for metadata if present
+  if (!is.null(attr(data, "h5annotations"))) {
+    attr(dataframe, "h5annotations") <- attr(data, "h5annotations")
+  }
+
   return(dataframe)
 }

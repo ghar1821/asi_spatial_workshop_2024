@@ -1,0 +1,77 @@
+
+# Introduction
+
+## Stereo-seq background 
+
+### Useful links
+
+- [Publication](https://doi.org/10.1016/j.cell.2022.04.003)
+- [Demo data](https://en.stomics.tech/resources/demo-data/list.html)
+- [Product documents](https://en.stomics.tech/resources/documents/list.html)
+- [Validated tissue list](https://en.stomics.tech/resource/stomics-validated-tissue-list?lang=en)
+
+## How it compares
+
+
+
+# Software ecosystem 
+
+## SAW
+
+STOmics has an analysis pipeline called the Stereo-seq Analysis Workflow (SAW).
+SAW is a command-line tool which is more or less the STOmics equivalent of Spaceranger.
+
+### Useful links
+
+- [Download page](https://en.stomics.tech/products/stomics-software/stomics-offline-software/list.html)
+- [Documentation](https://stereotoolss-organization.gitbook.io/saw-user-manual-v8.1)
+- [Github](https://github.com/STOmics/SAW)
+- [Publication](https://doi.org/10.46471/gigabyte.111)
+
+### Inputs and outputs
+
+
+
+### Report
+
+
+
+## StereoMap
+
+If we want to take a closer look than the report, but don't want to dive into
+writing code, we can open up our data in StereoMap.
+
+StereoMap is an interactive tool to examine your Stereo-seq data (being more or
+less the STOmics equivalent of Loupe browser).
+
+### Useful links
+
+- [Download page](https://en.stomics.tech/products/stomics-software/stomics-offline-software/list.html)
+- [Documentation](https://stereotoolss-organization.gitbook.io/stereomap-user-manual-v4.1)
+
+
+## StereoPy
+
+[StereoPy](https://stereopy.readthedocs.io/en/latest/) is a Python library 
+designed to work with Stereo-seq data. Internally it wraps 
+
+StereoPy is used internally by SAW for analysis, and is the easiest way to perform
+many analysis tasks with Stereo-seq data.
+
+### Exporting with StereoPy
+
+StereoPy plays well with other Python libraries, due to being based internally
+on libraries including as [scanpy](https://scanpy.readthedocs.io/en/stable/), 
+[squidpy](https://squidpy.readthedocs.io/en/stable/) and 
+[anndata](https://anndata.readthedocs.io/en/stable/).
+
+Getting data into a format suitable for analysis in R is more tricky.
+The page on [format conversion](https://stereopy.readthedocs.io/en/latest/Tutorials/Format_Conversion.html)
+shows an example of how you can convert a .h5ad (anndata file) to a Seurat object,
+for example.
+
+### Useful links
+
+- [Documentation](https://stereopy.readthedocs.io/en/latest/)
+- [Github](https://github.com/STOmics/stereopy)
+- [Paper](https://www.biorxiv.org/content/10.1101/2023.12.04.569485v1)

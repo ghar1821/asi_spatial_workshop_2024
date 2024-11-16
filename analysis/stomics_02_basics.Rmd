@@ -1,0 +1,137 @@
+
+```{r}
+library(rhdf5)
+library(SpatialExperiment)
+source("code/stomicsFunctions.R")
+```
+
+# Loading data into R
+
+One of the first hurdles to analyse STOmics data in R getting it into a suitable 
+format. The outputs are all [anndata](https://anndata.readthedocs.io/en/stable/)
+files, and we ideally would like either a Seurat object or SpatialExperiment
+object.
+
+## Format hell
+
+SPE, SCE, SFE, Seurat, Anndata
+
+## Options for conversion
+
+Unfortunately, there are many options, none of them quite perfect. Here are the
+ones that I know of:
+
+- Use the StereoPy R script to create a Seurat object [format conversion](https://stereopy.readthedocs.io/en/latest/Tutorials/Format_Conversion.html)
+  - This method is pretty reliable, but it's a command line script rather than
+    a library, and only gives you Seurat objects
+- Use a `reticulate` based package (calls into Python from R)
+  - For example, [`anndata` from CRAN](https://cran.r-project.org/web/packages/anndata/readme/README.html)
+  - This gets you the data, but you still have to convert it somehow
+- Use [`schard`](https://github.com/cellgeni/schard)
+  - This is a nice little library I've only recently discovered
+  - It will get you most of the way, but can't quite deal with Stereo-seq h5ad quirks yet
+- Use some custom `rhdf5` code 
+  - This is what I've done for this tutorial. It's probably good to understand how the formats differ.
+
+For this workshop, I've put all the loading code into an external script, `stomicsFunctions.R`.
+You don't need to worry too much about the details, and this should work with the current versions
+of SAW. 
+
+## Inspecting our files
+
+It's useful to be able to inspect h5ad files to verify their structure.
+Let's take a look at the SAW outputs:
+
+
+### gef 
+
+The gef files contain the original expression matrix. This is difficult to process
+in R.
+
+```{r}
+
+# Note, this is only in the optional downloads. Don't worry if you didn't download it.
+input_file <- "stomics/raw/visualization/C04042E3.tissue.gef"
+
+# We can directly query bins. However, it's difficult to convert this into a usable format.
+counts <- h5read(input_file, "/geneExp/bin50/gene")
+
+# Sort dataset
+counts[order(counts$count, decreasing=T),]
+```
+
+### h5ad
+
+The h5ad files are AnnData format, and contains a count matrix as well.
+
+## SpatialExperiment
+
+```{r}
+# We can free up memory by removing those counts
+rm(counts)
+
+# Let's load an h5ad instead
+h5ad_file <- "stomics/raw/visualization/C04042E3.bin50_1.0.h5ad"
+
+# Read in the matrix data (CSR format)
+matrix_data <- h5adMatrixLoad(h5ad_file)
+
+class(matrix_data)
+```
+
+
+```{r}
+# Read in row and col data (as per anndata format)
+rowdata <- anndataDataframe(h5ad_file, "var")
+coldata <- anndataDataframe(h5ad_file, "obs")
+
+
+# Let's explore the umap and pca, and recreate it
+
+# also do kmeans
+
+#umap <- h5adMatrixLoad(h5ad_file, "/obsm/X_umap")
+```
+
+```{r}
+# Read in spatial information, convert to the way SpatialExperiment prefers
+spatial_coords <- h5read(h5ad_file, "/obsm/spatial")
+spatial_coords <- data.matrix(data.frame(
+  x=spatial_coords[1,],
+  y=spatial_coords[2,],
+  row.names = rownames(coldata)
+))
+
+spatial_coords
+```
+
+
+```{r}
+h5ad_file <- "stomics/raw/DY1_D0_stereo-seq_compress.h5ad"
+#h5ad_file <- "stomics/raw/C04042E3.bin50_1.0.h5ad"
+
+# Read in the matrix data (CSR format)
+matrix_data <- h5adMatrixLoad(h5ad_file)
+
+spatial_coords <- h5read(h5ad_file, "/obsm/spatial")
+spatial_coords <- data.matrix(data.frame(
+  x=spatial_coords[1,],
+  y=spatial_coords[2,],
+  row.names = rownames(coldata)
+))
+rowdata <- anndataDataframe(h5ad_file, "var")
+coldata <- anndataDataframe(h5ad_file, "obs")
+
+spe <- SpatialExperiment(
+  assays = list(counts = matrix_data),
+  colData = coldata, # spatial bins
+  rowData = rowdata, # features
+  spatialCoords = spatial_coords
+)
+```
+
+## Basic QC
+
+
+
+## Basic processing
