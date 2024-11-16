@@ -1,4 +1,5 @@
 library(rhdf5)
+library(Matrix)
 
 # Scipy's CSR format can be read into a dgCMatrix with some slight adjustments
 convertCSR <- function(matrix_data) {

@@ -1,7 +1,9 @@
 
-```{r}
+```{r results = 'hide'}
 library(rhdf5)
 library(SpatialExperiment)
+library(ggplot2)
+library(patchwork) # combine multiple plots
 source("code/stomicsFunctions.R")
 ```
 
@@ -46,23 +48,24 @@ Let's take a look at the SAW outputs:
 ### gef 
 
 The gef files contain the original expression matrix. This is difficult to process
-in R.
+in R. This is just an HDF5 file, so you can inspect it with `h5ls`
 
 ```{r}
 
 # Note, this is only in the optional downloads. Don't worry if you didn't download it.
 input_file <- "stomics/raw/visualization/C04042E3.tissue.gef"
 
-# We can directly query bins. However, it's difficult to convert this into a usable format.
+# We can look inside the gef. However, it's not in a format we can directly use.
 counts <- h5read(input_file, "/geneExp/bin50/gene")
 
-# Sort dataset
+# We can just sort through the features (noting the prevalence of mitochondrial genes).
 counts[order(counts$count, decreasing=T),]
 ```
 
 ### h5ad
 
-The h5ad files are AnnData format, and contains a count matrix as well.
+The h5ad files are AnnData format, and contain a count matrix in a usable format.
+They also contain other analysis outputs created by SAW.
 
 ## SpatialExperiment
 
@@ -74,23 +77,30 @@ rm(counts)
 h5ad_file <- "stomics/raw/visualization/C04042E3.bin50_1.0.h5ad"
 
 # Read in the matrix data (CSR format)
-matrix_data <- h5adMatrixLoad(h5ad_file)
+matrix_data <- h5adMatrixLoad(h5ad_file, "/raw/X")
 
-class(matrix_data)
+# Check shape of matrix
+dim(matrix_data)
 ```
 
 
 ```{r}
 # Read in row and col data (as per anndata format)
 rowdata <- anndataDataframe(h5ad_file, "var")
+rowdata
+```
+```{r}
 coldata <- anndataDataframe(h5ad_file, "obs")
+coldata
+```
 
+We can see that the umap and PCA embeddings are stored here too:
 
+```{r}
 # Let's explore the umap and pca, and recreate it
+umap <- h5adMatrixLoad(h5ad_file, "/obsm/X_umap", sparse=F)
+umap <- data.frame(umap1 = umap[1,], umap2 = umap[2,], row.names = rownames(coldata))
 
-# also do kmeans
-
-#umap <- h5adMatrixLoad(h5ad_file, "/obsm/X_umap")
 ```
 
 ```{r}
@@ -101,37 +111,66 @@ spatial_coords <- data.matrix(data.frame(
   y=spatial_coords[2,],
   row.names = rownames(coldata)
 ))
-
-spatial_coords
 ```
 
 
+
 ```{r}
-h5ad_file <- "stomics/raw/DY1_D0_stereo-seq_compress.h5ad"
-#h5ad_file <- "stomics/raw/C04042E3.bin50_1.0.h5ad"
-
-# Read in the matrix data (CSR format)
-matrix_data <- h5adMatrixLoad(h5ad_file)
-
-spatial_coords <- h5read(h5ad_file, "/obsm/spatial")
-spatial_coords <- data.matrix(data.frame(
-  x=spatial_coords[1,],
-  y=spatial_coords[2,],
-  row.names = rownames(coldata)
-))
-rowdata <- anndataDataframe(h5ad_file, "var")
-coldata <- anndataDataframe(h5ad_file, "obs")
-
 spe <- SpatialExperiment(
   assays = list(counts = matrix_data),
+  reducedDims = list(umap = umap),
   colData = coldata, # spatial bins
   rowData = rowdata, # features
   spatialCoords = spatial_coords
 )
 ```
 
-## Basic QC
+
+Some basic QC:
+
+```{r}
+spe
+
+```
 
 
+```{r}
+ggplot(spatialCoords(spe), aes(x, y, color = colData(spe)$total_counts)) +
+  geom_point(size = 0.1) +
+  theme(aspect.ratio=1) +
+  scale_color_viridis_c() +
+  labs(
+    title = "Raw data",
+    color = "total counts"
+  )
+```
 
-## Basic processing
+Let's try plotting the UMAP. It'll hopefully look like the one we see in the report.
+
+```{r}
+# Let's plot the UMAP
+spatial_plot <- ggplot(spatialCoords(spe), aes(x, y, color = colData(spe)$leiden)) +
+  geom_point(size = 0.1) +
+  theme(aspect.ratio=1) +
+  scale_color_discrete(guide = "none") +
+  ggtitle("Spatial plot")
+
+umap_plot <- ggplot(reducedDims(spe)$umap, aes(umap1, umap2, color = colData(spe)$leiden)) +
+  geom_point(size = 0.1) +
+  theme(aspect.ratio=1) +
+  scale_color_discrete() +
+  labs(
+    title = "UMAP",
+    color = "Leiden clusters"
+  )
+
+spatial_plot + umap_plot
+```
+
+## TODO: Loading geoJSON (should prebake some), then psuedobulk diffexp 
+
+`s
+
+(you can use SAW)
+
+- https://lmweber.org/PrinciplesSTA/devel/pages/seq-differential-expression.html
