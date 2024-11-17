@@ -11,6 +11,7 @@ editor_options:
 
 ```{r}
 library(Seurat)
+library(tiff)
 
 # for plotting
 library(ggplot2)

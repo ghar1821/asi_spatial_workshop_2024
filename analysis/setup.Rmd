@@ -39,7 +39,7 @@ cran_packages <- c(
 install.packages(cran_packages)
 
 bioc_packages <- c(
-  "glmGamPoi", "scater", "scran" "SpatialExperiment", "ggspavis", "scran",
+  "glmGamPoi", "scater", "scran", "SpatialExperiment", "ggspavis", "scran",
   "nnSVG", "SpatialFeatureExperiment", "Voyager", "RBioFormats", "BiocParallel",
   "bluster", "EBImage"
 )
