@@ -31,7 +31,7 @@ the code block below.
 ```{r, eval=F}
 
 cran_packages <- c(
-  "BiocManager", "Seurat", "ggplot2", "scales", "patchwork", "qs",
+  "BiocManager", "Seurat", "ggplot2", "scales", "patchwork", "qs", "pheatmap",
   "hdf5r", "viridis", "devtools", "cli", "fs", "sf", "terra", "scales", "plotly"
 )
 

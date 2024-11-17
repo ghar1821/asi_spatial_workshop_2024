@@ -167,10 +167,119 @@ umap_plot <- ggplot(reducedDims(spe)$umap, aes(umap1, umap2, color = colData(spe
 spatial_plot + umap_plot
 ```
 
-## TODO: Loading geoJSON (should prebake some), then psuedobulk diffexp 
+## Loading geoJSON 
 
-`s
+TODO: prebake some geojson files
 
-(you can use SAW)
+```{r}
+library(sf)
+geojson <- "stomics/raw/C04042E3_20241117151457.lasso.geojson"
+sf_object <- read_sf(geojson, crs = NA)
+polygons <- st_collection_extract(sf_object)
+polygons$sample_id <- "sample01"
+
+# Can just plot these normally too
+# plot(sf_object$geometry, col = "grey")
+
+ggplot(polygons) +
+  geom_sf(fill = "#69b3a2", color = "white") +
+  coord_sf(datum=NA) +
+  theme_void()
+```
+
+
+```{r}
+
+# The polygons I get from StereoMap aren't closed
+# This causes issues with some functions that expect this
+# So this just modifies a simple feature collection with a polygon to close it
+closePolygon <- function(poly) {
+  # Extract coordinates
+  xy <- st_coordinates(poly)[,1:2]
+  # Append first xy pair to end (closing the polygon)
+  xy_fix <- rbind(xy, xy[1,])
+  new_poly <- st_polygon(list(xy_fix))
+  geom <- st_sfc(new_poly)
+  sf <- st_sf(
+    sample_id=poly$sample_id,
+    geometry <- geom
+  )
+  return(sf)
+}
+
+region_1 <- closePolygon(polygons[1,])
+region_2 <- closePolygon(polygons[2,])
+
+
+# Make a test region
+
+st <- 10000
+si <- 5000
+en <- st + si
+geom <- st_polygon(list(matrix(
+  c(st, st,  # Bottom-left
+    en, st,  # Bottom-right
+    en, en,  # Top-right
+    st, en,  # Top-left
+    st, st), # Back to Bottom-left to close
+  ncol = 2, byrow = TRUE
+)))
+
+polygon_data <- data.frame(
+  sample_id = "sample01",                 # ID column
+  name = "Test Polygon"   # Example attribute
+)
+
+# Combine the data frame with the geometry to create an sf object
+polygon_sf <- st_sf(polygon_data, geometry = st_sfc(geom))
+
+```
+
+Next, let's upgrade to a SpatialFeatureExperiment, which allows us to use these geometries.
+
+```{r}
+library(SpatialFeatureExperiment)
+sfe <- toSpatialFeatureExperiment(spe, 
+                                    annotGeometries = list(
+                                      region_1 = region_1
+                                    ),
+                                    spotDiameter = 0.5 # Somewhat innacurate to do this..
+                                  )
+
+crop(sfe, polygon_sf)
+```
+
+```{r}
+ggplot() +
+  geom_point(data = spatialCoords(spe), aes(x, y, color = colData(spe)$leiden)) +
+  geom_sf(data = annotGeometry(sfe, "region_1"), fill = NA) +
+  #geom_sf(data = annotGeometry(sfe, "region_2"), fill = NA) +
+  coord_sf(datum=NA) +
+  scale_color_discrete() +
+  theme(aspect.ratio=1)
+```
+
+
+
+```{r}
+cropped <- crop(sfe, polygon_sf)
+cropped
+
+ggplot() +
+  geom_point(data = spatialCoords(cropped), aes(x, y, color = colData(cropped)$leiden)) +
+  scale_color_discrete() +
+  theme(aspect.ratio=1)
+```
+```{r}
+# Why won't my outlines work
+
+```
+
+
+## Differential expression
+
+
+
+(you can also use SAW)
 
 - https://lmweber.org/PrinciplesSTA/devel/pages/seq-differential-expression.html
