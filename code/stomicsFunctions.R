@@ -104,3 +104,24 @@ anndataDataframe <- function(path, group) {
 
   return(dataframe)
 }
+
+# The polygons I get from StereoMap aren't closed
+# This causes issues with some functions that expect this
+# So this just modifies a simple feature collection with a polygon to close it
+closePolygon <- function(poly) {
+  # Extract coordinates
+  xy <- st_coordinates(poly)[,1:2]
+  # Append first xy pair to end (closing the polygon)
+  xy_fix <- rbind(xy, xy[1,])
+  new_poly <- st_polygon(list(xy_fix))
+  geom <- st_sfc(new_poly)
+  polygon_data <- data.frame(
+    sample_id = poly$sample_id,
+    name = "Polygon"
+  )
+  sf <- st_sf(
+    polygon_data,
+    geometry = geom
+  )
+  return(sf)
+}

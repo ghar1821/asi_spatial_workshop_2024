@@ -1,9 +1,24 @@
 
 ```{r results = 'hide'}
-library(rhdf5)
+# object for holding spatial / single cell data
 library(SpatialExperiment)
-library(ggplot2)
-library(patchwork) # combine multiple plots
+library(SpatialFeatureExperiment)
+
+# read HDF5 archives
+library(rhdf5)
+
+# single-cell tools
+library(scran) 
+library(scater) 
+
+# plotting
+library(ggplot2) 
+library(patchwork)
+
+# geospatial simple features
+library(sf)
+
+# custom functions
 source("code/stomicsFunctions.R")
 ```
 
@@ -85,23 +100,27 @@ dim(matrix_data)
 
 
 ```{r}
-# Read in row and col data (as per anndata format)
+# in anndata features (here, genes) are stored as "var", and are columns
 rowdata <- anndataDataframe(h5ad_file, "var")
 rowdata
 ```
 ```{r}
+# in anndata observations (here, spots) are stored as "obs", and are rows
 coldata <- anndataDataframe(h5ad_file, "obs")
 coldata
 ```
 
-We can see that the umap and PCA embeddings are stored here too:
+We can see that the umap and PCA embeddings are stored under /obsm:
 
 ```{r}
-# Let's explore the umap and pca, and recreate it
+# h5ls(h5ad_file)
+
+# Let's extract the umap
 umap <- h5adMatrixLoad(h5ad_file, "/obsm/X_umap", sparse=F)
 umap <- data.frame(umap1 = umap[1,], umap2 = umap[2,], row.names = rownames(coldata))
 
 ```
+Importantly, the actual spatial coordinates are also stored here:
 
 ```{r}
 # Read in spatial information, convert to the way SpatialExperiment prefers
@@ -113,7 +132,7 @@ spatial_coords <- data.matrix(data.frame(
 ))
 ```
 
-
+Putting it all together, we can create a SpatialExperiment object:
 
 ```{r}
 spe <- SpatialExperiment(
@@ -125,14 +144,14 @@ spe <- SpatialExperiment(
 )
 ```
 
-
-Some basic QC:
+Now we can use any tools compatible with this ecosystem.
+For example, some basic quick log normalisation:
 
 ```{r}
-spe
-
+spe <- logNormCounts(spe)
 ```
 
+We can plot with ggplot:
 
 ```{r}
 ggplot(spatialCoords(spe), aes(x, y, color = colData(spe)$total_counts)) +
@@ -145,7 +164,8 @@ ggplot(spatialCoords(spe), aes(x, y, color = colData(spe)$total_counts)) +
   )
 ```
 
-Let's try plotting the UMAP. It'll hopefully look like the one we see in the report.
+Let's try plotting the UMAP embeddings side by side with the spatial plot. 
+We can also highlight the Leiden clusters.
 
 ```{r}
 # Let's plot the UMAP
@@ -169,10 +189,10 @@ spatial_plot + umap_plot
 
 ## Loading geoJSON 
 
-TODO: prebake some geojson files
+In StereoMap (and other spatial software), we can annotate regions and export
+as GeoJSON. The `sf` library can be used to read these into R.
 
 ```{r}
-library(sf)
 geojson <- "stomics/raw/C04042E3_20241117151457.lasso.geojson"
 sf_object <- read_sf(geojson, crs = NA)
 polygons <- st_collection_extract(sf_object)
@@ -186,32 +206,19 @@ ggplot(polygons) +
   coord_sf(datum=NA) +
   theme_void()
 ```
-
+Now I'm just going to clean these up slightly (the polygons aren't closed).
 
 ```{r}
-
-# The polygons I get from StereoMap aren't closed
-# This causes issues with some functions that expect this
-# So this just modifies a simple feature collection with a polygon to close it
-closePolygon <- function(poly) {
-  # Extract coordinates
-  xy <- st_coordinates(poly)[,1:2]
-  # Append first xy pair to end (closing the polygon)
-  xy_fix <- rbind(xy, xy[1,])
-  new_poly <- st_polygon(list(xy_fix))
-  geom <- st_sfc(new_poly)
-  sf <- st_sf(
-    sample_id=poly$sample_id,
-    geometry <- geom
-  )
-  return(sf)
-}
 
 region_1 <- closePolygon(polygons[1,])
 region_2 <- closePolygon(polygons[2,])
 
+```
 
-# Make a test region
+In case that didn't work, here's an example of generating a polygonal region.
+
+```{r}
+# Make a test square region using the sf library
 
 st <- 10000
 si <- 5000
@@ -226,60 +233,104 @@ geom <- st_polygon(list(matrix(
 )))
 
 polygon_data <- data.frame(
-  sample_id = "sample01",                 # ID column
-  name = "Test Polygon"   # Example attribute
+  sample_id = "sample01",
+  name = "Square"
 )
 
-# Combine the data frame with the geometry to create an sf object
 polygon_sf <- st_sf(polygon_data, geometry = st_sfc(geom))
 
 ```
 
-Next, let's upgrade to a SpatialFeatureExperiment, which allows us to use these geometries.
+Next, let's upgrade to a [SpatialFeatureExperiment](https://www.bioconductor.org/packages/release/bioc/vignettes/SpatialFeatureExperiment/inst/doc/SFE.html),
+which allows us to make use of these geometries.
 
 ```{r}
-library(SpatialFeatureExperiment)
+# Our SpatialExperiment can just be with some region annotations.
 sfe <- toSpatialFeatureExperiment(spe, 
                                     annotGeometries = list(
-                                      region_1 = region_1
+                                      region_1 = region_1,
+                                      region_2 = region_2
                                     ),
-                                    spotDiameter = 0.5 # Somewhat innacurate to do this..
                                   )
-
-crop(sfe, polygon_sf)
+sfe
 ```
+Let's plot those regions:
 
 ```{r}
 ggplot() +
   geom_point(data = spatialCoords(spe), aes(x, y, color = colData(spe)$leiden)) +
   geom_sf(data = annotGeometry(sfe, "region_1"), fill = NA) +
-  #geom_sf(data = annotGeometry(sfe, "region_2"), fill = NA) +
+  geom_sf(data = annotGeometry(sfe, "region_2"), fill = NA) +
   coord_sf(datum=NA) +
   scale_color_discrete() +
   theme(aspect.ratio=1)
 ```
 
-
+Sometimes we might want to extract those regions out into separate objects, which
+we can do with the `crop` function:
 
 ```{r}
-cropped <- crop(sfe, polygon_sf)
-cropped
+sfe_r1 <- crop(sfe, annotGeometry(sfe, "region_1"))
+sfe_r2 <- crop(sfe, annotGeometry(sfe, "region_2"))
 
-ggplot() +
-  geom_point(data = spatialCoords(cropped), aes(x, y, color = colData(cropped)$leiden)) +
-  scale_color_discrete() +
+r1_plot <- ggplot() +
+  geom_point(data = spatialCoords(sfe_r1), aes(x, y, color = colData(sfe_r1)$leiden)) +
+  scale_color_discrete(guide = "none") +
   theme(aspect.ratio=1)
-```
-```{r}
-# Why won't my outlines work
 
-```
+r2_plot <- ggplot() +
+  geom_point(data = spatialCoords(sfe_r2), aes(x, y, color = colData(sfe_r2)$leiden)) +
+  scale_color_discrete(guide = "none") +
+  theme(aspect.ratio=1)
 
+r1_plot + r2_plot
+```
 
 ## Differential expression
 
+While SAW does have a feature to perform differential expression analysis with
+these regions, it's nice to be able to do the same analysis in R.
 
+First, let's just do a simple t-test using the `findMarkers` function:
 
-(you can also use SAW)
+```{r}
 
-- https://lmweber.org/PrinciplesSTA/devel/pages/seq-differential-expression.html
+# Create a "region" group for analysis
+colData(sfe)$region <- 0 # 0 will be default, no region
+colData(sfe)$region[annotPred(sfe, annotGeometryName = "region_1")] <- 1
+colData(sfe)$region[annotPred(sfe, annotGeometryName = "region_2")] <- 2
+
+# Subset the sfe 
+sfe_regions <- sfe[, colData(sfe)$region != 0]
+
+# Test for marker genes
+markers <- findMarkers(sfe_regions, test = "t", groups = sfe_regions$region)
+
+# Show table
+markers[[1]]
+```
+
+We might then want to plot the expression of a selected gene in these regions:
+
+```{r}
+# check
+# hist(colSums(assays(sfe_r1[rownames(markers[[1]])[1], ])$counts))
+
+# Function to return the counts of a particular gene
+geneCount <- function(spe_obj, gene, assay="counts") {
+  m <- assays(spe_obj)[[assay]]
+  return( m[gene,] )
+}
+
+gene <- rownames(markers[[1]])[1]
+
+ggplot() +
+  geom_point(data = spatialCoords(sfe_regions), 
+             aes(x, y, color = geneCount(sfe_regions, gene, assay="logcounts"))) +
+  scale_color_viridis_c() +
+  theme(aspect.ratio=1) + 
+  labs(
+    title = "Top DE gene between regions",
+    color = rowData(sfe[gene,])$real_gene_name
+  )
+```
