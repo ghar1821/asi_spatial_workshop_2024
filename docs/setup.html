@@ -9,11 +9,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Givanna Putri, Thomas O’Neil, John Salamon" />
+<meta name="author" content="Givanna Putri, Thomas O’Neil, John Salamon, Cathal King" />
 
 <meta name="date" content="2024-11-04" />
 
-<title>setup</title>
+<title>Setup</title>
 
 <script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -335,6 +335,18 @@ div.tocify {
         <li>
   <a href="index.html">Home</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Analysis Files
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="setup.html">Setup</a>
+    </li>
+  </ul>
+</li>
 <li>
   <a href="about.html">About</a>
 </li>
@@ -359,8 +371,9 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">setup</h1>
-<h4 class="author">Givanna Putri, Thomas O’Neil, John Salamon</h4>
+<h1 class="title toc-ignore">Setup</h1>
+<h4 class="author">Givanna Putri, Thomas O’Neil, John Salamon, Cathal
+King</h4>
 <h4 class="date">2024-11-04</h4>
 
 </div>
@@ -369,7 +382,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+workflowr <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -380,8 +393,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> </a>
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -390,13 +403,13 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-11-15
+<strong>Last updated:</strong> 2024-11-18
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong> <code>asi_spatial_workshop_2024/</code>
@@ -419,21 +432,18 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
-changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges"
+<div id="strongRMarkdownfilestronguptodate"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of
-the R Markdown file created these results, you’ll want to first commit
-it to the Git repo. If you’re still working on the analysis, you can
-ignore this warning. When you’re finished, you can run
-<code>wflow_publish</code> to commit the R Markdown file and build the
-HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
 </div>
 </div>
 </div>
@@ -524,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree5b7ca36572a1aa8952c61b168d52fdc08d7ba8e5targetblank5b7ca36a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree8b2939fd69752c8e1df76f756f046e462eb4714ftargetblank8b2939fa">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/5b7ca36572a1aa8952c61b168d52fdc08d7ba8e5" target="_blank">5b7ca36</a>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/8b2939fd69752c8e1df76f756f046e462eb4714f" target="_blank">8b2939f</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree5b7ca36572a1aa8952c61b168d52fdc08d7ba8e5targetblank5b7ca36a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree8b2939fd69752c8e1df76f756f046e462eb4714ftargetblank8b2939fa"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -542,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/5b7ca36572a1aa8952c61b168d52fdc08d7ba8e5" target="_blank">5b7ca36</a>.
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/8b2939fd69752c8e1df76f756f046e462eb4714f" target="_blank">8b2939f</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -567,14 +577,6 @@ Ignored files:
     Ignored:    data/visium_human_crc/
     Ignored:    output/.DS_Store
     Ignored:    visium/
-
-Untracked files:
-    Untracked:  analysis/visium_ffpe_prostate.Rmd.bk
-
-Unstaged changes:
-    Modified:   analysis/index.Rmd
-    Modified:   analysis/setup.Rmd
-    Modified:   analysis/visium_crc.Rmd
 
 </code></pre>
 <p>
@@ -619,6 +621,244 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/8b2939fd69752c8e1df76f756f046e462eb4714f/analysis/setup.Rmd" target="_blank">8b2939f</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-18
+</td>
+<td>
+wflow_publish(c("analysis/index.Rmd", "analysis/setup.Rmd"))
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/01d6af0634187bbc3bd1f2d81a3faeacd085f02f/analysis/setup.Rmd" target="_blank">01d6af0</a>
+</td>
+<td>
+DrThomasOneil
+</td>
+<td>
+2024-11-18
+</td>
+<td>
+fixes
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/6b8a6cacf932ac1f8cc84e067f6d54fdc5de8fee/analysis/setup.Rmd" target="_blank">6b8a6ca</a>
+</td>
+<td>
+DrThomasOneil
+</td>
+<td>
+2024-11-18
+</td>
+<td>
+fixes
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/d9093fdd131e1d444ea386b9a8cb242d64ed09de/analysis/setup.Rmd" target="_blank">d9093fd</a>
+</td>
+<td>
+DrThomasOneil
+</td>
+<td>
+2024-11-18
+</td>
+<td>
+Update setup.Rmd
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/ghar1821/asi_spatial_workshop_2024/4a62b5a093e7acca48311f4e76dba648f5292d57/docs/setup.html" target="_blank">4a62b5a</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-15
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/6e2f089dd3ccffadbde411a9b31ee1db209cf7ab/analysis/setup.Rmd" target="_blank">6e2f089</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-15
+</td>
+<td>
+wflow_publish(c("analysis/setup.Rmd", "analysis/index.Rmd"))
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/202bc797d3a2d9d009ff513d14a861caa6c63995/analysis/setup.Rmd" target="_blank">202bc79</a>
+</td>
+<td>
+John Salamon
+</td>
+<td>
+2024-11-15
+</td>
+<td>
+add dependencies
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/33c8fbf1e3e8b2cccb16aa7b8a08ecd5e4f78596/analysis/setup.Rmd" target="_blank">33c8fbf</a>
+</td>
+<td>
+John Salamon
+</td>
+<td>
+2024-11-15
+</td>
+<td>
+add compressed datasets, update checksums
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/725c2bf2839e1d471ff0e4b10218cc865ecbce15/analysis/setup.Rmd" target="_blank">725c2bf</a>
+</td>
+<td>
+GitHub
+</td>
+<td>
+2024-11-15
+</td>
+<td>
+Update setup.Rmd
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/d1d48408ddab085a7c03d17d02ad7a195c32c0c8/analysis/setup.Rmd" target="_blank">d1d4840</a>
+</td>
+<td>
+GitHub
+</td>
+<td>
+2024-11-15
+</td>
+<td>
+Update setup.Rmd
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/ff8732713a63378165462b58514be9f125c2f2d1/analysis/setup.Rmd" target="_blank">ff87327</a>
+</td>
+<td>
+GitHub
+</td>
+<td>
+2024-11-15
+</td>
+<td>
+Update setup.Rmd
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/4ef335fa502663f04247d27c5620df7cb6d9f746/analysis/setup.Rmd" target="_blank">4ef335f</a>
+</td>
+<td>
+GitHub
+</td>
+<td>
+2024-11-15
+</td>
+<td>
+Update setup.Rmd
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/ad6a58b2eb1a42658a8d8161489d6861e751ec52/analysis/setup.Rmd" target="_blank">ad6a58b</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-15
+</td>
+<td>
+update setup and homepage
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/ghar1821/asi_spatial_workshop_2024/ad6a58b2eb1a42658a8d8161489d6861e751ec52/docs/setup.html" target="_blank">ad6a58b</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-15
+</td>
+<td>
+update setup and homepage
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -787,13 +1027,17 @@ href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/master/analysis
 Rmd file</a> and run each code block step by step.</p>
 <p><strong><em>Do not just blindly run the code! Make sure you read the
 description above each of the code block to understand what the code is
-doing before running them!</em></strong></p>
+doing before running them!</em></strong> Sourcing the entire Rmd file
+will not run anything as every code block has been deliberately
+annotated such that they won’t execute when the whole file is
+sourced.</p>
 <p>If you have any problems, please reach out to either:</p>
 <ul>
 <li><a href="mailto:felix.marsh-wakefield@sydney.edu.au">Felix
 Marsh-Wakefield</a></li>
 <li><a href="mailto:thomas.oneil@sydney.edu.au">Thomas O’Neil</a></li>
 <li><a href="mailto:putri.g@wehi.edu.au">Givanna Putri</a></li>
+<li><a href="mailto:cathal.king@sahmri.com">Cathal King</a></li>
 </ul>
 <div id="packages" class="section level2">
 <h2>Packages</h2>
@@ -801,13 +1045,16 @@ Marsh-Wakefield</a></li>
 running the code block below.</p>
 <pre class="r"><code>cran_packages &lt;- c(
   &quot;BiocManager&quot;, &quot;Seurat&quot;, &quot;ggplot2&quot;, &quot;scales&quot;, &quot;patchwork&quot;, &quot;qs&quot;,
-  &quot;hdf5r&quot;, &quot;viridis&quot;, &quot;scater&quot;, &quot;devtools&quot;, &quot;cli&quot;
+  &quot;hdf5r&quot;, &quot;viridis&quot;, &quot;devtools&quot;, &quot;cli&quot;, &quot;fs&quot;, &quot;sf&quot;, &quot;terra&quot;, &quot;scales&quot;,
+  &quot;plotly&quot;, &quot;hexbin&quot;, &quot;raster&quot;
 )
 
 install.packages(cran_packages)
 
 bioc_packages &lt;- c(
-  &quot;glmGamPoi&quot;, &quot;scater&quot;, &quot;SpatialExperiment&quot;, &quot;ggspavis&quot;, &quot;scran&quot;, &quot;nnSVG&quot;
+  &quot;glmGamPoi&quot;, &quot;scater&quot;, &quot;scran&quot;, &quot;SpatialExperiment&quot;, &quot;ggspavis&quot;, &quot;scran&quot;,
+  &quot;nnSVG&quot;, &quot;SpatialFeatureExperiment&quot;, &quot;Voyager&quot;, &quot;RBioFormats&quot;, &quot;BiocParallel&quot;,
+  &quot;bluster&quot;, &quot;EBImage&quot;
 )
 
 BiocManager::install(bioc_packages)
@@ -843,6 +1090,26 @@ installed properly.</p>
   }
 }
 checkSetup()</code></pre>
+<p><strong><em>Note:</em></strong></p>
+<p>You may encounter error running the code block above when it tries to
+load the <em>RBioFormats</em> package. This is because
+<em>RBioFormats</em> loads <a
+href="https://github.com/s-u/rJava">rJava</a> package which relies on
+having Java Run Time (JRE) installed in your system.</p>
+<p><strong>For Mac users,</strong> if you have <a
+href="https://brew.sh/">homebrew</a> installed, you can install JRE
+through OpenJDK using homebrew by running
+<code>brew install openjdk</code> on terminal. Afterwards, you will need
+to set the <code>JAVA_HOME</code> environment value in rstudio to the
+location where homebrew installed openjdk. For example, if OpenJDK is
+installed under
+<code>/opt/homebrew/opt/openjdk/libexec/openjdk.jdk/Contents/Home</code>,
+and set <code>JAVA_HOME</code> to point to that directory using the
+following code:</p>
+<pre class="bash"><code>Sys.setenv(JAVA_HOME=&quot;/opt/homebrew/opt/openjdk/libexec/openjdk.jdk/Contents/Home&quot;)</code></pre>
+<p>If you are not sure how to get JRE installed into your system to load
+<em>RBioFormats</em> package, please reach out to your IT support for
+assistance.</p>
 </div>
 <div id="folder-structure" class="section level2">
 <h2>Folder structure</h2>
@@ -893,10 +1160,15 @@ integrity of the downloaded files.</p>
         cat(error(&quot;Some files are corrupted. Please redownload&quot;))
     }
 }</code></pre>
+<p><strong><em>Note</em></strong>: if you encounter a timeout error
+(after 60 seconds) while downloading the files, you can increase the
+timeout to say 6,000 seconds to give R more time to download the files
+by running
+<code>options(timeout = max(6000, getOption("timeout")))</code></p>
 <div id="visium" class="section level3">
 <h3>Visium</h3>
 <p>The code block below will download the count matrix and spatial
-information required to load the visium data in.</p>
+information required to load the Visium data in.</p>
 <pre class="r"><code>download.file(&quot;https://cf.10xgenomics.com/samples/spatial-exp/3.0.0/Visium_V2_Human_Colon_Cancer_P2/Visium_V2_Human_Colon_Cancer_P2_filtered_feature_bc_matrix.h5&quot;, 
               destfile = &quot;visium/raw/Visium_V2_Human_Colon_Cancer_P2_filtered_feature_bc_matrix.h5&quot;, 
               method = &quot;curl&quot;)
@@ -931,24 +1203,79 @@ md5sum_str &lt;- c(
     &quot;visium/raw/Visium_V2_Human_Colon_Cancer_P2_cloupe.cloupe&quot; = &quot;c5726e203c21a2fc3432831ea7c74252&quot;
 )
 check_md5(md5sum_str)</code></pre>
+<p>Install Loupe Browser at this link: <a
+href="https://www.10xgenomics.com/support/software/loupe-browser/latest"
+class="uri">https://www.10xgenomics.com/support/software/loupe-browser/latest</a></p>
 </div>
 </div>
 <div id="stomics" class="section level3">
 <h3>STOmics</h3>
-<pre class="r"><code># LISTA paper, processed tissue slice (4.1GB)
-download.file(&quot;https://ftp.cngb.org/pub/SciRAID/stomics/STDS0000059/Stereo-seq/DY1_D0_stereo-seq.h5ad&quot;,
-              destfile = &quot;stomics/raw/DY1_D0_stereo-seq.h5ad&quot;)
+<pre class="r"><code># LISTA paper, processed tissue slice (222MB)
+download.file(
+    &quot;https://filesender.aarnet.edu.au/download.php?token=ec632836-0700-4921-9699-668bfe9657d2&amp;files_ids=23608389&quot;,
+    destfile = &quot;stomics/raw/DY1_D0_stereo-seq.h5ad&quot;,
+    method = &#39;curl&#39;,
+    extra = &#39;-L&#39;
+)
 
-# LISTA single cell dataset (1.7GB)
-download.file(&quot;https://ftp.cngb.org/pub/SciRAID/stomics/STDS0000059/scRNAseq/Homeostasis_hepatic_cell_scRNAseq.h5ad&quot;,
-              destfile = &quot;stomics/raw/Homeostasis_hepatic_cell_scRNAseq.h5ad&quot;)</code></pre>
+# LISTA single cell dataset (540MB)
+download.file(
+    &quot;https://filesender.aarnet.edu.au/download.php?token=ec632836-0700-4921-9699-668bfe9657d2&amp;files_ids=23608386&quot;,
+    destfile = &quot;stomics/raw/Homeostasis_hepatic_cell_scRNAseq.h5ad&quot;,
+    method = &#39;curl&#39;,
+    extra = &#39;-L&#39;
+)</code></pre>
+<pre class="r"><code># check md5sum of the downloaded files.
+md5sum_str &lt;- c(
+    &quot;stomics/raw/DY1_D0_stereo-seq.h5ad&quot; = &quot;f63df815d75548034cb659bc3491f51a&quot;,
+    &quot;stomics/raw/Homeostasis_hepatic_cell_scRNAseq.h5ad&quot; = &quot;b1a7fd3ffa58e0420083fa8651cb7fec&quot;
+)
+check_md5(md5sum_str)</code></pre>
 <div id="optional-raw-data-download-from-saw" class="section level4">
 <h4>OPTIONAL raw data download from SAW</h4>
 <p>File size: 4.6GB</p>
 <pre class="r"><code># Raw data from SAW (4.6GB, optional download!)
-download.file(&quot;https://filesender.aarnet.edu.au/download.php?token=32ffcb63-24df-47e2-bdce-7341fe86082a&amp;files_ids=23595450&quot;,
-              destfile = &quot;stomics/raw/visualization.tar.gz&quot;)
-untar(&quot;stomics/raw/visualization.tar.gz&quot;, exdir =&quot;stomics/raw&quot;)</code></pre>
+download.file(
+    &quot;https://filesender.aarnet.edu.au/download.php?token=32ffcb63-24df-47e2-bdce-7341fe86082a&amp;files_ids=23595450&quot;,
+    destfile = &quot;stomics/raw/visualization.tar.gz&quot;,
+    method = &quot;curl&quot;,
+    extra = &#39;-L&#39;
+)
+
+# check md5sum of the downloaded files.
+md5sum_str &lt;- c(
+    &quot;stomics/raw/visualization.tar.gz&quot; = &quot;7d3daa224de7ca1244711531270546d3&quot;
+)
+check_md5(md5sum_str)</code></pre>
+<p>If there are no warning from the code block above, proceed to untar
+the <code>visualization.tar.gz</code> file using the code block
+below.</p>
+<pre class="r"><code>untar(&quot;stomics/raw/visualization.tar.gz&quot;, exdir =&quot;stomics/raw&quot;)</code></pre>
+</div>
+</div>
+<div id="xenium" class="section level3">
+<h3>Xenium</h3>
+<p>Install Xenium Explorer v3.1.1 at this link: <a
+href="https://www.10xgenomics.com/support/software/xenium-explorer/downloads"
+class="uri">https://www.10xgenomics.com/support/software/xenium-explorer/downloads</a></p>
+<p>Please also install the raw xenium data by using the below code. The
+file size is large so it might take a few minutes to complete.</p>
+<pre class="r"><code># Sample P5 CRC
+# This file is ~12GB so will take a few minutes to download.
+download.file(
+  url = &quot;https://cf.10xgenomics.com/samples/xenium/2.0.0/Xenium_V1_Human_Colon_Cancer_P5_CRC_Add_on_FFPE/Xenium_V1_Human_Colon_Cancer_P5_CRC_Add_on_FFPE_outs.zip&quot;, 
+  destfile = &quot;xenium/raw/Xenium_V1_Human_Colon_Cancer_P5_CRC_Add_on_FFPE_outs.zip&quot;, 
+  method = &quot;curl&quot;
+)
+
+# check md5sum of the downloaded files.
+md5sum_str &lt;- c(
+    &quot;xenium/raw/Xenium_V1_Human_Colon_Cancer_P5_CRC_Add_on_FFPE_outs.zip&quot; = &quot;1069cb6b67a596e0011a4b3f5d3b7c08&quot;
+)
+check_md5(md5sum_str)</code></pre>
+<p>Make sure there are no warning from the code block above. If there
+are, please redownload the file by re-running <code>download.file</code>
+command.</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -986,11 +1313,10 @@ loaded via a namespace (and not attached):
 [17] sass_0.4.9        fansi_1.0.6       rmarkdown_2.28    jquerylib_0.1.4  
 [21] tibble_3.2.1      evaluate_1.0.0    fastmap_1.2.0     yaml_2.3.10      
 [25] lifecycle_1.0.4   whisker_0.4.1     stringr_1.5.1     compiler_4.4.1   
-[29] fs_1.6.4          pkgconfig_2.0.3   Rcpp_1.0.13       rstudioapi_0.16.0
+[29] fs_1.6.5          pkgconfig_2.0.3   Rcpp_1.0.13       rstudioapi_0.16.0
 [33] later_1.3.2       digest_0.6.37     R6_2.5.1          utf8_1.2.4       
 [37] pillar_1.9.0      callr_3.7.6       magrittr_2.0.3    bslib_0.8.0      
 [41] tools_4.4.1       cachem_1.1.0      getPass_0.2-4    </code></pre>
-</div>
 </div>
 </div>
 </div>

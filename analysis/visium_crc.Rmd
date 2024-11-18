@@ -11,6 +11,7 @@ editor_options:
 
 ```{r}
 library(Seurat)
+library(tiff)
 
 # for plotting
 library(ggplot2)
@@ -77,8 +78,8 @@ First up, let's import our data into a seurat object.
 
 ```{r}
 dat <- Load10X_Spatial(
-  data.dir = 'data/visium_human_crc',
-  filename = 'filtered_feature_bc_matrix.h5'
+  data.dir = 'raw',
+  filename = 'Visium_V2_Human_Colon_Cancer_P2_filtered_feature_bc_matrix.h5'
 )
 
 ```
@@ -403,7 +404,7 @@ and that we do not have spots that lie outside the tissue.
 
 #### Using ImageJ
 
-> Tom O'neil demo using ImageJ
+The vanilla 10X SpaceRanger pipeline automatically identifies the spots that overlap with tissue. This is not always consistent or reliable. Therefore, there is no reason why 
 
 #### Using Loupe Browser
 
