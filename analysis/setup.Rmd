@@ -33,7 +33,7 @@ the code block below.
 cran_packages <- c(
   "BiocManager", "Seurat", "ggplot2", "scales", "patchwork", "qs",
   "hdf5r", "viridis", "devtools", "cli", "fs", "sf", "terra", "scales",
-  "plotly", "hexbin","tiff"
+  "plotly", "hexbin", "raster"
 )
 
 install.packages(cran_packages)
@@ -141,7 +141,7 @@ check_md5 <- function(files_expected_md5sum) {
 ### Visium
 
 The code block below will download the count matrix and spatial information
-required to load the visium data in.
+required to load the Visium data in.
 
 ```{r eval=F}
 download.file("https://cf.10xgenomics.com/samples/spatial-exp/3.0.0/Visium_V2_Human_Colon_Cancer_P2/Visium_V2_Human_Colon_Cancer_P2_filtered_feature_bc_matrix.h5", 
