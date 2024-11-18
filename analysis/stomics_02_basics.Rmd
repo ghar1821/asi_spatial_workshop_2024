@@ -25,15 +25,24 @@ source("code/stomicsFunctions.R")
 # Loading data into R
 
 One of the first hurdles to analyse STOmics data in R getting it into a suitable 
-format. The outputs are all [anndata](https://anndata.readthedocs.io/en/stable/)
-files, and we ideally would like either a Seurat object or SpatialExperiment
-object.
+format.
+Our SAW outputs use the [AnnData](https://anndata.readthedocs.io/en/stable/) 
+format, which is more commonly used with Python.
+For use in R, we will need to convert it into a different format - the two
+that we'll be considering here are a Seurat or SpatialExperiment object.
 
-## Format hell
+Seurat is an very popular library for single cell and spatial transcriptomics, 
+which we've been using extensively this morning.
 
-SPE, SCE, SFE, Seurat, Anndata
+[SpatialExperiment](https://www.bioconductor.org/packages/release/bioc/vignettes/SpatialExperiment/inst/doc/SpatialExperiment.html) 
+(SPE) is a package for management of spatial transcriptomicsdata, which 
+integrates well with the Bioconductor ecosystem.
 
-## Options for conversion
+It is an extension of SingleCellExperiment (SCE), and is extended by
+SpatialFeatureExperiment (SFE), which also adds advanced geometric
+operations and integration with geospatial libraries.
+
+## Conversion methods
 
 Unfortunately, there are many options, none of them quite perfect. Here are the
 ones that I know of:
@@ -56,14 +65,23 @@ of SAW.
 
 ## Inspecting our files
 
-It's useful to be able to inspect h5ad files to verify their structure.
-Let's take a look at the SAW outputs:
+Even if you're just going to use a library to handle opening these files,
+it's useful to have a general understanding of what they contain.
+Let's take a look at some of the most common SAW outputs.
+
+We'll be going through the outputs of `visualization.tar.gz`. If you haven't
+downloaded this file, don't worry,
 
 
 ### gef 
 
-The gef files contain the original expression matrix. This is difficult to process
-in R. This is just an HDF5 file, so you can inspect it with `h5ls`
+`.gef` files contain the original expression matrix, and are typically large.
+They will contain both the raw (non-binned) expression matrices, and multiple
+binned matrices.
+
+While these are just HDF5 files (so you can inspect it with `h5ls`), it is 
+difficult to process directly in R.
+
 
 ```{r}
 
@@ -79,10 +97,17 @@ counts[order(counts$count, decreasing=T),]
 
 ### h5ad
 
-The h5ad files are AnnData format, and contain a count matrix in a usable format.
-They also contain other analysis outputs created by SAW.
+The main SAW outputs we can access easily from R or Python are `.h5ad` files.
+These files are in AnnData format, and contain both a binned count matrix,
+plus other analysis outputs created by SAW (such as cluster annotations, 
+UMAP embeddings, etc).
 
-## SpatialExperiment
+I've just used the `rhdf5` library to read in these files. Pre-normalisation
+matrices can be found under "/raw/X", and are usually in a compressed format.
+This is fairly easy to convert into a format R can read. (Check the 
+`code/stomicsFunctions.R` file to see how `h5adMatrixLoad` was implemented).
+
+Try using the `h5ls` function to see the names of the subgroups in this input.
 
 ```{r}
 # We can free up memory by removing those counts
@@ -97,7 +122,8 @@ matrix_data <- h5adMatrixLoad(h5ad_file, "/raw/X")
 # Check shape of matrix
 dim(matrix_data)
 ```
-
+AnnData files also contain extra metadata that can map nicely onto the 
+SpatialExperiment object.
 
 ```{r}
 # in anndata features (here, genes) are stored as "var", and are columns
@@ -206,16 +232,19 @@ ggplot(polygons) +
   coord_sf(datum=NA) +
   theme_void()
 ```
-Now I'm just going to clean these up slightly (the polygons aren't closed).
+
+Unfortunately, the polygons we export from SAW aren't "closed", i.e., the first
+and last points are not the same. This causes some issues with the `sf` library
+so I'm just going to clean these up slightly (see the source for `closePolygon`
+in the file `code/stomicsFunctions.R`).
 
 ```{r}
-
 region_1 <- closePolygon(polygons[1,])
 region_2 <- closePolygon(polygons[2,])
-
 ```
 
-In case that didn't work, here's an example of generating a polygonal region.
+In case that didn't work, here's an example of generating a valid polygonal 
+region (just a simple square):
 
 ```{r}
 # Make a test square region using the sf library
@@ -233,25 +262,26 @@ geom <- st_polygon(list(matrix(
 )))
 
 polygon_data <- data.frame(
-  sample_id = "sample01",
-  name = "Square"
+  sample_id = "sample01"
 )
 
 polygon_sf <- st_sf(polygon_data, geometry = st_sfc(geom))
 
+plot(polygon_sf)
 ```
+## SpatialFeatureExperiment
 
 Next, let's upgrade to a [SpatialFeatureExperiment](https://www.bioconductor.org/packages/release/bioc/vignettes/SpatialFeatureExperiment/inst/doc/SFE.html),
-which allows us to make use of these geometries.
+which includes functions to manipulate our data with geometries.
 
 ```{r}
 # Our SpatialExperiment can just be with some region annotations.
 sfe <- toSpatialFeatureExperiment(spe, 
-                                    annotGeometries = list(
-                                      region_1 = region_1,
-                                      region_2 = region_2
-                                    ),
-                                  )
+  annotGeometries = list(
+    region_1 = region_1,
+    region_2 = region_2
+  ),
+)
 sfe
 ```
 Let's plot those regions:
@@ -266,13 +296,16 @@ ggplot() +
   theme(aspect.ratio=1)
 ```
 
-Sometimes we might want to extract those regions out into separate objects, which
-we can do with the `crop` function:
+Sometimes we might want to extract those regions out into separate objects.
+Noe that we have a SpatialFeatureExperiment object, one way to accomplish this
+is with the `crop` function.
 
 ```{r}
+# Crop our sfe by each annotated region
 sfe_r1 <- crop(sfe, annotGeometry(sfe, "region_1"))
 sfe_r2 <- crop(sfe, annotGeometry(sfe, "region_2"))
 
+# Visualise the two regions
 r1_plot <- ggplot() +
   geom_point(data = spatialCoords(sfe_r1), aes(x, y, color = colData(sfe_r1)$leiden)) +
   scale_color_discrete(guide = "none") +
@@ -310,7 +343,7 @@ markers <- findMarkers(sfe_regions, test = "t", groups = sfe_regions$region)
 markers[[1]]
 ```
 
-We might then want to plot the expression of a selected gene in these regions:
+We might then want to plot the expression of a selected gene in these regions
 
 ```{r}
 # check
