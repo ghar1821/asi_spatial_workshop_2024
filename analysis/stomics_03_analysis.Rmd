@@ -11,29 +11,25 @@ library(ggspavis)
 
 # Custom functions
 source("code/stomicsFunctions.R")
-
-
 ```
 
 # LISTA data (DY1_D0_stereo-seq.h5ad)
 
-## Area
+## Spatial area
 
 DY1_D0 represents $48.143 mm^2$
 
-From the paper: each bin contains 50x50 nanoballs, so the h5ad bin size is incorrect.
+From the paper: each bin contains $50x50$ nanoballs.
 
-Center-to-center distance of 715nm between nanoballs, aka bin-resolution of 36x36 um
+Center-to-center distance of $715 nm$ between nanoballs, aka bin-resolution of $36x36 um$.
 
 Liver cells are larger, so this is probably capturing close to a single-cell diameter.
 
-## Design
+## Experimental design
 
-In total, 30 whole liver lobe sections
-
-Time series (Day 0,1,2,3,7)
-
-Matched scRNA-seq.
+- In total, 30 whole liver lobe sections
+- Time series (Day 0,1,2,3,7)
+- Matched scRNA-seq.
 
 This experiment has matched and annotated single cell data. We'll be using 
 this to generate Figure 1A from the paper using robust cell-type decomposition
@@ -41,8 +37,10 @@ this to generate Figure 1A from the paper using robust cell-type decomposition
 
 ## Loading the LISTA dataset 
 
-```{r}
+As they are stored as AnnData, we can import the files from this experiment in 
+the same way we would files directly output from SAW.
 
+```{r}
 # SPE
 h5ad_file <- "stomics/raw/DY1_D0_stereo-seq.h5ad"
 
@@ -70,26 +68,28 @@ spe <- SpatialExperiment(
 
 spe
 ```
-We can quickly plot this to verify it looks correct:
+We can quickly plot this to verify it looks correct using `plot`.
+`ggplot` is much more powerful but sometimes we just want to verify the data
+is there and more or less looks correct.
 
 ```{r}
 # R's default plot function is actually pretty smart
-# plot(spatialCoords(spe))
 # but ggplot gives more functionality
-ggplot(spatialCoords(spe), aes(x, y)) +
-  geom_point() +
-  theme(aspect.ratio=1)
-
+plot(spatialCoords(spe))
 ```
+We can flip the y axis and set the aspect ratio correctly, for a start.
 
 ```{r}
 # flip y axis, and add colours
 ggplot(spatialCoords(spe), aes(x, y)) +
   geom_point(size = 0.5) +
-  scale_fill_viridis_c() +
   theme(aspect.ratio=1) +
   scale_y_reverse()
 ```
+## Examing the annotation
+
+
+
 ```{r}
 # Plot the current annotation
 # These were created using AddModuleScore in Seurat with lists of genes
@@ -220,7 +220,7 @@ puck <- SpatialRNA(data.frame(coords), assays(spe_circle)$counts)
 ```
 
 
-Now, let's try running RCTD.
+Now, let's try running RCTD. 
 
 
 ```{r}
@@ -231,21 +231,69 @@ RCTD <- create.RCTD(puck, reference, max_cores = 1)
 # Multi mode allows us to define >2 cell types per tissue
 RCTD <- run.RCTD(RCTD, doublet_mode = 'multi')
 
-# notes: started at 10:30
+# notes: started at 10:30, finished at 10:46...
 
 # Save the output as it can take a while to run
 saveRDS(RCTD, "stomics/data/RCTD.rds")
 ```
 
+We'll load our RDS file in case we weren't able to run this (or we don't want to wait):
 
 ```{r}
-
-## Selecting custom regions
-
-
-## PCA, UMAP, kmeans
-
-## SVGs
+RCTD <- readRDS("stomics/data/RCTD.rds")
 
 ```
 
+
+
+```{r}
+# We get back a list of results
+length(RCTD@results)
+
+# But not all spots have results
+dim(RCTD@spatialRNA@counts)
+
+# Take only the top weighted result
+celltypes <- lapply(RCTD@results, \(x) x$cell_type_list[which.max(x$sub_weights)])
+celltypes <- unlist(celltypes)
+
+
+# Empty vec, with names, correct length
+vec <- rep("None", dim(spe_circle)[2])
+names(vec) <- colnames(spe_circle)
+
+# Our results
+celltypes
+names(celltypes) <- colnames(RCTD@spatialRNA@counts)
+
+# assign
+vec[names(celltypes)] <- celltypes
+
+table(vec)
+```
+Each spot will have a list of identified cell types.
+It'll also have a list of identified cells.
+
+
+```{r}
+results <- RCTD@results
+# normalize the cell type proportions to sum to 1.
+cell_type_names <- RCTD@cell_type_info$info[[2]] #list of cell type names
+cell_type_names
+```
+```{r}
+
+spe_circle$celltypes <- vec
+
+# Plot...
+ggplot(colData(spe_circle), aes(x_pos, y_pos, color=celltypes)) +
+  geom_point() +
+  scale_color_discrete() +
+  theme(aspect.ratio=1) +
+  scale_y_reverse()
+```
+
+In the remaining time, perhaps we could do:
+
+- Clustering with these results? (PCA/UMAP/kmeans)
+- Define some more spatially variable genes?
