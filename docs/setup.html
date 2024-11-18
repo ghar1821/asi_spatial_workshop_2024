@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree30b12ff09d67ebb50d33a2cd359994988624f9f2targetblank30b12ffa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree423c4c23bcfcd8c167d1c3b625a4a1037858ca91targetblank423c4c2a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/30b12ff09d67ebb50d33a2cd359994988624f9f2" target="_blank">30b12ff</a>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/423c4c23bcfcd8c167d1c3b625a4a1037858ca91" target="_blank">423c4c2</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree30b12ff09d67ebb50d33a2cd359994988624f9f2targetblank30b12ffa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree423c4c23bcfcd8c167d1c3b625a4a1037858ca91targetblank423c4c2a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/30b12ff09d67ebb50d33a2cd359994988624f9f2" target="_blank">30b12ff</a>.
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/423c4c23bcfcd8c167d1c3b625a4a1037858ca91" target="_blank">423c4c2</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -577,6 +577,9 @@ Ignored files:
     Ignored:    data/visium_human_crc/
     Ignored:    output/.DS_Store
     Ignored:    visium/
+
+Unstaged changes:
+    Modified:   analysis/visium_crc.Rmd
 
 </code></pre>
 <p>
@@ -621,6 +624,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/423c4c23bcfcd8c167d1c3b625a4a1037858ca91/analysis/setup.Rmd" target="_blank">423c4c2</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-18
+</td>
+<td>
+wflow_publish("analysis/setup.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/ghar1821/asi_spatial_workshop_2024/34af55553a3370df167ba4e3d0cdfc02d925b5f2/docs/setup.html" target="_blank">34af555</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-18
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1104,11 +1141,11 @@ install.packages(cran_packages)
 
 bioc_packages &lt;- c(
   &quot;glmGamPoi&quot;, &quot;scater&quot;, &quot;scran&quot;, &quot;SpatialExperiment&quot;, &quot;ggspavis&quot;, &quot;scran&quot;,
-  &quot;nnSVG&quot;, &quot;SpatialFeatureExperiment&quot;, &quot;Voyager&quot;, &quot;RBioFormats&quot;, &quot;BiocParallel&quot;,
-  &quot;bluster&quot;, &quot;EBImage&quot;
+  &quot;nnSVG&quot;, &quot;SpatialFeatureExperiment&quot;, &quot;Voyager&quot;, &quot;BiocParallel&quot;,
+  &quot;bluster&quot;, &quot;EBImage&quot;, &quot;jpeg&quot;, &quot;HDF5Array&quot;, &quot;rdist&quot;
 )
 
-BiocManager::install(bioc_packages)
+BiocManager::install(c(bioc_packages, &quot;RBioFormats&quot;))
 
 # RCTD only available via devtools install
 devtools::install_github(&quot;dmcable/spacexr&quot;, build_vignettes = FALSE)</code></pre>
@@ -1141,12 +1178,23 @@ installed properly.</p>
   }
 }
 checkSetup()</code></pre>
-<p><strong><em>Note:</em></strong></p>
-<p>You may encounter error running the code block above when it tries to
-load the <em>RBioFormats</em> package. This is because
-<em>RBioFormats</em> loads <a
-href="https://github.com/s-u/rJava">rJava</a> package which relies on
-having Java Run Time (JRE) installed in your system.</p>
+<hr>
+<details>
+<summary>
+Click me to find out more about the RBioFormats package
+</summary>
+<hr>
+<h3>
+Loading the RBioFormats package
+</h3>
+<p>One of the required packages is <a
+href="https://www.bioconductor.org/packages/release/bioc/html/RBioFormats.html">RBioFormats</a>,
+would have been installed by the code in code block 1 but not checked in
+the code block above. This is because you may encounter error when
+loading the package as it has <a
+href="https://github.com/s-u/rJava">rJava</a> package as a dependency,
+and that rJava requires Java Run Time (JRE) installed in your system to
+run properly.</p>
 <p><strong>For Mac users,</strong> if you have <a
 href="https://brew.sh/">homebrew</a> installed, you can install JRE
 through OpenJDK using homebrew by running
@@ -1159,8 +1207,9 @@ and set <code>JAVA_HOME</code> to point to that directory using the
 following code:</p>
 <pre class="bash"><code>Sys.setenv(JAVA_HOME=&quot;/opt/homebrew/opt/openjdk/libexec/openjdk.jdk/Contents/Home&quot;)</code></pre>
 <p>If you are not sure how to get JRE installed into your system to load
-<em>RBioFormats</em> package, please reach out to your IT support for
+RBioFormats package, please reach out to your IT support for
 assistance.</p>
+</details>
 </div>
 <div id="folder-structure" class="section level2">
 <h2>Folder structure</h2>
