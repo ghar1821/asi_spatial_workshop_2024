@@ -304,11 +304,15 @@ md5sum_str <- c(
     "xenium/raw/Xenium_V1_Human_Colon_Cancer_P5_CRC_Add_on_FFPE_outs.zip" = "1069cb6b67a596e0011a4b3f5d3b7c08"
 )
 check_md5(md5sum_str)
-
-unzip(zipfile = "xenium/raw/Xenium_V1_Human_Colon_Cancer_P5_CRC_Add_on_FFPE_outs.zip")
-
 ```
 
 Make sure there are no warning from the code block above.
 If there are, please redownload the file by re-running `download.file` command.
+Otherwise, proceed to unzip the downloaded zip file using the code block below.
+
+```{r eval=FALSE}
+unzip(zipfile = "xenium/raw/Xenium_V1_Human_Colon_Cancer_P5_CRC_Add_on_FFPE_outs.zip")
+```
+
+
 
