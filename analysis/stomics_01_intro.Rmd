@@ -1,0 +1,232 @@
+
+# Introduction
+
+## Stereo-seq background 
+
+Stereo-seq (SpaTial Enhanced Resolution Omics-sequencing) builds upon the chip 
+technology already used in MGI DNA nanoball sequencing (DNBSEQ). For background 
+on DNBSEQ, see [here](https://mgi-tech.eu/technology).
+
+### Useful links
+
+- [Publication](https://doi.org/10.1016/j.cell.2022.04.003)
+- [Demo data](https://en.stomics.tech/resources/demo-data/list.html)
+- [Product documents](https://en.stomics.tech/resources/documents/list.html)
+- [Validated tissue list](https://en.stomics.tech/resource/stomics-validated-tissue-list?lang=en)
+
+
+# Software ecosystem 
+
+## SAW
+
+STOmics has an analysis pipeline called the Stereo-seq Analysis Workflow (SAW).
+SAW is a command-line tool which is more or less the STOmics equivalent of Spaceranger.
+
+As of time of writing, the latest version of SAW is v8.1.
+SAW has changed significantly between versions 7.x and 8.x. 
+Version 8.x introduces both internal workflow management with Snakemake, and 
+compatibility with OMNI (FFPE-compatible Stereo-seq).
+
+[The SAW documentation](https://stereotoolss-organization.gitbook.io/saw-user-manual-v8.1)
+is a helpful resource.
+
+Once installed, running, `saw --help` and subcommands (e.g. `saw count --help`) 
+can provide helpful clues for usage.
+
+
+### Useful links
+
+- [Download page](https://en.stomics.tech/products/stomics-software/stomics-offline-software/list.html)
+- [Documentation](https://stereotoolss-organization.gitbook.io/saw-user-manual-v8.1)
+- [Github](https://github.com/STOmics/SAW)
+- [Publication](https://doi.org/10.46471/gigabyte.111)
+
+
+## SAW makeRef
+
+The first step of your analysis will be to choose and build an appropriate 
+reference. Building can be accomplished with `saw makeRef`.
+
+To build the reference for this example, here's the command I used:
+
+```{bash, eval=FALSE}
+#!/bin/bash
+
+saw makeRef \
+    --mode=STAR \
+    --fasta=/path/to/GRCm39.genome.fa \
+    --gtf=/path/to/annotation.gtf \
+    --genome=/path/to/reference/output
+```
+
+Notes:
+
+- The [GENCODE GRCm39 reference](https://www.gencodegenes.org/mouse/) was used
+- The `--genome` parameter actually specifies the name of the output directory
+- There is no way to pass parameters to STAR in this version.
+
+To have more control over the parameters used, you can use version 7.x of SAW.
+This version is implemented as a bash script which calls into a container image,
+and is easier to customise.
+
+## SAW count
+
+Next, we want to run the main pipeline which is called via `saw count`.
+
+Documentation for this step is available for using SAW with different sample 
+types, e.g. [fresh-frozen](https://stereotoolss-organization.gitbook.io/saw-user-manual-v8.1/tutorials/run-main-pipeline/stereo-seq-ff).
+
+Here's how it was run for this example:
+
+```{bash, eval=FALSE}
+#!/bin/bash
+
+saw count \
+    --id=workshop_demo \
+    --sn=C04042E3 \
+    --chip-mask="/path/to/C04042E3.barcodeToPos.h5" \
+    --omics=transcriptomics \
+    --kit-version="Stereo-seq T FF V1.3" \
+    --sequencing-type="PE75_50+100" \
+    --organism=mouse \
+    --tissue=brain \
+    --fastqs=/path/to/fastq/directory/ \
+    --image-tar="/path/to/C04042E3_SC_20240925_142342_4.1.0.tar.gz" \
+    --reference=/path/to/reference/output
+```
+
+Notes:
+
+- `--reference` here should point to the directory specified in the `--genome` parameter of `saw makeRef`
+- `--image-tar` accepts image files processed by [StereoMap](#stereomap) or ImageStudio, and is optional
+- `--fastqs` points to a directory containing fastq file pairs. More than one pair can be present (e.g. if multiple sequencing runs or lanes were used) 
+- `--organism` and `--tissue` can be any string
+
+# SAW outputs
+
+Once this is complete, an `outs` directory will be created:
+
+```{bash, eval=FALSE}
+$ tree outs/
+.
+├── analysis
+│   ├── C04042E3.bin20_1.0.h5ad
+│   ├── C04042E3.bin20_1.0.marker_features.csv
+│   ├── C04042E3.bin50_1.0.h5ad
+│   ├── C04042E3.bin50_1.0.marker_features.csv
+│   ├── C04042E3.cellbin_1.0.adjusted.h5ad
+│   ├── C04042E3.cellbin_1.0.adjusted.marker_features.csv
+│   ├── C04042E3.cellbin_1.0.h5ad
+│   └── C04042E3.cellbin_1.0.marker_features.csv
+├── bam
+│   └── annotated_bam
+│       ├── C04042E3.Aligned.sortedByCoord.out.merge.q10.dedup.target.bam
+│       └── C04042E3.Aligned.sortedByCoord.out.merge.q10.dedup.target.bam.csi
+├── C04042E3.report.tar.gz
+├── feature_expression
+│   ├── C04042E3.adjusted.cellbin.gef
+│   ├── C04042E3.cellbin.gef
+│   ├── C04042E3.merge.barcodeReadsCount.txt
+│   ├── C04042E3_raw_barcode_gene_exp.txt
+│   ├── C04042E3.raw.gef
+│   └── C04042E3.tissue.gef
+├── image
+│   ├── C04042E3_HE_mask_edm_dis_10.tif
+│   ├── C04042E3_HE_mask.tif
+│   ├── C04042E3_HE_regist.tif
+│   └── C04042E3_HE_tissue_cut.tif
+├── visualization.tar.gz
+└── visualization.tar.gz.md5
+```
+
+[See here](https://stereotoolss-organization.gitbook.io/saw-user-manual-v8.1/analysis/outputs/count-outputs)
+for a detailed guide to these outputs.
+
+Many of these are actually HDF5 files (including the `.h5ad` (anndata-compatible 
+analysis results) and `.gef` (count matrices) files) and can be inspected with 
+any HDF5 compatible tool or library.
+
+The file `visualization.tar.gz` packages the main outputs into a single file for 
+visualization and analysis.
+It is also a handy file for distributing results easily, as it packages most
+of the main outputs (excluding the BAM files).
+
+Taking a look inside, we see many of the other output files have been repackaged here:
+
+```{bash, eval=FALSE}
+.
+├── C04042E3.adjusted.cellbin.gef
+├── C04042E3.bin20_1.0.h5ad
+├── C04042E3.bin50_1.0.h5ad
+├── C04042E3.cellbin_1.0.adjusted.h5ad
+├── C04042E3.rpi
+├── C04042E3_SC_20240925_142342_4.1.0.tar.gz
+├── C04042E3.stereo
+├── C04042E3.tissue.gef
+└── HE_matrix_template.txt
+```
+
+A JSON manifest of the experiment can be found in `.stereo`, which can be loaded
+by the StereoMap software.
+
+### Report
+
+The first place to look is generally the HTML report. A detailed guide to the 
+SAW report can be found [in the SAW manual](https://stereotoolss-organization.gitbook.io/saw-user-manual-v8.1/analysis/outputs/html-report).
+
+
+## StereoMap
+
+If we want to take a closer look than the report, but don't want to dive into
+writing code, we can open up our data in StereoMap.
+
+StereoMap is an interactive tool to examine your Stereo-seq data (being more or
+less the STOmics equivalent of Loupe browser).
+
+StereoMap can be [downloaded from STOmics directly](https://en.stomics.tech/products/stomics-software/stomics-offline-software/list.html), although it is currently only compatible with Windows.
+
+StereoMap v4.1 is compatible with SAW v8.1. Previous versions also included
+image QC in a seperate program, ImageStudio, which is now integrated with 
+StereoMap.
+
+
+### Useful links
+
+- [Download page](https://en.stomics.tech/products/stomics-software/stomics-offline-software/list.html)
+- [Documentation](https://stereotoolss-organization.gitbook.io/stereomap-user-manual-v4.1)
+
+
+## StereoPy
+
+[StereoPy](https://stereopy.readthedocs.io/en/latest/) is a Python library 
+designed to work with Stereo-seq data. Internally it wraps 
+
+StereoPy is used internally by SAW for analysis, and is the easiest way to perform
+many analysis tasks with Stereo-seq data.
+
+It is very easy to import Stereo-seq data into the Python ecosystem using
+StereoPy. For example, GEF files can be loaded with a single command:
+
+```{python, eval=FALSE}
+import stereo as st
+
+data = st.io.read_gef(file_path='C04042E3.tissue.gef', bin_size=50)
+```
+
+### Exporting with StereoPy
+
+StereoPy plays well with other Python libraries, due to being based internally
+on libraries including as [scanpy](https://scanpy.readthedocs.io/en/stable/), 
+[squidpy](https://squidpy.readthedocs.io/en/stable/) and 
+[anndata](https://anndata.readthedocs.io/en/stable/).
+
+Getting data into a format suitable for analysis in R is more tricky.
+The page on [format conversion](https://stereopy.readthedocs.io/en/latest/Tutorials/Format_Conversion.html)
+shows an example of how you can convert a .h5ad (anndata file) to a Seurat object,
+for example.
+
+### Useful links
+
+- [Documentation](https://stereopy.readthedocs.io/en/latest/)
+- [Github](https://github.com/STOmics/stereopy)
+- [Paper](https://www.biorxiv.org/content/10.1101/2023.12.04.569485v1)

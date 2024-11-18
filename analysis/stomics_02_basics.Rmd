@@ -1,0 +1,369 @@
+
+```{r results = 'hide'}
+# object for holding spatial / single cell data
+library(SpatialExperiment)
+library(SpatialFeatureExperiment)
+
+# read HDF5 archives
+library(rhdf5)
+
+# single-cell tools
+library(scran) 
+library(scater) 
+
+# plotting
+library(ggplot2) 
+library(patchwork)
+
+# geospatial simple features
+library(sf)
+
+# custom functions
+source("code/stomicsFunctions.R")
+```
+
+# Loading data into R
+
+One of the first hurdles to analyse STOmics data in R getting it into a suitable 
+format.
+Our SAW outputs use the [AnnData](https://anndata.readthedocs.io/en/stable/) 
+format, which is more commonly used with Python.
+For use in R, we will need to convert it into a different format - the two
+that we'll be considering here are a Seurat or SpatialExperiment object.
+
+Seurat is an very popular library for single cell and spatial transcriptomics, 
+which we've been using extensively this morning.
+
+[SpatialExperiment](https://www.bioconductor.org/packages/release/bioc/vignettes/SpatialExperiment/inst/doc/SpatialExperiment.html) 
+(SPE) is a package for management of spatial transcriptomicsdata, which 
+integrates well with the Bioconductor ecosystem.
+
+It is an extension of SingleCellExperiment (SCE), and is extended by
+SpatialFeatureExperiment (SFE), which also adds advanced geometric
+operations and integration with geospatial libraries.
+
+## Conversion methods
+
+Unfortunately, there are many options, none of them quite perfect. Here are the
+ones that I know of:
+
+- Use the StereoPy R script to create a Seurat object [format conversion](https://stereopy.readthedocs.io/en/latest/Tutorials/Format_Conversion.html)
+  - This method is pretty reliable, but it's a command line script rather than
+    a library, and only gives you Seurat objects
+- Use a `reticulate` based package (calls into Python from R)
+  - For example, [`anndata` from CRAN](https://cran.r-project.org/web/packages/anndata/readme/README.html)
+  - This gets you the data, but you still have to convert it somehow
+- Use [`schard`](https://github.com/cellgeni/schard)
+  - This is a nice little library I've only recently discovered
+  - It will get you most of the way, but can't quite deal with Stereo-seq h5ad quirks yet
+- Use some custom `rhdf5` code 
+  - This is what I've done for this tutorial. It's probably good to understand how the formats differ.
+
+For this workshop, I've put all the loading code into an external script, `stomicsFunctions.R`.
+You don't need to worry too much about the details, and this should work with the current versions
+of SAW. 
+
+## Inspecting our files
+
+Even if you're just going to use a library to handle opening these files,
+it's useful to have a general understanding of what they contain.
+Let's take a look at some of the most common SAW outputs.
+
+We'll be going through the outputs of `visualization.tar.gz`. If you haven't
+downloaded this file, don't worry,
+
+
+### gef 
+
+`.gef` files contain the original expression matrix, and are typically large.
+They will contain both the raw (non-binned) expression matrices, and multiple
+binned matrices.
+
+While these are just HDF5 files (so you can inspect it with `h5ls`), it is 
+difficult to process directly in R.
+
+
+```{r}
+
+# Note, this is only in the optional downloads. Don't worry if you didn't download it.
+input_file <- "stomics/raw/visualization/C04042E3.tissue.gef"
+
+# We can look inside the gef. However, it's not in a format we can directly use.
+counts <- h5read(input_file, "/geneExp/bin50/gene")
+
+# We can just sort through the features (noting the prevalence of mitochondrial genes).
+counts[order(counts$count, decreasing=T),]
+```
+
+### h5ad
+
+The main SAW outputs we can access easily from R or Python are `.h5ad` files.
+These files are in AnnData format, and contain both a binned count matrix,
+plus other analysis outputs created by SAW (such as cluster annotations, 
+UMAP embeddings, etc).
+
+I've just used the `rhdf5` library to read in these files. Pre-normalisation
+matrices can be found under "/raw/X", and are usually in a compressed format.
+This is fairly easy to convert into a format R can read. (Check the 
+`code/stomicsFunctions.R` file to see how `h5adMatrixLoad` was implemented).
+
+Try using the `h5ls` function to see the names of the subgroups in this input.
+
+```{r}
+# We can free up memory by removing those counts
+rm(counts)
+
+# Let's load an h5ad instead
+h5ad_file <- "stomics/raw/visualization/C04042E3.bin50_1.0.h5ad"
+
+# Read in the matrix data (CSR format)
+matrix_data <- h5adMatrixLoad(h5ad_file, "/raw/X")
+
+# Check shape of matrix
+dim(matrix_data)
+```
+AnnData files also contain extra metadata that can map nicely onto the 
+SpatialExperiment object.
+
+```{r}
+# in anndata features (here, genes) are stored as "var", and are columns
+rowdata <- anndataDataframe(h5ad_file, "var")
+rowdata
+```
+```{r}
+# in anndata observations (here, spots) are stored as "obs", and are rows
+coldata <- anndataDataframe(h5ad_file, "obs")
+coldata
+```
+
+We can see that the umap and PCA embeddings are stored under /obsm:
+
+```{r}
+# h5ls(h5ad_file)
+
+# Let's extract the umap
+umap <- h5adMatrixLoad(h5ad_file, "/obsm/X_umap", sparse=F)
+umap <- data.frame(umap1 = umap[1,], umap2 = umap[2,], row.names = rownames(coldata))
+
+```
+Importantly, the actual spatial coordinates are also stored here:
+
+```{r}
+# Read in spatial information, convert to the way SpatialExperiment prefers
+spatial_coords <- h5read(h5ad_file, "/obsm/spatial")
+spatial_coords <- data.matrix(data.frame(
+  x=spatial_coords[1,],
+  y=spatial_coords[2,],
+  row.names = rownames(coldata)
+))
+```
+
+Putting it all together, we can create a SpatialExperiment object:
+
+```{r}
+spe <- SpatialExperiment(
+  assays = list(counts = matrix_data),
+  reducedDims = list(umap = umap),
+  colData = coldata, # spatial bins
+  rowData = rowdata, # features
+  spatialCoords = spatial_coords
+)
+```
+
+Now we can use any tools compatible with this ecosystem.
+For example, some basic quick log normalisation:
+
+```{r}
+spe <- logNormCounts(spe)
+```
+
+We can plot with ggplot:
+
+```{r}
+ggplot(spatialCoords(spe), aes(x, y, color = colData(spe)$total_counts)) +
+  geom_point(size = 0.1) +
+  theme(aspect.ratio=1) +
+  scale_color_viridis_c() +
+  labs(
+    title = "Raw data",
+    color = "total counts"
+  )
+```
+
+Let's try plotting the UMAP embeddings side by side with the spatial plot. 
+We can also highlight the Leiden clusters.
+
+```{r}
+# Let's plot the UMAP
+spatial_plot <- ggplot(spatialCoords(spe), aes(x, y, color = colData(spe)$leiden)) +
+  geom_point(size = 0.1) +
+  theme(aspect.ratio=1) +
+  scale_color_discrete(guide = "none") +
+  ggtitle("Spatial plot")
+
+umap_plot <- ggplot(reducedDims(spe)$umap, aes(umap1, umap2, color = colData(spe)$leiden)) +
+  geom_point(size = 0.1) +
+  theme(aspect.ratio=1) +
+  scale_color_discrete() +
+  labs(
+    title = "UMAP",
+    color = "Leiden clusters"
+  )
+
+spatial_plot + umap_plot
+```
+
+## Loading geoJSON 
+
+In StereoMap (and other spatial software), we can annotate regions and export
+as GeoJSON. The `sf` library can be used to read these into R.
+
+```{r}
+geojson <- "stomics/raw/C04042E3_20241117151457.lasso.geojson"
+sf_object <- read_sf(geojson, crs = NA)
+polygons <- st_collection_extract(sf_object)
+polygons$sample_id <- "sample01"
+
+# Can just plot these normally too
+# plot(sf_object$geometry, col = "grey")
+
+ggplot(polygons) +
+  geom_sf(fill = "#69b3a2", color = "white") +
+  coord_sf(datum=NA) +
+  theme_void()
+```
+
+Unfortunately, the polygons we export from SAW aren't "closed", i.e., the first
+and last points are not the same. This causes some issues with the `sf` library
+so I'm just going to clean these up slightly (see the source for `closePolygon`
+in the file `code/stomicsFunctions.R`).
+
+```{r}
+region_1 <- closePolygon(polygons[1,])
+region_2 <- closePolygon(polygons[2,])
+```
+
+In case that didn't work, here's an example of generating a valid polygonal 
+region (just a simple square):
+
+```{r}
+# Make a test square region using the sf library
+
+st <- 10000
+si <- 5000
+en <- st + si
+geom <- st_polygon(list(matrix(
+  c(st, st,  # Bottom-left
+    en, st,  # Bottom-right
+    en, en,  # Top-right
+    st, en,  # Top-left
+    st, st), # Back to Bottom-left to close
+  ncol = 2, byrow = TRUE
+)))
+
+polygon_data <- data.frame(
+  sample_id = "sample01"
+)
+
+polygon_sf <- st_sf(polygon_data, geometry = st_sfc(geom))
+
+plot(polygon_sf)
+```
+## SpatialFeatureExperiment
+
+Next, let's upgrade to a [SpatialFeatureExperiment](https://www.bioconductor.org/packages/release/bioc/vignettes/SpatialFeatureExperiment/inst/doc/SFE.html),
+which includes functions to manipulate our data with geometries.
+
+```{r}
+# Our SpatialExperiment can just be with some region annotations.
+sfe <- toSpatialFeatureExperiment(spe, 
+  annotGeometries = list(
+    region_1 = region_1,
+    region_2 = region_2
+  ),
+)
+sfe
+```
+Let's plot those regions:
+
+```{r}
+ggplot() +
+  geom_point(data = spatialCoords(spe), aes(x, y, color = colData(spe)$leiden)) +
+  geom_sf(data = annotGeometry(sfe, "region_1"), fill = NA) +
+  geom_sf(data = annotGeometry(sfe, "region_2"), fill = NA) +
+  coord_sf(datum=NA) +
+  scale_color_discrete() +
+  theme(aspect.ratio=1)
+```
+
+Sometimes we might want to extract those regions out into separate objects.
+Noe that we have a SpatialFeatureExperiment object, one way to accomplish this
+is with the `crop` function.
+
+```{r}
+# Crop our sfe by each annotated region
+sfe_r1 <- crop(sfe, annotGeometry(sfe, "region_1"))
+sfe_r2 <- crop(sfe, annotGeometry(sfe, "region_2"))
+
+# Visualise the two regions
+r1_plot <- ggplot() +
+  geom_point(data = spatialCoords(sfe_r1), aes(x, y, color = colData(sfe_r1)$leiden)) +
+  scale_color_discrete(guide = "none") +
+  theme(aspect.ratio=1)
+
+r2_plot <- ggplot() +
+  geom_point(data = spatialCoords(sfe_r2), aes(x, y, color = colData(sfe_r2)$leiden)) +
+  scale_color_discrete(guide = "none") +
+  theme(aspect.ratio=1)
+
+r1_plot + r2_plot
+```
+
+## Differential expression
+
+While SAW does have a feature to perform differential expression analysis with
+these regions, it's nice to be able to do the same analysis in R.
+
+First, let's just do a simple t-test using the `findMarkers` function:
+
+```{r}
+
+# Create a "region" group for analysis
+colData(sfe)$region <- 0 # 0 will be default, no region
+colData(sfe)$region[annotPred(sfe, annotGeometryName = "region_1")] <- 1
+colData(sfe)$region[annotPred(sfe, annotGeometryName = "region_2")] <- 2
+
+# Subset the sfe 
+sfe_regions <- sfe[, colData(sfe)$region != 0]
+
+# Test for marker genes
+markers <- findMarkers(sfe_regions, test = "t", groups = sfe_regions$region)
+
+# Show table
+markers[[1]]
+```
+
+We might then want to plot the expression of a selected gene in these regions
+
+```{r}
+# check
+# hist(colSums(assays(sfe_r1[rownames(markers[[1]])[1], ])$counts))
+
+# Function to return the counts of a particular gene
+geneCount <- function(spe_obj, gene, assay="counts") {
+  m <- assays(spe_obj)[[assay]]
+  return( m[gene,] )
+}
+
+gene <- rownames(markers[[1]])[1]
+
+ggplot() +
+  geom_point(data = spatialCoords(sfe_regions), 
+             aes(x, y, color = geneCount(sfe_regions, gene, assay="logcounts"))) +
+  scale_color_viridis_c() +
+  theme(aspect.ratio=1) + 
+  labs(
+    title = "Top DE gene between regions",
+    color = rowData(sfe[gene,])$real_gene_name
+  )
+```

@@ -1,0 +1,309 @@
+
+```{r}
+# For RCTD
+library(spacexr)
+
+# spatial experiment
+library(SpatialExperiment)
+
+# Easier plotting with spe
+library(ggspavis)
+
+# Custom functions
+source("code/stomicsFunctions.R")
+```
+
+# LISTA data (DY1_D0_stereo-seq.h5ad)
+
+## Spatial area
+
+DY1_D0 represents $48.143 mm^2$
+
+From the paper: each bin contains $50x50$ nanoballs.
+
+Center-to-center distance of $715 nm$ between nanoballs, aka bin-resolution of $36x36 um$.
+
+Liver cells are larger, so this is probably capturing close to a single-cell diameter.
+
+## Experimental design
+
+- In total, 30 whole liver lobe sections
+- Time series (Day 0,1,2,3,7)
+- Matched scRNA-seq.
+
+This experiment has matched and annotated single cell data. We'll be using 
+this to generate Figure 1A from the paper using robust cell-type decomposition
+(RCTD).
+
+## Loading the LISTA dataset 
+
+As they are stored as AnnData, we can import the files from this experiment in 
+the same way we would files directly output from SAW.
+
+```{r}
+# SPE
+h5ad_file <- "stomics/raw/DY1_D0_stereo-seq.h5ad"
+
+# Read in the matrix data (CSR format)
+matrix_data <- h5adMatrixLoad(h5ad_file)
+
+spatial_coords <- h5read(h5ad_file, "/obsm/spatial")
+
+rowdata <- anndataDataframe(h5ad_file, "var")
+coldata <- anndataDataframe(h5ad_file, "obs")
+
+
+spatial_coords <- data.matrix(data.frame(
+  x=spatial_coords[1,],
+  y=spatial_coords[2,],
+  row.names = rownames(coldata)
+))
+
+spe <- SpatialExperiment(
+  assays = list(counts = matrix_data),
+  colData = coldata, # spatial bins
+  rowData = rowdata, # features
+  spatialCoords = spatial_coords
+)
+
+spe
+```
+We can quickly plot this to verify it looks correct using `plot`.
+`ggplot` is much more powerful but sometimes we just want to verify the data
+is there and more or less looks correct.
+
+```{r}
+# R's default plot function is actually pretty smart
+# but ggplot gives more functionality
+plot(spatialCoords(spe))
+```
+We can flip the y axis and set the aspect ratio correctly, for a start.
+
+```{r}
+# flip y axis, and add colours
+ggplot(spatialCoords(spe), aes(x, y)) +
+  geom_point(size = 0.5) +
+  theme(aspect.ratio=1) +
+  scale_y_reverse()
+```
+
+## Examing the annotation
+
+
+```{r}
+# Plot the current annotation
+# These were created using AddModuleScore in Seurat with lists of genes
+# https://github.com/haoshijie13/LISTA/blob/main/00.cut_zonation_layer_and_pathway_module_score.R
+
+# ggspavis plotSpots can be useful
+# plotSpots(spe, annotate = "annotation", in_tissue = NULL) +
+  
+ggplot(spatialCoords(spe), aes(x, y, color = spe$annotation)) +
+  geom_point() +
+  scale_color_viridis_d() +
+  theme(aspect.ratio=1) +
+  scale_y_reverse()
+
+```
+
+Plotting each point can actually obscure the real picture if many points are
+overlapping. We could reduce the point size, or simply bin our data further.
+A good option for binning spatial data is to use `hexbin`:
+
+```{r}
+ggplot(spatialCoords(spe), aes(x, y)) +
+  geom_hex(bins=80, mapping = aes(fill = spe$annotation)) +
+  scale_fill_viridis_d() +
+  theme(aspect.ratio=1) +
+  scale_y_reverse()
+
+```
+
+
+## RCTD
+
+Robust cell type decomposition ([RCTD](https://www.nature.com/articles/s41587-021-00830-w)) can be used to
+determine the likely cell types comprising each bin of our spatial dataset.
+
+
+### Loading single cell reference 
+
+The reference data for LISTA are also stored in AnnData format, which we can
+store in a SingleCellExperiment object.
+
+```{r}
+# examine the file
+# h5ls(sc_reference)
+# str(h5read(sc_reference, "var"))
+
+sc_reference <- "stomics/raw/Homeostasis_hepatic_cell_scRNAseq.h5ad"
+
+# Load the raw data
+sc_matrix_data <- h5adMatrixLoad(sc_reference, group = "/raw/X")
+obs <- anndataDataframe(sc_reference, "obs")
+var <-anndataDataframe(sc_reference, "var")
+
+# make sure col and rownames are set
+rownames(sc_matrix_data) <- var$gene
+colnames(sc_matrix_data) <- rownames(obs)
+
+# Construct SCE
+sce <- SingleCellExperiment(
+  assays = list(counts = sc_matrix_data),
+  colData = obs, # spatial bins
+  rowData = var # features
+)
+
+sce
+```
+
+We can see how many cells we have per annotation:
+
+```{r}
+table(sce$annotation)
+```
+
+
+Because this will take quite some time with our full dataset, we'll actually
+just take a random subsample of cells for this example to speed things up.
+
+```{r}
+# Make sure we get a usable seed...
+set.seed(123)
+
+# Take a random subsample
+sce <- sce[ ,sample(dim(sce)[2], 8000)]
+```
+
+Finally, we can create our reference for RCTD.
+
+```{r}
+# Extract single cell annotations
+cell_types <- sce$annotation
+names(cell_types) <- colnames(sce)
+
+# Create RCTD object
+reference <- Reference(assays(sce)$counts, cell_types)
+```
+
+### Preparing spatial data
+
+First, we'll also subset our spatial data for efficiency.
+We don't want to just randomly subsample this however, as we'll end up with
+a very strangle looking dataset. Instead, let's select a particular subset
+based on our xy coordinates.
+
+```{r}
+# Let's select a little circle from the middle of the tissue
+midpoint <- as.integer(colMeans(spatialCoords(spe)))
+
+# center with midpoint around origin
+adjusted_coords <- sweep(spatialCoords(spe), 2, midpoint, "-")
+
+# define some regions
+spe$circle <- sqrt(rowSums((adjusted_coords)^2)) < 40 # A circle, 50 pts in diameter
+spe$square <- (rowSums(abs(adjusted_coords) < 50)) == 2 # A square
+
+# We can plot more easily if we have x and y in coldata..
+spe$x_pos <- spatialCoords(spe)[,1]
+spe$y_pos <- spatialCoords(spe)[,2]
+
+# Take the circle
+spe_circle <- spe[, spe$circle]
+
+# Plot...
+ggplot(colData(spe_circle), aes(x_pos, y_pos)) +
+  geom_hex(bins=30, mapping = aes(fill = annotation)) +
+  scale_fill_viridis_d() +
+  theme(aspect.ratio=1) +
+  scale_y_reverse()
+```
+
+Now that we have our subset, we can set up the 
+
+```{r}
+coords <- spatialCoords(spe_circle)
+rownames(coords) <- colnames(spe_circle)
+puck <- SpatialRNA(data.frame(coords), assays(spe_circle)$counts)
+```
+
+
+Now, let's try running RCTD. 
+
+
+```{r}
+# Prepare for RCTD analysis
+# The max_cores thing seems broken, it just uses total n cores regardless
+RCTD <- create.RCTD(puck, reference, max_cores = 1)
+
+# Multi mode allows us to define >2 cell types per tissue
+RCTD <- run.RCTD(RCTD, doublet_mode = 'multi')
+
+# notes: started at 10:30, finished at 10:46...
+
+# Save the output as it can take a while to run
+saveRDS(RCTD, "stomics/data/RCTD.rds")
+```
+
+We'll load our RDS file in case we weren't able to run this (or we don't want to wait):
+
+```{r}
+RCTD <- readRDS("stomics/data/RCTD.rds")
+```
+
+Let's inspect the results.
+
+```{r}
+# We get back a list of results
+length(RCTD@results)
+
+# But not all spots have results
+dim(RCTD@spatialRNA@counts)
+
+# Take only the top weighted result
+celltypes <- lapply(RCTD@results, \(x) x$cell_type_list[which.max(x$sub_weights)])
+celltypes <- unlist(celltypes)
+
+
+# Empty vec, with names, correct length
+vec <- rep("None", dim(spe_circle)[2])
+names(vec) <- colnames(spe_circle)
+
+# Our results
+celltypes
+names(celltypes) <- colnames(RCTD@spatialRNA@counts)
+
+# assign
+vec[names(celltypes)] <- celltypes
+
+table(vec)
+```
+
+Each spot will have a list of identified cell types.
+It'll also have a list of identified cells.
+
+
+```{r}
+results <- RCTD@results
+# normalize the cell type proportions to sum to 1.
+cell_type_names <- RCTD@cell_type_info$info[[2]] #list of cell type names
+cell_type_names
+```
+```{r}
+
+spe_circle$celltypes <- vec
+
+# Plot...
+ggplot(colData(spe_circle), aes(x_pos, y_pos, color=celltypes)) +
+  geom_point() +
+  scale_color_discrete() +
+  theme(aspect.ratio=1) +
+  scale_y_reverse()
+```
+
+## Extra steps
+
+In the remaining time, perhaps we could do:
+
+- Go into some depth with clustering? (PCA/UMAP/kmeans)
+- Define some more spatially variable genes?
