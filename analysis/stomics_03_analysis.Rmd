@@ -4,6 +4,7 @@
 library(spacexr)
 
 # spatial experiment
+suppressMessages(library(SpatialExperiment))
 library(SpatialExperiment)
 
 # Easier plotting with spe

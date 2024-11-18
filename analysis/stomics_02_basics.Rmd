@@ -1,6 +1,9 @@
 
 ```{r results = 'hide'}
 # object for holding spatial / single cell data
+
+# hide some output
+suppressMessages(library(SpatialExperiment))
 library(SpatialExperiment)
 library(SpatialFeatureExperiment)
 
@@ -92,7 +95,7 @@ input_file <- "stomics/raw/visualization/C04042E3.tissue.gef"
 counts <- h5read(input_file, "/geneExp/bin50/gene")
 
 # We can just sort through the features (noting the prevalence of mitochondrial genes).
-counts[order(counts$count, decreasing=T),]
+head(counts[order(counts$count, decreasing=T),])
 ```
 
 ### h5ad
@@ -128,12 +131,12 @@ SpatialExperiment object.
 ```{r}
 # in anndata features (here, genes) are stored as "var", and are columns
 rowdata <- anndataDataframe(h5ad_file, "var")
-rowdata
+head(rowdata)
 ```
 ```{r}
 # in anndata observations (here, spots) are stored as "obs", and are rows
 coldata <- anndataDataframe(h5ad_file, "obs")
-coldata
+head(coldata)
 ```
 
 We can see that the umap and PCA embeddings are stored under /obsm:
@@ -340,7 +343,7 @@ sfe_regions <- sfe[, colData(sfe)$region != 0]
 markers <- findMarkers(sfe_regions, test = "t", groups = sfe_regions$region)
 
 # Show table
-markers[[1]]
+head(markers[[1]])
 ```
 
 We might then want to plot the expression of a selected gene in these regions
