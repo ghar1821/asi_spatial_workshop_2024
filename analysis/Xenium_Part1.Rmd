@@ -1,0 +1,132 @@
+---
+title: "10x Xenium Analysis Part 1"
+output: html_document
+date: "2024-11-18"
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This part of the analysis will read in raw data and construct a data object containing 10x Xenium data. It will also explore the Xenium outputs explore the data object
+
+# Load libraries
+
+```{r, echo=FALSE, include=FALSE}
+library(SpatialFeatureExperiment)
+library(Voyager)
+library(RBioFormats)
+library(scater)
+library(BiocParallel)
+library(scran)
+library(fs)
+library(bluster)
+library(sf)
+library(EBImage)
+library(terra)
+library(scales)
+library(plotly)
+```
+
+# Read in Xenium data
+
+* Locate the Xenium output bundle on your computer and set it to ```dir```
+* Might have to unzip first
+* Check the Xenium output bundle in a tree-like format
+
+```{r}
+# Xenium_V1_Human_Colon_Cancer_P5_CRC_Add_on_FFPE_outs.zip
+
+# read data into an SE object
+# dir should point to the Xenium outputs
+# this output folder contains data from patient 5
+dir <- "xenium/raw/"
+
+# examine files in Xenium output bundle
+fs::dir_tree(dir)
+
+# the main files needed for construction of SE are:
+#cell_feature_matrix.h5
+#cells.parquet
+#experiment.xenium
+
+# create data object and call it se
+se <- SpatialFeatureExperiment::readXenium(data_dir = dir, 
+                                                    sample_id = "p5",
+                                           row.names = "symbol")
+
+# Read in data with readRDS instead
+# se <- readRDS(~/data/se_xenium.rds)
+```
+
+# Exploring the Xenium SE object
+
+* Getting, setting, and plotting fields of SE objects
+* Common operations on SE objects
+* getters, setters, and plotting functions
+* Find the gene count matrix
+
+```{r}
+# summary
+se
+# dimensions
+dim(se)
+
+# where are the counts?
+# use the 'counts' getter function 
+m <- counts(se)
+head(m)
+```
+
+# Explore metadata within the Xenium SE data object
+
+* The gene count matrix has metadata about the cells and genes.
+* This metadata is stored within various slots of the SE object.
+* Use the ```colData``` getter function to get cell metadata and ```rowData``` to get gene metadata.
+
+```{r}
+colData(se) # cell metadata
+rowData(se) # gene metadata
+
+colGeometries(se)
+
+# use the $ operator to access slops within the object
+# se$
+
+# save file as SE object
+# re-use this later as needed
+#saveRDS(object = se, file = "/DIR/se_p5.rds")
+```
+
+# Plot Xenium cells
+
+* Extract cell segmentation results to a data frame
+
+```{r}
+(cells <- colGeometry(se, "cellSeg"))
+```
+
+* Plot cell geometries using the ```colGeometry``` function
+
+```{r}
+ggplot(cells) + geom_sf() + ggtitle("Xenium cells - p5")
+```
+
+# Plot Xenium cells custom
+
+* Plot the cell segmentation results. Also plot with the dark theme. 
+* Use the ```plotGeometry``` function. 
+
+```{r}
+# "type" or "colGeometryName" depending on version of the package
+plotGeometry(se, colGeometryName = "cellSeg", show_axes = TRUE) +
+    plotGeometry(se, colGeometryName = "cellSeg", show_axes = TRUE, dark = TRUE)
+```
+
+# Save data checkpoint
+
+```{r}
+#saveRDS(object = se, file = "xenium/data/se_xenium.rds")
+```

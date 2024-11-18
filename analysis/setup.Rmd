@@ -305,6 +305,8 @@ md5sum_str <- c(
 )
 check_md5(md5sum_str)
 
+unzip(zipfile = "xenium/raw/Xenium_V1_Human_Colon_Cancer_P5_CRC_Add_on_FFPE_outs.zip")
+
 ```
 
 Make sure there are no warning from the code block above.
