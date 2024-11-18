@@ -10,11 +10,14 @@ editor_options:
 Please ensure you follow the instructions below **prior** to attending the workshop.
 
 You can either create a new R script and copy paste the content of the code blocks
-or download [this Rmd file](https://github.com/ghar1821/asi_spatial_workshop_2024/blob/master/analysis/setup.Rmd) 
+or download [this Rmd file](https://github.com/ghar1821/asi_spatial_workshop_2024/blob/master/analysis/setup.Rmd)
 and run each code block step by step.
 
 ***Do not just blindly run the code! Make sure you read the description above each
 of the code block to understand what the code is doing before running them!***
+Sourcing the entire Rmd file will not run anything as every code block has been 
+deliberately annotated such that they won't execute when the whole file is sourced.
+
 
 If you have any problems, please reach out to either:
 
@@ -28,7 +31,7 @@ If you have any problems, please reach out to either:
 Please install the packages that we will be using in the workshop by running
 the code block below.
 
-```{r, eval=F}
+```{r, eval=FALSE}
 
 cran_packages <- c(
   "BiocManager", "Seurat", "ggplot2", "scales", "patchwork", "qs",
@@ -52,7 +55,7 @@ devtools::install_github("dmcable/spacexr", build_vignettes = FALSE)
 
 Running this chunk will let you know if the packages have been installed properly. 
 
-```{r eval=F}
+```{r eval=FALSE}
 checkSetup <- function() {
   library(cli)
   cat("\n--------------------------------------\n")
@@ -82,12 +85,33 @@ checkSetup <- function() {
 checkSetup()
 ```
 
+***Note:***
+
+You may encounter error running the code block above when it tries to load the *RBioFormats* package.
+This is because *RBioFormats* loads [rJava](https://github.com/s-u/rJava) package which relies on
+having Java Run Time (JRE) installed in your system.
+
+**For Mac users,** if you have [homebrew](https://brew.sh/) installed, you can install JRE
+through OpenJDK using homebrew by running `brew install openjdk` on terminal.
+Afterwards, you will need to set the `JAVA_HOME` environment value in rstudio to 
+the location where homebrew installed openjdk.
+For example, if OpenJDK is installed under `/opt/homebrew/opt/openjdk/libexec/openjdk.jdk/Contents/Home`,
+and set `JAVA_HOME` to point to that directory
+using the following code:
+
+```{bash eval=FALSE}
+Sys.setenv(JAVA_HOME="/opt/homebrew/opt/openjdk/libexec/openjdk.jdk/Contents/Home")
+```
+
+If you are not sure how to get JRE installed into your system to load *RBioFormats*
+package, please reach out to your IT support for assistance.
+
 ## Folder structure
 
 The code block below will create a bunch of folders in the location where
 this script is stored.
 
-```{r, eval=F}
+```{r, eval=FALSE}
 # This sets the working directory for all subsequent code chunks to be run
 # to the location of this file.
 knitr::opts_knit$set(root.dir = dirname(rstudioapi::getActiveDocumentContext()$path))
@@ -110,7 +134,7 @@ if(!dir.exists("stomics/data")){dir.create("stomics/data")}
 
 Please source the code block below to load a function to check the integrity of the downloaded files.
 
-```{r eval=F}
+```{r eval=FALSE}
 check_md5 <- function(files_expected_md5sum) {
     # files_expected_md5sum must be a named vector where the name is the path to the file
     # and the value is the expected md5sum
@@ -138,12 +162,16 @@ check_md5 <- function(files_expected_md5sum) {
 }
 ```
 
+***Note***: if you encounter a timeout error (after 60 seconds) while downloading the files,
+you can increase the timeout to say 6,000 seconds to give R more time
+to download the files by running `options(timeout = max(6000, getOption("timeout")))`
+
 ### Visium
 
 The code block below will download the count matrix and spatial information
 required to load the Visium data in.
 
-```{r eval=F}
+```{r eval=FALSE}
 download.file("https://cf.10xgenomics.com/samples/spatial-exp/3.0.0/Visium_V2_Human_Colon_Cancer_P2/Visium_V2_Human_Colon_Cancer_P2_filtered_feature_bc_matrix.h5", 
               destfile = "visium/raw/Visium_V2_Human_Colon_Cancer_P2_filtered_feature_bc_matrix.h5", 
               method = "curl")
@@ -198,18 +226,25 @@ https://www.10xgenomics.com/support/software/loupe-browser/latest
 
 ### STOmics
 
-```{r eval=F}
+```{r eval=FALSE}
 # LISTA paper, processed tissue slice (222MB)
-download.file("https://filesender.aarnet.edu.au/download.php?token=ec632836-0700-4921-9699-668bfe9657d2&files_ids=23608389",
-              destfile = "stomics/raw/DY1_D0_stereo-seq.h5ad")
+download.file(
+    "https://filesender.aarnet.edu.au/download.php?token=ec632836-0700-4921-9699-668bfe9657d2&files_ids=23608389",
+    destfile = "stomics/raw/DY1_D0_stereo-seq.h5ad",
+    method = 'curl',
+    extra = '-L'
+)
 
 # LISTA single cell dataset (540MB)
-download.file("https://filesender.aarnet.edu.au/download.php?token=ec632836-0700-4921-9699-668bfe9657d2&files_ids=23608386",
-              destfile = "stomics/raw/Homeostasis_hepatic_cell_scRNAseq.h5ad")
+download.file(
+    "https://filesender.aarnet.edu.au/download.php?token=ec632836-0700-4921-9699-668bfe9657d2&files_ids=23608386",
+    destfile = "stomics/raw/Homeostasis_hepatic_cell_scRNAseq.h5ad",
+    method = 'curl',
+    extra = '-L'
+)
 ```
 
 ```{r eval=FALSE}
-
 # check md5sum of the downloaded files.
 md5sum_str <- c(
     "stomics/raw/DY1_D0_stereo-seq.h5ad" = "f63df815d75548034cb659bc3491f51a",
@@ -224,10 +259,14 @@ check_md5(md5sum_str)
 
 File size: 4.6GB
 
-```{r eval=F}
+```{r eval=FALSE}
 # Raw data from SAW (4.6GB, optional download!)
-download.file("https://filesender.aarnet.edu.au/download.php?token=32ffcb63-24df-47e2-bdce-7341fe86082a&files_ids=23595450",
-              destfile = "stomics/raw/visualization.tar.gz")
+download.file(
+    "https://filesender.aarnet.edu.au/download.php?token=32ffcb63-24df-47e2-bdce-7341fe86082a&files_ids=23595450",
+    destfile = "stomics/raw/visualization.tar.gz",
+    method = "curl",
+    extra = '-L'
+)
 
 # check md5sum of the downloaded files.
 md5sum_str <- c(
@@ -251,7 +290,7 @@ https://www.10xgenomics.com/support/software/xenium-explorer/downloads
 Please also install the raw xenium data by using the below code. 
 The file size is large so it might take a few minutes to complete. 
 
-```{r eval=F}
+```{r eval=FALSE}
 # Sample P5 CRC
 # This file is ~12GB so will take a few minutes to download.
 download.file(
