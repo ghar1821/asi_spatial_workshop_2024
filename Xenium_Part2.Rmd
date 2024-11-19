@@ -1,0 +1,201 @@
+---
+title: "10x Xenium Analysis Part 2"
+output: html_document
+date: "2024-11-18"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Part 2 of the analysis will cover: 
+
+* Introduction to image processing
+* QC of Xenium data
+* Clustering and dimensionality reduction analysis
+
+```{r, echo=FALSE, include=FALSE}
+library(SpatialFeatureExperiment)
+library(Voyager)
+library(RBioFormats)
+library(scater)
+library(BiocParallel)
+library(scran)
+library(fs)
+library(bluster)
+library(sf)
+library(EBImage)
+library(terra)
+library(scales)
+library(plotly)
+```
+
+* The Xenium data should be loaded in from part 1 of the analysis in the ```se``` object
+* If its not, read in data with ```readRDS(xenium/data/se_xenium.rds)```
+
+```{r}
+se <- readRDS(file = "xenium/data/se_xenium.rds")
+```
+
+# Images
+
+* Access images with getter functions ```imgData``` and ```imageIDs```
+* This part of the analysis will require the ```RBioFormats``` package.
+* Plot transcript counts across spatial image. 
+* Get the spatial extent of the spatial image with ```terra::ext()```
+* View the binary mask of the image
+* Explore and visualise image channels. 
+
+```{r}
+imgData(se)
+imageIDs(se)
+
+(img <- getImg(se, image_id = "morphology_focus"))
+
+# plot image overlayed with metadata
+# features can be any of colData
+plotSpatialFeature(se, features = "transcript_counts", 
+                   colGeometryName = "cellSeg",
+                   aes_use = "color", fill = NA, # Only color by cell outline
+                   image_id = "morphology_focus", dark = TRUE, channel = 1)
+
+# get the extend of the spatial image
+ext(img)
+
+# convert BioFormatsImage to ExtImage
+ebi <- toExtImage(img)
+# display with EBimage
+#EBImage::display(normalize(ebi))
+
+th <- EBImage::otsu(ebi, range = range(ebi), levels = max(ebi))
+mask <- ebi > th
+EBImage::display(mask)
+
+#plotImage(se, image_id = "morphology_focus", channel = 3:1, normalize_channels = TRUE)
+
+# plot side-by-side
+plotImage(se, image_id = "morphology_focus", channel = 3:1, normalize_channels = TRUE) +
+plotImage(se, image_id = "morphology_focus", channel = 1, palette = viridis_pal()(255))
+```
+
+# Bounding box
+
+* Create a bounding box to crop the spatial image to a region of interest (ROI)
+* Plot the cropped ROI
+
+```{r}
+# for example
+bbox <- c(xmin = 2000, xmax = 4000, ymin = -5000, ymax = -2000)
+# plot
+plotGeometry(se, colGeometryName = "cellSeg", bbox = bbox)
+
+# a smaller ROI
+#bbox <- c(xmin = 0, xmax = 200, ymin = -600, ymax = -400)
+
+# plotSpatialFeature(se, features = "total_counts", 
+#                    colGeometryName = "cellSeg",
+#                    aes_use = "color", fill = NA, # Only color by cell outline
+#                    image_id = "morphology_focus", dark = TRUE, bbox = bbox, channel = 1)
+
+```
+
+# Filtering data
+
+* Remove low quality cells with too few transcript counts and genes that are not detected.
+* ```colData``` columns in SE can be accessed with the $ operator as if getting a column from a data frame
+
+```{r}
+# check dims
+dim(se)
+# contains pre-computed QC metrics
+names(colData(se))
+# filter metadata
+se <- se[, se$total_counts > 5]
+# filter counts matrix
+se <- se[rowSums(counts(se)) > 0,]
+# check dims again
+dim(se)
+```
+
+# Data Normalization
+
+* Normalise gene expression values across the sample. 
+* Access the log normalised values within the ```se``` object.
+* Using cell area as size factors is more suited to (imaging based) Xenium data. Using total counts as in scRNA-seq is inappropriate when we have a curated gene panel and can blunt biological signals.
+
+```{r}
+# normalise
+se <- logNormCounts(se, size.factors = se$cell_area)
+# check the assays slot
+se
+# Log counts getter
+logcounts(se) |> head()
+```
+
+# Run Principal Component Analysis (PCA)
+
+* PCA discovers axes in high-dimensional space that capture the largest amount of variation. This is best understood by imagining each axis as a line.
+* In PCA, the first axis (or “principal component”, PC) is chosen such that it maximizes this variance. The next PC is chosen such that it is orthogonal to the first and captures the greatest remaining amount of variation, and so on.
+* PCA will reveal linear combinations of features in the original dataset and are ranked with decreasing order of variance.
+* PCA is commonly used on single-cell RNA-seq datasets and is used here on Xenium. 
+* Run PCA on the Xenium dataset.
+* Examine and plot the PCA results.
+
+```{r}
+se <- runPCA(se, ncomponents = 20,
+                  exprs_values = "logcounts", scale = TRUE)
+# find in object
+pca_res <- reducedDim(se, "PCA")
+# check dim names slot
+se
+# getter 
+reducedDimNames(se)
+# plot PCA results
+spatialReducedDim(se, "PCA", 4, colGeometryName = "centroids", divergent = TRUE,
+                  diverge_center = 0, ncol = 2, scattermore = TRUE, pointsize = 1.5)
+```
+
+# Clustering and Dimensionality reduction
+
+* Clustering is an unsupervised learning procedure that is used to empirically define groups of cells with similar gene expression profiles.
+* This will make cell identify annotation easier as it will group cells into distinct clusters. 
+* Clustering is just a tool to explore the data. Many different clustering algorithms and resolutions can be used to explore the clustering of the data. 
+* Run the Leiden clustering algorithm using the function ```bluster::clusterRows()```
+* Examine the clustering results using the ```plotSpatialFeature``` function. 
+* We can further arrange our cells in low dimensional space with the UMAP algorithm. UMAP will project gene expression down to 2 dimensions. It has more freedom in how it arranges cells in 2D space and aims to preserve relationships between neighbouring cells.
+* Run UMAP with the ```runUMAP``` function and plot.
+
+```{r}
+set.seed(29)
+# run clustering
+colData(se)$cluster <- clusterRows(reducedDim(se, "PCA")[,1:15],
+                                    BLUSPARAM = SNNGraphParam(
+                                        cluster.fun = "leiden",
+                                        cluster.args = list(
+                                            resolution_parameter = 0.5,
+                                            objective_function = "modularity")))
+
+# examine results
+# This will make a new column called cluster in the colData slot
+colData(se)
+table(se$cluster)
+# plot
+plotSpatialFeature(se, "cluster", colGeometryName = "cellSeg", pointsize = 1.4) + ggtitle("Leiden gene expression clustering")
+# bbox
+plotSpatialFeature(se, "cluster", colGeometryName = "cellSeg", bbox = bbox)
+
+# UMAP
+se <- runUMAP(se, dimred="PCA")
+
+plotUMAP(object = se, dimred = "UMAP", colour_by = "cluster") + ggtitle("UMAP representation of Leiden gene expression clusters")
+#, text_by = "cluster"
+
+# choose a gene from rowData
+
+# plotSpatialFeature(se, "ACP5", colGeometryName = "cellSeg", 
+#                   image_id = "morphology_focus",
+#                    fill = NA, aes_use = "color", linewidth = 0.15,
+#                    tx_fixed = list(color = "lightgray"),
+#                    channel = 3:1, dark = TRUE, normalize_channels = TRUE)
+
+```
