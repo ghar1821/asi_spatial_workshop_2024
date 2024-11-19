@@ -4,6 +4,7 @@
 library(spacexr)
 
 # spatial experiment
+suppressMessages(library(SpatialExperiment))
 library(SpatialExperiment)
 
 # Easier plotting with spe
@@ -89,6 +90,8 @@ ggplot(spatialCoords(spe), aes(x, y)) +
 
 ## Examing the annotation
 
+A pre-set list of genes was used to define zonation layers in this tissue,
+we've already put this annotation in our SPE.
 
 ```{r}
 # Plot the current annotation
@@ -251,54 +254,85 @@ We'll load our RDS file in case we weren't able to run this (or we don't want to
 RCTD <- readRDS("stomics/data/RCTD.rds")
 ```
 
-Let's inspect the results.
-
-```{r}
-# We get back a list of results
-length(RCTD@results)
-
-# But not all spots have results
-dim(RCTD@spatialRNA@counts)
-
-# Take only the top weighted result
-celltypes <- lapply(RCTD@results, \(x) x$cell_type_list[which.max(x$sub_weights)])
-celltypes <- unlist(celltypes)
-
-
-# Empty vec, with names, correct length
-vec <- rep("None", dim(spe_circle)[2])
-names(vec) <- colnames(spe_circle)
-
-# Our results
-celltypes
-names(celltypes) <- colnames(RCTD@spatialRNA@counts)
-
-# assign
-vec[names(celltypes)] <- celltypes
-
-table(vec)
-```
+Let's inspect the results. 
 
 Each spot will have a list of identified cell types.
-It'll also have a list of identified cells.
-
+It'll also have a list of identified cells. But we can extract the weights
+assigned to every cell type in the reference and plot that.
 
 ```{r}
-results <- RCTD@results
-# normalize the cell type proportions to sum to 1.
-cell_type_names <- RCTD@cell_type_info$info[[2]] #list of cell type names
-cell_type_names
+# We can extract "all weights" to see the score assigned per type
+celltype_list <- lapply(RCTD@results, \(x) x$all_weights)
+celltype_df <- as.data.frame(do.call(rbind, celltype_list))
+celltype_df <- normalize_weights(celltype_df)
+rownames(celltype_df) <- colnames(RCTD@spatialRNA@counts)
+
+boxplot(celltype_df)
 ```
+
+The main cell types assigned are "PC hep" (pericentral hepatocyte) and "PP hep"
+(periportal hepatocyte). If we were to only take the most highly weighted 
+result, this is all we'd see.
+
+The liver cells are on average much larger, and perhaps expression is higher.
+If we want to highlight these immune cells, we'll need to treat them differently.
+
+```{r}
+# Get a closer look at the other cell type scores
+boxplot(celltype_df[, !(names(celltype_df) %in% c("PC hep", "PP hep"))])
+```
+Now we can see the liver sinusoidal endothelial cells (LSECs), and a small number
+of immune cells. 
+Let's extract all of these results so we can plot them more easily.
+
+```{r}
+# Define a dataframe with the correct number of rows
+df <- data.frame(row.names = colnames(spe_circle))
+# Set the results
+df[rownames(celltype_df),colnames(celltype_df)] <- celltype_df
+dim(df)
+```
+We'll reshape this into "long" format.
+
+
+```{r}
+# Reshape into long format for plotting
+df_long <- data.frame(
+  variable = rep(names(df), each = nrow(df)),
+  value = unlist(df),
+  x_pos = rep(colData(spe_circle)$x_pos, times = ncol(df)),
+  y_pos = rep(colData(spe_circle)$y_pos, times = ncol(df))
+)
+```
+
+
+We can see that our main two cell types correspond well to the zonation layers
+that have already been annotated:
+
+```{r}
+# Plot the PC hep and PP hep weights
+df_long[df_long$variable %in% c("PC hep", "PP hep"),] |> 
+  ggplot(aes(x_pos, y_pos, color=value)) +
+  geom_point(size=1.0) +
+  scale_color_viridis_c() +
+  theme(aspect.ratio=1) +
+  scale_y_reverse() +
+  facet_wrap(~variable)
+```
+Let's exclude these two, and just see the distribution of other cell types, to
+identify some specific immune cell hotspots.
+
+
 ```{r}
 
-spe_circle$celltypes <- vec
-
-# Plot...
-ggplot(colData(spe_circle), aes(x_pos, y_pos, color=celltypes)) +
-  geom_point() +
-  scale_color_discrete() +
+# Plot weights of each cell type
+df_long[!df_long$variable %in% c("PC hep", "PP hep"),] |> 
+  ggplot(aes(x_pos, y_pos, color=value)) +
+  geom_point(size=1.0) +
+  scale_color_viridis_c() +
   theme(aspect.ratio=1) +
-  scale_y_reverse()
+  scale_y_reverse() +
+  facet_wrap(~variable)
 ```
 
 ## Extra steps
