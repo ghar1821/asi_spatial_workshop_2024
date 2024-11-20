@@ -9,7 +9,7 @@ editor_options:
 
 ## Introduction
 
-In this part of the analysis, we will introduce the dataset we will be using 
+In this part of the visium workshop, we will introduce the dataset we will be using 
 in the visium workshop, learn how to load it up into a Seurat object and
 interrogate it.
 
@@ -290,6 +290,6 @@ QS object using the [qs package](https://cran.r-project.org/web/packages/qs/vign
 The latter is a lot quicker.
 
 ```{r}
-qsave(dat, "output/visium/filtered_seurat.qs")
+qsave(dat, "output/visium/visium_seurat.qs")
 ```
 
