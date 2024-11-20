@@ -345,6 +345,15 @@ div.tocify {
     <li>
       <a href="setup.html">Setup</a>
     </li>
+    <li>
+      <a href="stomics_01_intro.html">STOmics intro</a>
+    </li>
+    <li>
+      <a href="stomics_02_basics.html">STOmics basics</a>
+    </li>
+    <li>
+      <a href="stomics_03_analysis.html">STOmics analysis</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -381,7 +390,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+workflowr <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -392,8 +401,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> </a>
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -406,9 +415,9 @@ aria-hidden="true"></span> </a>
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong> <code>asi_spatial_workshop_2024/</code>
@@ -431,21 +440,18 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
-changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges"
+<div id="strongRMarkdownfilestronguptodate"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of
-the R Markdown file created these results, you’ll want to first commit
-it to the Git repo. If you’re still working on the analysis, you can
-ignore this warning. When you’re finished, you can run
-<code>wflow_publish</code> to commit the R Markdown file and build the
-HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
 </div>
 </div>
 </div>
@@ -536,15 +542,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024treed159369db7afd7d2b68b6afd118f5eba5dc4dbaetargetblankd159369a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree21f7796fe642ca3b086d0dec1d1f87877ec894f0targetblank21f7796a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/d159369db7afd7d2b68b6afd118f5eba5dc4dbae" target="_blank">d159369</a>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/21f7796fe642ca3b086d0dec1d1f87877ec894f0" target="_blank">21f7796</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024treed159369db7afd7d2b68b6afd118f5eba5dc4dbaetargetblankd159369a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree21f7796fe642ca3b086d0dec1d1f87877ec894f0targetblank21f7796a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -554,7 +560,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/d159369db7afd7d2b68b6afd118f5eba5dc4dbae" target="_blank">d159369</a>.
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/21f7796fe642ca3b086d0dec1d1f87877ec894f0" target="_blank">21f7796</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -578,10 +584,8 @@ Untracked files:
     Untracked:  visium/
 
 Unstaged changes:
-    Modified:   analysis/index.Rmd
-    Modified:   analysis/stomics_01_intro.Rmd
+    Modified:   analysis/_site.yml
     Modified:   analysis/stomics_02_basics.Rmd
-    Modified:   analysis/stomics_03_analysis.Rmd
 
 </code></pre>
 <p>
@@ -626,6 +630,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/ghar1821/asi_spatial_workshop_2024/21f7796fe642ca3b086d0dec1d1f87877ec894f0/docs/stomics_01_intro.html" target="_blank">21f7796</a>
+</td>
+<td>
+John
+</td>
+<td>
+2024-11-20
+</td>
+<td>
+add html
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/4c7c8f6d93e404a14bc1eefeade17ff61776a8f9/analysis/stomics_01_intro.Rmd" target="_blank">4c7c8f6</a>
+</td>
+<td>
+John
+</td>
+<td>
+2024-11-20
+</td>
+<td>
+update header
+</td>
+</tr>
 <tr>
 <td>
 Rmd

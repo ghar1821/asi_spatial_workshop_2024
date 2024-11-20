@@ -9,6 +9,12 @@ navbar:
     menu:
       - text: "Setup"
         href: setup.html
+      - text: "STOmics intro"
+        href: stomics_01_intro.html
+      - text: "STOmics basics"
+        href: stomics_02_basics.html
+      - text: "STOmics analysis"
+        href: stomics_03_analysis.html
   - text: "About"
     href: about.html
   - text: License

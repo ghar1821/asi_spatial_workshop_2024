@@ -345,6 +345,15 @@ div.tocify {
     <li>
       <a href="setup.html">Setup</a>
     </li>
+    <li>
+      <a href="stomics_01_intro.html">STOmics intro</a>
+    </li>
+    <li>
+      <a href="stomics_02_basics.html">STOmics basics</a>
+    </li>
+    <li>
+      <a href="stomics_03_analysis.html">STOmics analysis</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -381,7 +390,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+workflowr <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -392,8 +401,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> </a>
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -406,9 +415,9 @@ aria-hidden="true"></span> </a>
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong> <code>asi_spatial_workshop_2024/</code>
@@ -431,21 +440,18 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
-changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges"
+<div id="strongRMarkdownfilestronguptodate"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of
-the R Markdown file created these results, you’ll want to first commit
-it to the Git repo. If you’re still working on the analysis, you can
-ignore this warning. When you’re finished, you can run
-<code>wflow_publish</code> to commit the R Markdown file and build the
-HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
 </div>
 </div>
 </div>
@@ -536,15 +542,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024treed159369db7afd7d2b68b6afd118f5eba5dc4dbaetargetblankd159369a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree21f7796fe642ca3b086d0dec1d1f87877ec894f0targetblank21f7796a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/d159369db7afd7d2b68b6afd118f5eba5dc4dbae" target="_blank">d159369</a>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/21f7796fe642ca3b086d0dec1d1f87877ec894f0" target="_blank">21f7796</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024treed159369db7afd7d2b68b6afd118f5eba5dc4dbaetargetblankd159369a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree21f7796fe642ca3b086d0dec1d1f87877ec894f0targetblank21f7796a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -554,7 +560,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/d159369db7afd7d2b68b6afd118f5eba5dc4dbae" target="_blank">d159369</a>.
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/21f7796fe642ca3b086d0dec1d1f87877ec894f0" target="_blank">21f7796</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -578,10 +584,8 @@ Untracked files:
     Untracked:  visium/
 
 Unstaged changes:
-    Modified:   analysis/index.Rmd
-    Modified:   analysis/stomics_01_intro.Rmd
+    Modified:   analysis/_site.yml
     Modified:   analysis/stomics_02_basics.Rmd
-    Modified:   analysis/stomics_03_analysis.Rmd
 
 </code></pre>
 <p>
@@ -626,6 +630,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/ghar1821/asi_spatial_workshop_2024/21f7796fe642ca3b086d0dec1d1f87877ec894f0/docs/stomics_03_analysis.html" target="_blank">21f7796</a>
+</td>
+<td>
+John
+</td>
+<td>
+2024-11-20
+</td>
+<td>
+add html
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/4c7c8f6d93e404a14bc1eefeade17ff61776a8f9/analysis/stomics_03_analysis.Rmd" target="_blank">4c7c8f6</a>
+</td>
+<td>
+John
+</td>
+<td>
+2024-11-20
+</td>
+<td>
+update header
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -865,8 +903,45 @@ looks correct.</p>
 <pre class="r"><code># R&#39;s default plot function is actually pretty smart
 # but ggplot gives more functionality
 plot(spatialCoords(spe))</code></pre>
-<p><img src="figure/stomics_03_analysis.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" />
-We can flip the y axis and set the aspect ratio correctly, for a
+<p><img src="figure/stomics_03_analysis.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-1">
+Past versions of unnamed-chunk-3-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-3-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/21f7796fe642ca3b086d0dec1d1f87877ec894f0/docs/figure/stomics_03_analysis.Rmd/unnamed-chunk-3-1.png" target="_blank">21f7796</a>
+</td>
+<td>
+John
+</td>
+<td>
+2024-11-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>We can flip the y axis and set the aspect ratio correctly, for a
 start.</p>
 <pre class="r"><code># flip y axis, and add colours
 ggplot(spatialCoords(spe), aes(x, y)) +
@@ -874,6 +949,43 @@ ggplot(spatialCoords(spe), aes(x, y)) +
   theme(aspect.ratio=1) +
   scale_y_reverse()</code></pre>
 <p><img src="figure/stomics_03_analysis.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-1">
+Past versions of unnamed-chunk-4-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-4-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/21f7796fe642ca3b086d0dec1d1f87877ec894f0/docs/figure/stomics_03_analysis.Rmd/unnamed-chunk-4-1.png" target="_blank">21f7796</a>
+</td>
+<td>
+John
+</td>
+<td>
+2024-11-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="examing-the-annotation" class="section level2">
 <h2>Examing the annotation</h2>
@@ -892,6 +1004,43 @@ ggplot(spatialCoords(spe), aes(x, y, color = spe$annotation)) +
   theme(aspect.ratio=1) +
   scale_y_reverse()</code></pre>
 <p><img src="figure/stomics_03_analysis.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-1">
+Past versions of unnamed-chunk-5-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-5-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/21f7796fe642ca3b086d0dec1d1f87877ec894f0/docs/figure/stomics_03_analysis.Rmd/unnamed-chunk-5-1.png" target="_blank">21f7796</a>
+</td>
+<td>
+John
+</td>
+<td>
+2024-11-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Plotting each point can actually obscure the real picture if many
 points are overlapping. We could reduce the point size, or simply bin
 our data further. A good option for binning spatial data is to use
@@ -902,6 +1051,43 @@ our data further. A good option for binning spatial data is to use
   theme(aspect.ratio=1) +
   scale_y_reverse()</code></pre>
 <p><img src="figure/stomics_03_analysis.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
+Past versions of unnamed-chunk-6-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/21f7796fe642ca3b086d0dec1d1f87877ec894f0/docs/figure/stomics_03_analysis.Rmd/unnamed-chunk-6-1.png" target="_blank">21f7796</a>
+</td>
+<td>
+John
+</td>
+<td>
+2024-11-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="rctd" class="section level2">
 <h2>RCTD</h2>
@@ -1007,6 +1193,43 @@ ggplot(colData(spe_circle), aes(x_pos, y_pos)) +
   theme(aspect.ratio=1) +
   scale_y_reverse()</code></pre>
 <p><img src="figure/stomics_03_analysis.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-1">
+Past versions of unnamed-chunk-11-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-11-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/21f7796fe642ca3b086d0dec1d1f87877ec894f0/docs/figure/stomics_03_analysis.Rmd/unnamed-chunk-11-1.png" target="_blank">21f7796</a>
+</td>
+<td>
+John
+</td>
+<td>
+2024-11-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Now that we have our subset, we can set up the</p>
 <pre class="r"><code>coords &lt;- spatialCoords(spe_circle)
 rownames(coords) &lt;- colnames(spe_circle)
@@ -1089,6 +1312,43 @@ rownames(celltype_df) &lt;- colnames(RCTD@spatialRNA@counts)
 
 boxplot(celltype_df)</code></pre>
 <p><img src="figure/stomics_03_analysis.Rmd/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-15-1">
+Past versions of unnamed-chunk-15-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-15-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/21f7796fe642ca3b086d0dec1d1f87877ec894f0/docs/figure/stomics_03_analysis.Rmd/unnamed-chunk-15-1.png" target="_blank">21f7796</a>
+</td>
+<td>
+John
+</td>
+<td>
+2024-11-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>The main cell types assigned are “PC hep” (pericentral hepatocyte)
 and “PP hep” (periportal hepatocyte). If we were to only take the most
 highly weighted result, this is all we’d see.</p>
@@ -1097,8 +1357,45 @@ higher. If we want to highlight these immune cells, we’ll need to treat
 them differently.</p>
 <pre class="r"><code># Get a closer look at the other cell type scores
 boxplot(celltype_df[, !(names(celltype_df) %in% c(&quot;PC hep&quot;, &quot;PP hep&quot;))])</code></pre>
-<p><img src="figure/stomics_03_analysis.Rmd/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" />
-Now we can see the liver sinusoidal endothelial cells (LSECs), and a
+<p><img src="figure/stomics_03_analysis.Rmd/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-16-1">
+Past versions of unnamed-chunk-16-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-16-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/21f7796fe642ca3b086d0dec1d1f87877ec894f0/docs/figure/stomics_03_analysis.Rmd/unnamed-chunk-16-1.png" target="_blank">21f7796</a>
+</td>
+<td>
+John
+</td>
+<td>
+2024-11-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Now we can see the liver sinusoidal endothelial cells (LSECs), and a
 small number of immune cells. Let’s extract all of these results so we
 can plot them more easily.</p>
 <pre class="r"><code># Define a dataframe with the correct number of rows
@@ -1125,8 +1422,45 @@ df_long[df_long$variable %in% c(&quot;PC hep&quot;, &quot;PP hep&quot;),] |&gt;
   theme(aspect.ratio=1) +
   scale_y_reverse() +
   facet_wrap(~variable)</code></pre>
-<p><img src="figure/stomics_03_analysis.Rmd/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;" />
-Let’s exclude these two, and just see the distribution of other cell
+<p><img src="figure/stomics_03_analysis.Rmd/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-19-1">
+Past versions of unnamed-chunk-19-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-19-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/21f7796fe642ca3b086d0dec1d1f87877ec894f0/docs/figure/stomics_03_analysis.Rmd/unnamed-chunk-19-1.png" target="_blank">21f7796</a>
+</td>
+<td>
+John
+</td>
+<td>
+2024-11-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Let’s exclude these two, and just see the distribution of other cell
 types, to identify some specific immune cell hotspots.</p>
 <pre class="r"><code># Plot weights of each cell type
 df_long[!df_long$variable %in% c(&quot;PC hep&quot;, &quot;PP hep&quot;),] |&gt; 
@@ -1137,6 +1471,43 @@ df_long[!df_long$variable %in% c(&quot;PC hep&quot;, &quot;PP hep&quot;),] |&gt;
   scale_y_reverse() +
   facet_wrap(~variable)</code></pre>
 <p><img src="figure/stomics_03_analysis.Rmd/unnamed-chunk-20-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-20-1">
+Past versions of unnamed-chunk-20-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-20-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/21f7796fe642ca3b086d0dec1d1f87877ec894f0/docs/figure/stomics_03_analysis.Rmd/unnamed-chunk-20-1.png" target="_blank">21f7796</a>
+</td>
+<td>
+John
+</td>
+<td>
+2024-11-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="extra-steps" class="section level2">
