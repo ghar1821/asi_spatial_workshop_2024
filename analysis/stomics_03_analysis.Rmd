@@ -1,3 +1,14 @@
+---
+title: "STOmics analysis"
+author: "John Salamon"
+date: "2024-11-20"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: true
+editor_options:
+  chunk_output_type: console
+---
 
 ```{r}
 # For RCTD
@@ -231,7 +242,8 @@ puck <- SpatialRNA(data.frame(coords), assays(spe_circle)$counts)
 ```
 
 
-Now, let's try running RCTD. 
+Now, let's try running RCTD. I've commented this out for now because it will
+take a very long time to run.
 
 
 ```{r}
@@ -240,12 +252,10 @@ Now, let's try running RCTD.
 RCTD <- create.RCTD(puck, reference, max_cores = 1)
 
 # Multi mode allows us to define >2 cell types per tissue
-RCTD <- run.RCTD(RCTD, doublet_mode = 'multi')
-
-# notes: started at 10:30, finished at 10:46...
+# RCTD <- run.RCTD(RCTD, doublet_mode = 'multi')
 
 # Save the output as it can take a while to run
-saveRDS(RCTD, "stomics/data/RCTD.rds")
+# saveRDS(RCTD, "stomics/data/RCTD.rds")
 ```
 
 We'll load our RDS file in case we weren't able to run this (or we don't want to wait):
