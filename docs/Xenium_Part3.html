@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+<meta name="date" content="2024-11-19" />
+
+<title>10x Xenium Analysis Part 3</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">ASI Spatial Workshop 2024</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Analysis Files
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="setup.html">Setup</a>
+    </li>
+    <li>
+      <a href="stomics_01_intro.html">STOmics intro</a>
+    </li>
+    <li>
+      <a href="stomics_02_basics.html">STOmics basics</a>
+    </li>
+    <li>
+      <a href="stomics_03_analysis.html">STOmics analysis</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/ghar1821/asi_spatial_workshop_2024">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">10x Xenium Analysis Part 3</h1>
+<h4 class="date">2024-11-19</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2024-11-20
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>asi_spatial_workshop_2024/</code>
+<span class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.1). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20240925code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20240925)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20240925code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20240925)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024treee5a7744281c1a6e4d467b8dcb5d0ac085406865etargetblanke5a7744a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/e5a7744281c1a6e4d467b8dcb5d0ac085406865e" target="_blank">e5a7744</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024treee5a7744281c1a6e4d467b8dcb5d0ac085406865etargetblanke5a7744a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/e5a7744281c1a6e4d467b8dcb5d0ac085406865e" target="_blank">e5a7744</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .Rproj.user/
+    Ignored:    stomics/
+    Ignored:    visium/
+
+Untracked files:
+    Untracked:  RCTD_Plots/
+    Untracked:  xenium/
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/Xenium_Part3.Rmd</code>) and HTML
+(<code>docs/Xenium_Part3.html</code>) files. If you’ve configured a
+remote Git repository (see <code>?wflow_git_remote</code>), click on the
+hyperlinks in the table below to view the files as they were in that
+past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/e5a7744281c1a6e4d467b8dcb5d0ac085406865e/analysis/Xenium_Part3.Rmd" target="_blank">e5a7744</a>
+</td>
+<td>
+Cathal King
+</td>
+<td>
+2024-11-20
+</td>
+<td>
+updating Xenium analysis files
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="part-3-of-the-analysis-will-cover" class="section level1">
+<h1>Part 3 of the analysis will cover:</h1>
+<ul>
+<li>Differential Expression analysis</li>
+<li>Neighbourhood analysis</li>
+<li>Cell identity annotation</li>
+</ul>
+</div>
+<div id="load-libraries" class="section level1">
+<h1>Load libraries</h1>
+</div>
+<div id="read-in-data" class="section level1">
+<h1>Read in data</h1>
+<pre class="r"><code>se &lt;- readRDS(file = &quot;xenium/data/se_clust.rds&quot;)</code></pre>
+</div>
+<div id="differential-expression-testing" class="section level1">
+<h1>Differential Expression Testing</h1>
+<ul>
+<li>Cluster marker genes are found with the Wilcoxon rank sum test as
+commonly done for scRNA-seq.</li>
+<li>Run DE tests with the <code>findMarkers</code> function.</li>
+<li>This will find candidate marker genes per cluster.</li>
+<li>Plot results as violin plots and heatmap.</li>
+<li><code>TGFBI</code> is a marker related to SPP1+ macrophages.</li>
+<li>The <code>PIGR</code> gene is identified as a marker for goblet
+cells and enterocytes.</li>
+<li><code>PECAM1</code> is used to gain a detailed understanding of the
+cellular landscape in specific regions of the TME and is used as a
+marker gene for endothelial cells.</li>
+</ul>
+<pre class="r"><code># run test
+markers &lt;- findMarkers(se, groups = colData(se)$cluster,
+                       test.type = &quot;wilcox&quot;, pval.type = &quot;all&quot;, direction = &quot;up&quot;)
+
+# plot markers per cluster
+genes_use &lt;- vapply(markers, function(x) rownames(x)[1], FUN.VALUE = character(1))
+y &lt;- plotExpression(se, genes_use, x = &quot;cluster&quot;, point_fun = function(...) list())
+y</code></pre>
+<p><img src="figure/Xenium_Part3.Rmd/unnamed-chunk-3-1.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># plot clusters
+f &lt;- plotSpatialFeature(se, &quot;cluster&quot;, colGeometryName = &quot;cellSeg&quot;, pointsize = 1.4) + ggtitle(&quot;Leiden gene expression clustering&quot;)
+
+# plot heatmap
+genes_use2 &lt;- unique(unlist(lapply(markers, function(x) rownames(x)[1:5])))
+plotGroupedHeatmap(se, genes_use2, group = &quot;cluster&quot;, colour = scales::viridis_pal()(100))</code></pre>
+<p><img src="figure/Xenium_Part3.Rmd/unnamed-chunk-3-2.png" width="768" style="display: block; margin: auto;" /></p>
+</div>
+<div id="local-spatial-statistics-of-marker-genes"
+class="section level1">
+<h1>Local spatial statistics of marker genes</h1>
+<ul>
+<li>Plot the genes in space as a reference.</li>
+<li>The sources use <code>CLCA1</code> as one of the marker genes for
+goblet cells within the colon tissue.</li>
+<li>They measure the localisation of transcripts for these genes within
+specific regions of interest (ROIs) that correspond to colon glands,
+where goblet cells are typically found.</li>
+<li>The analysis showed that the majority of transcripts for these
+genes, including CLCA1, were indeed detected in their expected
+locations, backing up findings from Visium HD.</li>
+</ul>
+<pre class="r"><code>plotSpatialFeature(se, genes_use, colGeometryName = &quot;centroids&quot;, ncol = 3,
+                   pointsize = 2, scattermore = TRUE)</code></pre>
+<p><img src="figure/Xenium_Part3.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="neighbourhood-analysis-and-spatial-graphs"
+class="section level1">
+<h1>Neighbourhood analysis and Spatial Graphs</h1>
+<ul>
+<li>Find a spatial neighborhood graph with the K nearest neighbours
+method.</li>
+<li>Calculate Spatial correlation using Moran’s I. Visualise spatially
+variable genes.</li>
+<li>The paper uses <code>CEACAM5</code> and <code>CEACAM6</code> as a
+marker gene for tumour cells in CRC samples. This implies that CEACAM5
+exhibits specific and reliable expression patterns in tumour cells,
+making it useful for identifying these cells within the complex tissue
+microenvironment (TME)</li>
+</ul>
+<pre class="r"><code># calculate spatial neighbourhood graph
+colGraph(se, &quot;knn&quot;) &lt;- findSpatialNeighbors(se, 
+                                            method = &quot;knearneigh&quot;,
+                                            k = 5)
+#plotColGraph(se, colGraphName = &quot;knn&quot;)
+
+se &lt;- runMoransI(se, colGraphName = &quot;knn&quot;, BPPARAM = MulticoreParam(2))
+# get top
+top_moran &lt;- rownames(se)[order(rowData(se)$moran_p5, decreasing = TRUE)[1:6]]
+# visualise
+plotSpatialFeature(se, top_moran, colGeometryName = &quot;centroids&quot;,
+                   scattermore = TRUE, ncol = 2, pointsize = 1.5)</code></pre>
+<p><img src="figure/Xenium_Part3.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="plot-individual-genes-or-markers-of-interest"
+class="section level1">
+<h1>Plot individual genes or markers of interest</h1>
+<ul>
+<li>Visualise genes of interest using the
+<code>plotSpatialFeature</code> function.</li>
+<li>Choose any gene from <code>rownames(se)</code></li>
+</ul>
+<pre class="r"><code># CLCA1 
+plotSpatialFeature(se, &quot;CLCA1&quot;, colGeometryName = &quot;cellSeg&quot;, 
+                  image_id = &quot;morphology_focus&quot;,
+                   fill = NA, aes_use = &quot;color&quot;, linewidth = 0.15,
+                   tx_fixed = list(color = &quot;lightgray&quot;),
+                   channel = 3:1, dark = TRUE, normalize_channels = TRUE)</code></pre>
+<p><img src="figure/Xenium_Part3.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># TRAC
+plotSpatialFeature(se, &quot;TRAC&quot;, colGeometryName = &quot;cellSeg&quot;, 
+                  image_id = &quot;morphology_focus&quot;,
+                   fill = NA, aes_use = &quot;color&quot;, linewidth = 0.15,
+                   tx_fixed = list(color = &quot;lightgray&quot;),
+                   channel = 3:1, dark = TRUE, normalize_channels = TRUE)</code></pre>
+<p><img src="figure/Xenium_Part3.Rmd/unnamed-chunk-6-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cell-identity-annotation" class="section level1">
+<h1>Cell identity annotation</h1>
+<ul>
+<li><p>Annotate Xenium data with matched, annotated single-cell RNA-seq
+data</p></li>
+<li><p>Use the RCTD method implemented in the <code>spacexr</code>
+package</p></li>
+<li><p>Read in matched single-cell data</p></li>
+<li><p>add meta-data containing cell type annotations to single-cell
+object</p></li>
+<li><p>Run RCTD pipeline</p></li>
+<li><p>Add RCTD outputs to tissue positions (cells.csv) Xenium
+file</p></li>
+<li><p>Plot and examine RCTD results.</p></li>
+<li><p>RCTD results are already generated and are stored in an RDS file.
+Read in and add to Xenium cells.csv file and plot.</p></li>
+<li><p>After RCTD is ran:</p></li>
+<li><p>the <code>first_type</code> column gives the first cell type
+predicted on the bead (for all spot_class conditions except
+“reject”)</p></li>
+</ul>
+<pre class="r"><code># read in the RCTD results (calculated prior)
+RCTD &lt;- readRDS(file = &quot;xenium/data/RCTD_results.rds&quot;)
+
+# read in cell locations file from Xenium raw data bundle
+# gunzip(&quot;xenium/raw/cells.csv.gz&quot;)
+
+# cell locations from cells.csv file
+cells_pos &lt;- read.csv(&quot;xenium/raw/cells.csv&quot;,
+                       header = TRUE, row.names=1)
+
+# merge RCTD de-convolution results to Xenium cell positions file
+head(cells_pos)</code></pre>
+<pre><code>           x_centroid y_centroid transcript_counts control_probe_counts
+aaaadchh-1   493.6353   2310.994                56                    0
+aaaaglla-1   499.8276   2321.825                51                    0
+aaaanjng-1   490.4425   2319.039                45                    0
+aaabakie-1   498.2829   2315.627                37                    0
+aaabalkl-1   486.3413   2311.812               112                    0
+aaabbekk-1   516.1199   2340.094                73                    0
+           control_codeword_counts unassigned_codeword_counts
+aaaadchh-1                       0                          0
+aaaaglla-1                       0                          0
+aaaanjng-1                       0                          0
+aaabakie-1                       0                          0
+aaabalkl-1                       0                          0
+aaabbekk-1                       0                          0
+           deprecated_codeword_counts total_counts cell_area nucleus_area
+aaaadchh-1                          0           56  49.98797     31.33844
+aaaaglla-1                          0           51  44.52406     25.82938
+aaaanjng-1                          0           45  54.00688     33.68656
+aaabakie-1                          0           37  49.44610     31.33844
+aaabalkl-1                          0          112  74.23688     35.76375
+aaabbekk-1                          0           73  56.35500     30.20953</code></pre>
+<pre class="r"><code>annotation.df &lt;- RCTD@results$results_df
+head(annotation.df)</code></pre>
+<pre><code>           spot_class first_type   second_type first_class second_class
+aaabalkl-1    singlet    T cells    Fibroblast       FALSE        FALSE
+aaahlhbp-1    singlet    T cells Smooth Muscle       FALSE        FALSE
+aaakckea-1    singlet    T cells Smooth Muscle       FALSE        FALSE
+aaakffjl-1    singlet Fibroblast       T cells       FALSE        FALSE
+aaapbmen-1    singlet    Myeloid       B cells       FALSE        FALSE
+aaapljid-1    singlet    Myeloid    Fibroblast       FALSE        FALSE
+           min_score singlet_score conv_all conv_doublet
+aaabalkl-1  125.5928      137.7852     TRUE         TRUE
+aaahlhbp-1  135.8409      140.3838     TRUE         TRUE
+aaakckea-1  117.6264      127.4931     TRUE         TRUE
+aaakffjl-1  147.5117      160.0963     TRUE         TRUE
+aaapbmen-1  169.0018      174.8787     TRUE         TRUE
+aaapljid-1  133.3394      142.4714     TRUE         TRUE</code></pre>
+<pre class="r"><code># combine cell positions and denconvolution results
+cells_pos &lt;- cells_pos[rownames(annotation.df),]
+cells_pos &lt;- cbind(cells_pos, annotation.df)
+head(cells_pos)</code></pre>
+<pre><code>           x_centroid y_centroid transcript_counts control_probe_counts
+aaabalkl-1   486.3413   2311.812               112                    0
+aaahlhbp-1   440.7468   3220.111               119                    0
+aaakckea-1   426.7924   2725.387               126                    0
+aaakffjl-1   428.7641   2729.976               145                    0
+aaapbmen-1   813.1482   4849.892               156                    0
+aaapljid-1   829.1583   4794.916               116                    0
+           control_codeword_counts unassigned_codeword_counts
+aaabalkl-1                       0                          0
+aaahlhbp-1                       0                          0
+aaakckea-1                       0                          0
+aaakffjl-1                       0                          0
+aaapbmen-1                       0                          0
+aaapljid-1                       0                          0
+           deprecated_codeword_counts total_counts cell_area nucleus_area
+aaabalkl-1                          0          112  74.23688     35.76375
+aaahlhbp-1                          0          119  70.89532     41.09219
+aaakckea-1                          0          126  49.80735          NaN
+aaakffjl-1                          0          145  96.22797     39.06016
+aaapbmen-1                          0          156  75.41094     44.20797
+aaapljid-1                          0          116  52.20063     24.61016
+           spot_class first_type   second_type first_class second_class
+aaabalkl-1    singlet    T cells    Fibroblast       FALSE        FALSE
+aaahlhbp-1    singlet    T cells Smooth Muscle       FALSE        FALSE
+aaakckea-1    singlet    T cells Smooth Muscle       FALSE        FALSE
+aaakffjl-1    singlet Fibroblast       T cells       FALSE        FALSE
+aaapbmen-1    singlet    Myeloid       B cells       FALSE        FALSE
+aaapljid-1    singlet    Myeloid    Fibroblast       FALSE        FALSE
+           min_score singlet_score conv_all conv_doublet
+aaabalkl-1  125.5928      137.7852     TRUE         TRUE
+aaahlhbp-1  135.8409      140.3838     TRUE         TRUE
+aaakckea-1  117.6264      127.4931     TRUE         TRUE
+aaakffjl-1  147.5117      160.0963     TRUE         TRUE
+aaapbmen-1  169.0018      174.8787     TRUE         TRUE
+aaapljid-1  133.3394      142.4714     TRUE         TRUE</code></pre>
+<pre class="r"><code>annotation.df &lt;- annotation.df[(annotation.df$spot_class != &quot;reject&quot;),]
+# check
+table(cells_pos$spot_class)</code></pre>
+<pre><code>
+           reject           singlet   doublet_certain doublet_uncertain 
+              820             98259              5133               966 </code></pre>
+<pre class="r"><code>table(cells_pos$first_type)</code></pre>
+<pre><code>
+              B cells           Endothelial            Fibroblast 
+                 2773                  7169                  8646 
+Intestinal Epithelial               Myeloid              Neuronal 
+                25108                  4767                   507 
+        Smooth Muscle               T cells                 Tumor 
+                 2456                  1855                 51897 </code></pre>
+<pre class="r"><code>table(cells_pos$second_type)</code></pre>
+<pre><code>
+              B cells           Endothelial            Fibroblast 
+                27767                  5190                  8800 
+Intestinal Epithelial               Myeloid              Neuronal 
+                28793                  9463                  8914 
+        Smooth Muscle               T cells                 Tumor 
+                 3822                  6026                  6403 </code></pre>
+<pre class="r"><code># plot
+options(repr.plot.width=20, repr.plot.height=6)
+l &lt;- ggplot()+
+  geom_point(cells_pos, mapping=aes(x=-x_centroid, y=y_centroid,color=first_type),
+             stroke=0, size=.8)+
+  scale_color_manual(values=c(&#39;#911eb4&#39;, &#39;#3cb44b&#39;, &#39;#ffe119&#39;, &#39;#4363d8&#39;, &#39;#f58231&#39;,
+                               &#39;#e6194b&#39;, &#39;#46f0f0&#39;, &#39;#f032e6&#39;, &#39;#bcf60c&#39;, &#39;#fabebe&#39;,
+                               &#39;#008080&#39;, &#39;#e6beff&#39;, &#39;#9a6324&#39;, &#39;#fffac8&#39;, &#39;#800000&#39;,
+                               &#39;#aaffc3&#39;, &#39;#808000&#39;, &#39;#ffd8b1&#39;, &#39;#000075&#39;, &#39;#808080&#39;)) +
+  guides(colour = guide_legend(override.aes = list(size=8)))+
+  scale_x_reverse()+scale_y_reverse()+
+  theme_bw()
+l</code></pre>
+<p><img src="figure/Xenium_Part3.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># generate an interactive plot with plotly
+# ggplotly(l)
+
+## results
+#   “singlet” (1 cell type on pixel),
+#   “doublet_certain” (2 cell types on pixel),
+#   “doublet_uncertain” (2 cell types on pixel, but only confident of 1),
+#   “reject” (no prediction given for pixel).</code></pre>
+</div>
+<div id="re-run-rctd-with-level2-cell-type-annotations"
+class="section level1">
+<h1>Re-run RCTD with Level2 cell type annotations</h1>
+<ul>
+<li>The paper provided level 2 finer grain cell type annotations on the
+matched single-cell RNA-seq dataset.</li>
+<li>I re-ran RCTD again on these labels.</li>
+<li>This will annotate our Xenium dataset with those finer grained
+annotations.</li>
+</ul>
+<pre class="r"><code># read in the RCTD level 2 results (calculated prior)
+RCTD_level2 &lt;- readRDS(file = &quot;xenium/data/RCTD_level2.rds&quot;)
+
+# read in cell locations file from Xenium raw data bundle
+# gunzip(&quot;xenium/raw/cells.csv.gz&quot;)
+
+# cell locations from cells.csv file
+cells_pos &lt;- read.csv(&quot;xenium/raw/cells.csv&quot;,
+                       header = TRUE, row.names=1)
+
+# merge RCTD de-convolution results to Xenium cell positions file
+head(cells_pos)</code></pre>
+<pre><code>           x_centroid y_centroid transcript_counts control_probe_counts
+aaaadchh-1   493.6353   2310.994                56                    0
+aaaaglla-1   499.8276   2321.825                51                    0
+aaaanjng-1   490.4425   2319.039                45                    0
+aaabakie-1   498.2829   2315.627                37                    0
+aaabalkl-1   486.3413   2311.812               112                    0
+aaabbekk-1   516.1199   2340.094                73                    0
+           control_codeword_counts unassigned_codeword_counts
+aaaadchh-1                       0                          0
+aaaaglla-1                       0                          0
+aaaanjng-1                       0                          0
+aaabakie-1                       0                          0
+aaabalkl-1                       0                          0
+aaabbekk-1                       0                          0
+           deprecated_codeword_counts total_counts cell_area nucleus_area
+aaaadchh-1                          0           56  49.98797     31.33844
+aaaaglla-1                          0           51  44.52406     25.82938
+aaaanjng-1                          0           45  54.00688     33.68656
+aaabakie-1                          0           37  49.44610     31.33844
+aaabalkl-1                          0          112  74.23688     35.76375
+aaabbekk-1                          0           73  56.35500     30.20953</code></pre>
+<pre class="r"><code>annotation.df &lt;- RCTD_level2@results$results_df
+head(annotation.df)</code></pre>
+<pre><code>                spot_class              first_type             second_type
+aaabalkl-1         singlet    CD8 Cytotoxic T cell              Fibroblast
+aaahlhbp-1         singlet    CD8 Cytotoxic T cell                     vSM
+aaakckea-1         singlet Proliferating Immune II                     vSM
+aaakffjl-1 doublet_certain              Fibroblast Proliferating Immune II
+aaapbmen-1         singlet              Macrophage                  Plasma
+aaapljid-1         singlet              Macrophage              Fibroblast
+           first_class second_class min_score singlet_score conv_all
+aaabalkl-1       FALSE        FALSE  131.8147      151.1508     TRUE
+aaahlhbp-1       FALSE        FALSE  152.3676      161.0821     TRUE
+aaakckea-1       FALSE        FALSE  145.1528      162.2965     TRUE
+aaakffjl-1       FALSE        FALSE  168.4984      192.9901     TRUE
+aaapbmen-1       FALSE        FALSE  198.8039      210.0786     TRUE
+aaapljid-1       FALSE        FALSE  150.7818      164.1528     TRUE
+           conv_doublet
+aaabalkl-1         TRUE
+aaahlhbp-1         TRUE
+aaakckea-1         TRUE
+aaakffjl-1         TRUE
+aaapbmen-1         TRUE
+aaapljid-1         TRUE</code></pre>
+<pre class="r"><code># merge
+cells_pos &lt;- cells_pos[rownames(annotation.df),]
+cells_pos &lt;- cbind(cells_pos, annotation.df)
+head(cells_pos)</code></pre>
+<pre><code>           x_centroid y_centroid transcript_counts control_probe_counts
+aaabalkl-1   486.3413   2311.812               112                    0
+aaahlhbp-1   440.7468   3220.111               119                    0
+aaakckea-1   426.7924   2725.387               126                    0
+aaakffjl-1   428.7641   2729.976               145                    0
+aaapbmen-1   813.1482   4849.892               156                    0
+aaapljid-1   829.1583   4794.916               116                    0
+           control_codeword_counts unassigned_codeword_counts
+aaabalkl-1                       0                          0
+aaahlhbp-1                       0                          0
+aaakckea-1                       0                          0
+aaakffjl-1                       0                          0
+aaapbmen-1                       0                          0
+aaapljid-1                       0                          0
+           deprecated_codeword_counts total_counts cell_area nucleus_area
+aaabalkl-1                          0          112  74.23688     35.76375
+aaahlhbp-1                          0          119  70.89532     41.09219
+aaakckea-1                          0          126  49.80735          NaN
+aaakffjl-1                          0          145  96.22797     39.06016
+aaapbmen-1                          0          156  75.41094     44.20797
+aaapljid-1                          0          116  52.20063     24.61016
+                spot_class              first_type             second_type
+aaabalkl-1         singlet    CD8 Cytotoxic T cell              Fibroblast
+aaahlhbp-1         singlet    CD8 Cytotoxic T cell                     vSM
+aaakckea-1         singlet Proliferating Immune II                     vSM
+aaakffjl-1 doublet_certain              Fibroblast Proliferating Immune II
+aaapbmen-1         singlet              Macrophage                  Plasma
+aaapljid-1         singlet              Macrophage              Fibroblast
+           first_class second_class min_score singlet_score conv_all
+aaabalkl-1       FALSE        FALSE  131.8147      151.1508     TRUE
+aaahlhbp-1       FALSE        FALSE  152.3676      161.0821     TRUE
+aaakckea-1       FALSE        FALSE  145.1528      162.2965     TRUE
+aaakffjl-1       FALSE        FALSE  168.4984      192.9901     TRUE
+aaapbmen-1       FALSE        FALSE  198.8039      210.0786     TRUE
+aaapljid-1       FALSE        FALSE  150.7818      164.1528     TRUE
+           conv_doublet
+aaabalkl-1         TRUE
+aaahlhbp-1         TRUE
+aaakckea-1         TRUE
+aaakffjl-1         TRUE
+aaapbmen-1         TRUE
+aaapljid-1         TRUE</code></pre>
+<pre class="r"><code>annotation.df &lt;- annotation.df[(annotation.df$spot_class != &quot;reject&quot;),]
+# check
+table(cells_pos$spot_class)</code></pre>
+<pre><code>
+           reject           singlet   doublet_certain doublet_uncertain 
+            25972             70165              4836              4205 </code></pre>
+<pre class="r"><code>table(cells_pos$first_type)</code></pre>
+<pre><code>
+              Adipocyte                     CAF              CD4 T cell 
+                    129                    4287                     898 
+   CD8 Cytotoxic T cell             Endothelial           Enteric Glial 
+                    934                    5933                     555 
+             Enterocyte              Epithelial              Fibroblast 
+                   3702                      72                    2939 
+                 Goblet   Lymphatic Endothelial              Macrophage 
+                  24369                     564                    4272 
+                   Mast                Mature B                  mRegDC 
+                    314                     541                     379 
+          Myofibroblast          Neuroendocrine              Neutrophil 
+                    571                     983                     486 
+                    pDC               Pericytes                  Plasma 
+                     88                    1558                    2489 
+Proliferating Immune II      SM Stress Response           Smooth Muscle 
+                    573                     111                     159 
+                   Tuft                 Tumor I                Tumor II 
+                    298                   25197                   10676 
+              Tumor III                 Tumor V        Unknown III (SM) 
+                   7162                    3487                     436 
+                    vSM 
+                   1016 </code></pre>
+<pre class="r"><code>table(cells_pos$second_type)</code></pre>
+<pre><code>
+              Adipocyte                     CAF              CD4 T cell 
+                   4017                    2687                    2092 
+   CD8 Cytotoxic T cell             Endothelial           Enteric Glial 
+                   1844                    1581                    2507 
+             Enterocyte              Epithelial              Fibroblast 
+                   1185                      42                    3064 
+                 Goblet   Lymphatic Endothelial              Macrophage 
+                   5947                    1673                    2392 
+                   Mast                Mature B                  mRegDC 
+                   1236                    1288                    1141 
+          Myofibroblast          Neuroendocrine              Neutrophil 
+                   2496                    4494                    1232 
+                    pDC               Pericytes                  Plasma 
+                    916                    2021                    3770 
+Proliferating Immune II      SM Stress Response           Smooth Muscle 
+                   1489                     784                     596 
+                   Tuft                 Tumor I                Tumor II 
+                   1469                    7519                   10674 
+              Tumor III                 Tumor V        Unknown III (SM) 
+                  14437                   16657                    2102 
+                    vSM 
+                   1826 </code></pre>
+<pre class="r"><code># plot
+# more cell labels means a bigger colour palette is needed
+library(RColorBrewer)
+# Choose a palette with enough colors
+custom_palette &lt;- c(&quot;#E69F00&quot;, &quot;#56B4E9&quot;, &quot;#009E73&quot;, &quot;#F0E442&quot;, &quot;#0072B2&quot;, &quot;#D55E00&quot;, &quot;#CC79A7&quot;, &quot;#999999&quot;, &quot;#882255&quot;,
+                   &quot;#44AA99&quot;, &quot;#AA4499&quot;, &quot;#117733&quot;, &quot;#DDCC77&quot;, &quot;#CC6677&quot;, &quot;#88CCEE&quot;, &quot;#AA4466&quot;, &quot;#44AA88&quot;, &quot;#999933&quot;,
+                   &quot;#DDCCAA&quot;, &quot;#66AA77&quot;, &quot;#AA44DD&quot;, &quot;#771155&quot;, &quot;#778899&quot;, &quot;#BBBB44&quot;, &quot;#4499AA&quot;, &quot;#994499&quot;, &quot;#AA6688&quot;,
+                   &quot;#99AA00&quot;, &quot;#AAAA11&quot;, &quot;#663300&quot;, &quot;#AA4400&quot;)
+# plot
+options(repr.plot.width=8, repr.plot.height=8)
+t &lt;- ggplot()+
+  geom_point(cells_pos, mapping=aes(x=-x_centroid, y=y_centroid,color=first_type),
+             stroke=0, size=1)+
+  scale_color_manual(values=custom_palette) +
+  guides(colour = guide_legend(override.aes = list(size=6)))+
+  scale_x_reverse()+scale_y_reverse()+
+  theme_bw() + theme(legend.position = &quot;right&quot;)
+t</code></pre>
+<p><img src="figure/Xenium_Part3.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># plot just one cell identity of interest
+cell_type &lt;- &quot;Goblet&quot;
+options(repr.plot.width=13, repr.plot.height=12)
+ggplot()+
+  geom_point(cells_pos, mapping=aes(x=-x_centroid, y=y_centroid,),
+             stroke=0, size=.8, col=&quot;lightgrey&quot;)+
+  geom_point(cells_pos[(cells_pos$first_type==cell_type),],
+             mapping=aes(x=-x_centroid, y=y_centroid),
+             stroke=0, size=.8, col=&quot;red&quot;)+
+  scale_x_reverse()+scale_y_reverse()+
+  ggtitle(cell_type)+
+  theme_bw()</code></pre>
+<p><img src="figure/Xenium_Part3.Rmd/unnamed-chunk-8-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>## Optional - further RCTD analysis
+# results &lt;- RCTD@results
+# norm_weights = normalize_weights(results$weights) 
+# cell_type_names &lt;- RCTD@cell_type_info$info[[2]]
+# spatialRNA &lt;- RCTD@spatialRNA
+# resultsdir &lt;- &#39;RCTD_Plots&#39;
+# dir.create(resultsdir)
+# # plot
+# plot_cond_occur(cell_type_names, resultsdir, norm_weights, spatialRNA)
+# check PDF file
+#plot_weights(cell_type_names, spatialRNA, resultsdir, norm_weights) </code></pre>
+<p>Checkpoint</p>
+<pre class="r"><code>saveRDS(object = se, file = &quot;xenium/data/se_final.rds&quot;)</code></pre>
+</div>
+<div id="calculating-rctd-results" class="section level1">
+<h1>Calculating RCTD results</h1>
+<ul>
+<li>To run RCTD yourself, use the code below. You will need an annotated
+single-cell RNA-seq dataset ideally within a <code>Seurat</code> or
+<code>SingleCellExperiment</code> object and a Xenium dataset. RCTD will
+also work on other spatial transcriptomics platforms.</li>
+<li>Read more -&gt; <a
+href="https://www.nature.com/articles/s41587-021-00830-w"
+class="uri">https://www.nature.com/articles/s41587-021-00830-w</a></li>
+</ul>
+<pre class="r"><code># read in single-cell data
+# seu &lt;- readRDS(file = &quot;data/seu_filtered_colon_paper.rds&quot;)
+
+# sce &lt;- as.SingleCellExperiment(x = seu)
+
+## Run RCTD
+# ref = seu
+# query = se Xenium obj
+
+## extract information to pass to the RCTD Reference function
+# counts_sce &lt;- assay(sce)
+# cluster_sce &lt;- as.factor(sce$Level1)
+# names(cluster_sce) &lt;- colnames(sce)
+# nUMI_sce &lt;- sce$nCount_originalexp
+# names(nUMI_sce) &lt;- colnames(sce)
+# reference_sce &lt;- Reference(counts_sce, cluster_sce, nUMI_sce)
+# 
+# # set up query with the RCTD function SpatialRNA
+# # use se Xenium object
+# 
+# counts_se &lt;- assay(se)
+# coords &lt;- spatialCoords(se)
+# coords_df &lt;- as.data.frame(coords)
+# colnames(coords) &lt;- c(&quot;x&quot;, &quot;y&quot;)
+# coords[is.na(colnames(coords))] &lt;- NULL
+# query_se &lt;- SpatialRNA(coords_df, counts_se, colSums(counts_se))
+# #
+# RCTD &lt;- create.RCTD(query_se, reference_sce, max_cores = 8)
+# # doublet mode for Xenium data
+# RCTD &lt;- run.RCTD(RCTD, doublet_mode = &quot;doublet&quot;)
+# se$RCTD_annotations &lt;- RCTD@results$results_df$first_type
+# colData(se)$new_RCTD &lt;- RCTD@results$results_df$first_type
+#
+#saveRDS(object = RCTD, file = &quot;data/RCTD.rds&quot;)</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.4.0 (2024-04-24)
+Platform: aarch64-apple-darwin20
+Running under: macOS Sonoma 14.7.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: Australia/Adelaide
+tzcode source: internal
+
+attached base packages:
+[1] stats4    stats     graphics  grDevices utils     datasets  methods  
+[8] base     
+
+other attached packages:
+ [1] RColorBrewer_1.1-3             spacexr_2.2.1                 
+ [3] plotly_4.10.4                  scales_1.3.0                  
+ [5] terra_1.7-78                   EBImage_4.48.0                
+ [7] sf_1.0-19                      bluster_1.16.0                
+ [9] fs_1.6.5                       scran_1.34.0                  
+[11] BiocParallel_1.40.0            scater_1.34.0                 
+[13] ggplot2_3.5.1                  scuttle_1.16.0                
+[15] SingleCellExperiment_1.28.1    SummarizedExperiment_1.36.0   
+[17] Biobase_2.66.0                 GenomicRanges_1.58.0          
+[19] GenomeInfoDb_1.42.0            IRanges_2.40.0                
+[21] S4Vectors_0.44.0               BiocGenerics_0.52.0           
+[23] MatrixGenerics_1.18.0          matrixStats_1.4.1             
+[25] RBioFormats_1.6.0              Voyager_1.8.1                 
+[27] SpatialFeatureExperiment_1.8.2 workflowr_1.7.1               
+
+loaded via a namespace (and not attached):
+  [1] later_1.3.2               bitops_1.0-9             
+  [3] tibble_3.2.1              R.oo_1.27.0              
+  [5] lifecycle_1.0.4           doParallel_1.0.17        
+  [7] edgeR_4.4.0               rprojroot_2.0.4          
+  [9] processx_3.8.4            lattice_0.22-6           
+ [11] magrittr_2.0.3            limma_3.62.1             
+ [13] sass_0.4.9                rmarkdown_2.29           
+ [15] jquerylib_0.1.4           yaml_2.3.10              
+ [17] metapod_1.14.0            httpuv_1.6.15            
+ [19] sp_2.1-4                  cowplot_1.1.3            
+ [21] DBI_1.2.3                 abind_1.4-8              
+ [23] zlibbioc_1.52.0           purrr_1.0.2              
+ [25] R.utils_2.12.3            RCurl_1.98-1.16          
+ [27] git2r_0.35.0              GenomeInfoDbData_1.2.13  
+ [29] ggrepel_0.9.6             irlba_2.3.5.1            
+ [31] pheatmap_1.0.12           units_0.8-5              
+ [33] RSpectra_0.16-2           dqrng_0.4.1              
+ [35] DelayedMatrixStats_1.28.0 codetools_0.2-20         
+ [37] DropletUtils_1.26.0       DelayedArray_0.32.0      
+ [39] xml2_1.3.6                tidyselect_1.2.1         
+ [41] UCSC.utils_1.2.0          memuse_4.2-3             
+ [43] farver_2.1.2              ScaledMatrix_1.14.0      
+ [45] viridis_0.6.5             jsonlite_1.8.9           
+ [47] BiocNeighbors_2.0.0       e1071_1.7-16             
+ [49] iterators_1.0.14          foreach_1.5.2            
+ [51] tools_4.4.0               ggnewscale_0.5.0         
+ [53] Rcpp_1.0.13-1             glue_1.8.0               
+ [55] gridExtra_2.3             SparseArray_1.6.0        
+ [57] xfun_0.49                 dplyr_1.1.4              
+ [59] HDF5Array_1.34.0          withr_3.0.2              
+ [61] fastmap_1.2.0             boot_1.3-31              
+ [63] rhdf5filters_1.18.0       fansi_1.0.6              
+ [65] spData_2.3.3              callr_3.7.6              
+ [67] digest_0.6.37             rsvd_1.0.5               
+ [69] R6_2.5.1                  colorspace_2.1-1         
+ [71] wk_0.9.4                  scattermore_1.2          
+ [73] jpeg_0.1-10               R.methodsS3_1.8.2        
+ [75] utf8_1.2.4                tidyr_1.3.1              
+ [77] generics_0.1.3            data.table_1.16.2        
+ [79] class_7.3-22              httr_1.4.7               
+ [81] htmlwidgets_1.6.4         S4Arrays_1.6.0           
+ [83] whisker_0.4.1             spdep_1.3-6              
+ [85] pkgconfig_2.0.3           scico_1.5.0              
+ [87] rJava_1.0-11              gtable_0.3.6             
+ [89] XVector_0.46.0            htmltools_0.5.8.1        
+ [91] fftwtools_0.9-11          png_0.1-8                
+ [93] SpatialExperiment_1.16.0  knitr_1.49               
+ [95] rstudioapi_0.17.1         rjson_0.2.23             
+ [97] proxy_0.4-27              cachem_1.1.0             
+ [99] rhdf5_2.50.0              stringr_1.5.1            
+[101] KernSmooth_2.23-24        parallel_4.4.0           
+[103] vipor_0.4.7               s2_1.1.7                 
+[105] pillar_1.9.0              grid_4.4.0               
+[107] vctrs_0.6.5               promises_1.3.0           
+[109] BiocSingular_1.22.0       beachmat_2.22.0          
+[111] sfheaders_0.4.4           cluster_2.1.6            
+[113] beeswarm_0.4.0            evaluate_1.0.1           
+[115] zeallot_0.1.0             magick_2.8.5             
+[117] cli_3.6.3                 locfit_1.5-9.10          
+[119] compiler_4.4.0            rlang_1.1.4              
+[121] crayon_1.5.3              labeling_0.4.3           
+[123] classInt_0.4-10           ps_1.8.1                 
+[125] getPass_0.2-4             ggbeeswarm_0.7.2         
+[127] stringi_1.8.4             viridisLite_0.4.2        
+[129] deldir_2.0-4              munsell_0.5.1            
+[131] lazyeval_0.2.2            tiff_0.1-12              
+[133] Matrix_1.7-1              patchwork_1.3.0          
+[135] sparseMatrixStats_1.18.0  Rhdf5lib_1.28.0          
+[137] statmod_1.5.0             igraph_2.1.1             
+[139] bslib_0.8.0              </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
