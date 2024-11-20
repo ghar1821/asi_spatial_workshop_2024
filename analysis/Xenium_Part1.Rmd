@@ -125,8 +125,8 @@ plotGeometry(se, colGeometryName = "cellSeg", show_axes = TRUE) +
     plotGeometry(se, colGeometryName = "cellSeg", show_axes = TRUE, dark = TRUE)
 ```
 
-# Save data checkpoint
+# Save checkpoint
 
 ```{r}
-#saveRDS(object = se, file = "xenium/data/se_xenium.rds")
+saveRDS(object = se, file = "xenium/data/se_xenium.rds")
 ```
