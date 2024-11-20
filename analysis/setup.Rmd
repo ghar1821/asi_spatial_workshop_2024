@@ -253,13 +253,24 @@ download.file(
     method = 'curl',
     extra = '-L'
 )
+
+
+# Mouse brain dataset, this is part of the larger optional dataset (466MB)
+if(!dir.exists("stomics/raw")){dir.create("stomics/raw/visualization")}
+download.file(
+    "https://filesender.aarnet.edu.au/download.php?token=f39b9294-5703-4e19-8692-00edadd22e1d&files_ids=23643207",
+    destfile = "stomics/raw/visualization/C04042E3.bin50_1.0.h5ad",
+    method = 'curl',
+    extra = '-L'
+)
 ```
 
 ```{r eval=FALSE}
 # check md5sum of the downloaded files.
 md5sum_str <- c(
     "stomics/raw/DY1_D0_stereo-seq.h5ad" = "f63df815d75548034cb659bc3491f51a",
-    "stomics/raw/Homeostasis_hepatic_cell_scRNAseq.h5ad" = "b1a7fd3ffa58e0420083fa8651cb7fec"
+    "stomics/raw/Homeostasis_hepatic_cell_scRNAseq.h5ad" = "b1a7fd3ffa58e0420083fa8651cb7fec",
+    "stomics/raw/visualization/C04042E3.bin50_1.0.h5ad" = "ad5e3450f39d03914f83fc017da05eb6"
 )
 check_md5(md5sum_str)
 
@@ -279,9 +290,17 @@ download.file(
     extra = '-L'
 )
 
+download.file(
+  "https://filesender.aarnet.edu.au/download.php?token=2fd67792-4292-427f-b450-9ef2ed2b42f7&files_ids=23642652",
+    destfile = "stomics/raw/C04042E3_20241117151457.lasso.geojson",
+    method = "curl",
+    extra = '-L'
+)
+
 # check md5sum of the downloaded files.
 md5sum_str <- c(
-    "stomics/raw/visualization.tar.gz" = "7d3daa224de7ca1244711531270546d3"
+    "stomics/raw/visualization.tar.gz" = "7d3daa224de7ca1244711531270546d3",
+    "stomics/raw/C04042E3_20241117151457.lasso.geojson" = "791c46c79909a500f5b6169efe69b430"
 )
 check_md5(md5sum_str)
 ```

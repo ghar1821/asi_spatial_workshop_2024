@@ -60,7 +60,7 @@ plotSpatialFeature(se, features = "transcript_counts",
                    image_id = "morphology_focus", dark = TRUE, channel = 1)
 
 # get the extend of the spatial image
-ext(img)
+terra::ext(img)
 
 # convert BioFormatsImage to ExtImage
 ebi <- toExtImage(img)
@@ -103,6 +103,7 @@ plotGeometry(se, colGeometryName = "cellSeg", bbox = bbox)
 
 * Remove low quality cells with too few transcript counts and genes that are not detected.
 * ```colData``` columns in SE can be accessed with the $ operator as if getting a column from a data frame
+* Discussion. Gene panel vs WT. 
 
 ```{r}
 # check dims
@@ -122,6 +123,7 @@ dim(se)
 * Normalise gene expression values across the sample. 
 * Access the log normalised values within the ```se``` object.
 * Using cell area as size factors is more suited to (imaging based) Xenium data. Using total counts as in scRNA-seq is inappropriate when we have a curated gene panel and can blunt biological signals.
+* Paper -> https://genomebiology.biomedcentral.com/articles/10.1186/s13059-024-03303-w
 
 ```{r}
 # normalise
@@ -164,6 +166,9 @@ spatialReducedDim(se, "PCA", 4, colGeometryName = "centroids", divergent = TRUE,
 * Examine the clustering results using the ```plotSpatialFeature``` function. 
 * We can further arrange our cells in low dimensional space with the UMAP algorithm. UMAP will project gene expression down to 2 dimensions. It has more freedom in how it arranges cells in 2D space and aims to preserve relationships between neighbouring cells.
 * Run UMAP with the ```runUMAP``` function and plot.
+* Clustering analysis is an important step for understanding cellular structure in the dataset. 
+* The Leiden algorithm is a method for detecting communities in large networks. Leiden creates clusters by taking into account the number of links between cells in a cluster versus the overall expected number of links in the dataset.
+
 
 ```{r}
 set.seed(29)
@@ -179,7 +184,7 @@ colData(se)$cluster <- clusterRows(reducedDim(se, "PCA")[,1:15],
 # This will make a new column called cluster in the colData slot
 colData(se)
 table(se$cluster)
-# plot
+# plot clusters
 plotSpatialFeature(se, "cluster", colGeometryName = "cellSeg", pointsize = 1.4) + ggtitle("Leiden gene expression clustering")
 # bbox
 plotSpatialFeature(se, "cluster", colGeometryName = "cellSeg", bbox = bbox)
@@ -199,3 +204,12 @@ plotUMAP(object = se, dimred = "UMAP", colour_by = "cluster") + ggtitle("UMAP re
 #                    channel = 3:1, dark = TRUE, normalize_channels = TRUE)
 
 ```
+
+Checkpoint
+
+```{r}
+saveRDS(object = se, file = "xenium/data/se_clust.rds")
+```
+
+
+

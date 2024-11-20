@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+<meta name="date" content="2024-11-18" />
+
+<title>10x Xenium Analysis Part 2</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">ASI Spatial Workshop 2024</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Analysis Files
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="setup.html">Setup</a>
+    </li>
+    <li>
+      <a href="stomics_01_intro.html">STOmics intro</a>
+    </li>
+    <li>
+      <a href="stomics_02_basics.html">STOmics basics</a>
+    </li>
+    <li>
+      <a href="stomics_03_analysis.html">STOmics analysis</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/ghar1821/asi_spatial_workshop_2024">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">10x Xenium Analysis Part 2</h1>
+<h4 class="date">2024-11-18</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2024-11-20
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>asi_spatial_workshop_2024/</code>
+<span class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.1). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20240925code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20240925)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20240925code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20240925)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024treee5a7744281c1a6e4d467b8dcb5d0ac085406865etargetblanke5a7744a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/e5a7744281c1a6e4d467b8dcb5d0ac085406865e" target="_blank">e5a7744</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024treee5a7744281c1a6e4d467b8dcb5d0ac085406865etargetblanke5a7744a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/e5a7744281c1a6e4d467b8dcb5d0ac085406865e" target="_blank">e5a7744</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .Rproj.user/
+    Ignored:    stomics/
+    Ignored:    visium/
+
+Untracked files:
+    Untracked:  RCTD_Plots/
+    Untracked:  xenium/
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/Xenium_Part2.Rmd</code>) and HTML
+(<code>docs/Xenium_Part2.html</code>) files. If you’ve configured a
+remote Git repository (see <code>?wflow_git_remote</code>), click on the
+hyperlinks in the table below to view the files as they were in that
+past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/e5a7744281c1a6e4d467b8dcb5d0ac085406865e/analysis/Xenium_Part2.Rmd" target="_blank">e5a7744</a>
+</td>
+<td>
+Cathal King
+</td>
+<td>
+2024-11-20
+</td>
+<td>
+updating Xenium analysis files
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/d159369db7afd7d2b68b6afd118f5eba5dc4dbae/analysis/Xenium_Part2.Rmd" target="_blank">d159369</a>
+</td>
+<td>
+Cathal King
+</td>
+<td>
+2024-11-20
+</td>
+<td>
+move script to analysis directory
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="part-2-of-the-analysis-will-cover" class="section level1">
+<h1>Part 2 of the analysis will cover:</h1>
+<ul>
+<li><p>Introduction to image processing</p></li>
+<li><p>QC of Xenium data</p></li>
+<li><p>Clustering and dimensionality reduction analysis</p></li>
+<li><p>The Xenium data should be loaded in from part 1 of the analysis
+in the <code>se</code> object</p></li>
+<li><p>If its not, read in data with
+<code>readRDS(xenium/data/se_xenium.rds)</code></p></li>
+</ul>
+<pre class="r"><code>se &lt;- readRDS(file = &quot;xenium/data/se_xenium.rds&quot;)</code></pre>
+</div>
+<div id="images" class="section level1">
+<h1>Images</h1>
+<ul>
+<li>Access images with getter functions <code>imgData</code> and
+<code>imageIDs</code></li>
+<li>This part of the analysis will require the <code>RBioFormats</code>
+package.</li>
+<li>Plot transcript counts across spatial image.</li>
+<li>Get the spatial extent of the spatial image with
+<code>terra::ext()</code></li>
+<li>View the binary mask of the image</li>
+<li>Explore and visualise image channels.</li>
+</ul>
+<pre class="r"><code>imgData(se)</code></pre>
+<pre><code>DataFrame with 1 row and 4 columns
+    sample_id         image_id                              data scaleFactor
+  &lt;character&gt;      &lt;character&gt;                            &lt;list&gt;   &lt;numeric&gt;
+1          p5 morphology_focus 31470 x 30874 x 4 BioFormatsImage           1</code></pre>
+<pre class="r"><code>imageIDs(se)</code></pre>
+<pre><code>[1] &quot;morphology_focus&quot;</code></pre>
+<pre class="r"><code>(img &lt;- getImg(se, image_id = &quot;morphology_focus&quot;))</code></pre>
+<pre><code>X: 31470, Y: 30874, C: 4, Z: 1, T: 1, BioFormatsImage
+imgSource():
+  /Users/cathal.king/Library/CloudStorage/OneDrive-SouthAustralianHealthandMedicalResearchInstituteLtd/Workshops/ASI_workshop/asi_spatial_workshop_2024/xenium/raw/morphology_focus/morphology_focus_0000.ome.tif </code></pre>
+<pre class="r"><code># plot image overlayed with metadata
+# features can be any of colData
+plotSpatialFeature(se, features = &quot;transcript_counts&quot;, 
+                   colGeometryName = &quot;cellSeg&quot;,
+                   aes_use = &quot;color&quot;, fill = NA, # Only color by cell outline
+                   image_id = &quot;morphology_focus&quot;, dark = TRUE, channel = 1)</code></pre>
+<p><img src="figure/Xenium_Part2.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># get the extend of the spatial image
+terra::ext(img)</code></pre>
+<pre><code>     xmin      xmax      ymin      ymax 
+    0.000  6687.375 -6560.725     0.000 </code></pre>
+<pre class="r"><code># convert BioFormatsImage to ExtImage
+ebi &lt;- toExtImage(img)
+# display with EBimage
+#EBImage::display(normalize(ebi))
+
+th &lt;- EBImage::otsu(ebi, range = range(ebi), levels = max(ebi))
+mask &lt;- ebi &gt; th
+EBImage::display(mask)</code></pre>
+<pre><code>Only the first frame of the image stack is displayed.
+To display all frames use &#39;all = TRUE&#39;.</code></pre>
+<p><img src="figure/Xenium_Part2.Rmd/unnamed-chunk-3-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#plotImage(se, image_id = &quot;morphology_focus&quot;, channel = 3:1, normalize_channels = TRUE)
+
+# plot side-by-side
+plotImage(se, image_id = &quot;morphology_focus&quot;, channel = 3:1, normalize_channels = TRUE) +
+plotImage(se, image_id = &quot;morphology_focus&quot;, channel = 1, palette = viridis_pal()(255))</code></pre>
+<p><img src="figure/Xenium_Part2.Rmd/unnamed-chunk-3-3.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="bounding-box" class="section level1">
+<h1>Bounding box</h1>
+<ul>
+<li>Create a bounding box to crop the spatial image to a region of
+interest (ROI)</li>
+<li>Plot the cropped ROI</li>
+</ul>
+<pre class="r"><code># for example
+bbox &lt;- c(xmin = 2000, xmax = 4000, ymin = -5000, ymax = -2000)
+# plot
+plotGeometry(se, colGeometryName = &quot;cellSeg&quot;, bbox = bbox)</code></pre>
+<p><img src="figure/Xenium_Part2.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># a smaller ROI
+#bbox &lt;- c(xmin = 0, xmax = 200, ymin = -600, ymax = -400)
+
+# plotSpatialFeature(se, features = &quot;total_counts&quot;, 
+#                    colGeometryName = &quot;cellSeg&quot;,
+#                    aes_use = &quot;color&quot;, fill = NA, # Only color by cell outline
+#                    image_id = &quot;morphology_focus&quot;, dark = TRUE, bbox = bbox, channel = 1)</code></pre>
+</div>
+<div id="filtering-data" class="section level1">
+<h1>Filtering data</h1>
+<ul>
+<li>Remove low quality cells with too few transcript counts and genes
+that are not detected.</li>
+<li><code>colData</code> columns in SE can be accessed with the $
+operator as if getting a column from a data frame</li>
+<li>Discussion. Gene panel vs WT.</li>
+</ul>
+<pre class="r"><code># check dims
+dim(se)</code></pre>
+<pre><code>[1]    541 275998</code></pre>
+<pre class="r"><code># contains pre-computed QC metrics
+names(colData(se))</code></pre>
+<pre><code>[1] &quot;transcript_counts&quot;          &quot;control_probe_counts&quot;      
+[3] &quot;control_codeword_counts&quot;    &quot;unassigned_codeword_counts&quot;
+[5] &quot;deprecated_codeword_counts&quot; &quot;total_counts&quot;              
+[7] &quot;cell_area&quot;                  &quot;nucleus_area&quot;              
+[9] &quot;sample_id&quot;                 </code></pre>
+<pre class="r"><code># filter metadata
+se &lt;- se[, se$total_counts &gt; 5]
+# filter counts matrix
+se &lt;- se[rowSums(counts(se)) &gt; 0,]
+# check dims again
+dim(se)</code></pre>
+<pre><code>[1]    539 274000</code></pre>
+</div>
+<div id="data-normalization" class="section level1">
+<h1>Data Normalization</h1>
+<ul>
+<li>Normalise gene expression values across the sample.</li>
+<li>Access the log normalised values within the <code>se</code>
+object.</li>
+<li>Using cell area as size factors is more suited to (imaging based)
+Xenium data. Using total counts as in scRNA-seq is inappropriate when we
+have a curated gene panel and can blunt biological signals.</li>
+<li>Paper -&gt; <a
+href="https://genomebiology.biomedcentral.com/articles/10.1186/s13059-024-03303-w"
+class="uri">https://genomebiology.biomedcentral.com/articles/10.1186/s13059-024-03303-w</a></li>
+</ul>
+<pre class="r"><code># normalise
+se &lt;- logNormCounts(se, size.factors = se$cell_area)
+# check the assays slot
+se</code></pre>
+<pre><code>class: SpatialFeatureExperiment 
+dim: 539 274000 
+metadata(1): Samples
+assays(2): counts logcounts
+rownames(539): ABCC8 ACP5 ... UnassignedCodeword_0330
+  UnassignedCodeword_0338
+rowData names(3): ID Symbol Type
+colnames(274000): aaaadchh-1 aaaaglla-1 ... oinihnka-1 oiniiibd-1
+colData names(10): transcript_counts control_probe_counts ... sample_id
+  sizeFactor
+reducedDimNames(0):
+mainExpName: NULL
+altExpNames(0):
+spatialCoords names(2) : x_centroid y_centroid
+imgData names(4): sample_id image_id data scaleFactor
+
+unit: micron
+Geometries:
+colGeometries: centroids (POINT), cellSeg (MULTIPOLYGON), nucSeg (MULTIPOLYGON) 
+
+Graphs:
+p5: </code></pre>
+<pre class="r"><code># Log counts getter
+logcounts(se) |&gt; head()</code></pre>
+<pre><code>&lt;6 x 274000&gt; sparse DelayedMatrix object of type &quot;double&quot;:
+        aaaadchh-1 aaaaglla-1 aaaanjng-1 ... oinihnka-1 oiniiibd-1
+ABCC8     0.000000   0.000000   0.000000   .   0.000000   0.000000
+ACP5      1.173393   0.000000   0.000000   .   0.000000   0.000000
+ACTA2     1.173393   0.000000   2.165423   .   3.220612   0.000000
+ADH1C     0.000000   0.000000   0.000000   .   0.000000   0.000000
+ADRA2A    0.000000   0.000000   0.000000   .   0.000000   0.000000
+AFAP1L2   0.000000   0.000000   0.000000   .   0.000000   0.000000</code></pre>
+</div>
+<div id="run-principal-component-analysis-pca" class="section level1">
+<h1>Run Principal Component Analysis (PCA)</h1>
+<ul>
+<li>PCA discovers axes in high-dimensional space that capture the
+largest amount of variation. This is best understood by imagining each
+axis as a line.</li>
+<li>In PCA, the first axis (or “principal component”, PC) is chosen such
+that it maximizes this variance. The next PC is chosen such that it is
+orthogonal to the first and captures the greatest remaining amount of
+variation, and so on.</li>
+<li>PCA will reveal linear combinations of features in the original
+dataset and are ranked with decreasing order of variance.</li>
+<li>PCA is commonly used on single-cell RNA-seq datasets and is used
+here on Xenium.</li>
+<li>Run PCA on the Xenium dataset.</li>
+<li>Examine and plot the PCA results.</li>
+</ul>
+<pre class="r"><code>se &lt;- runPCA(se, ncomponents = 20,
+                  exprs_values = &quot;logcounts&quot;, scale = TRUE)
+# find in object
+pca_res &lt;- reducedDim(se, &quot;PCA&quot;)
+# check dim names slot
+se</code></pre>
+<pre><code>class: SpatialFeatureExperiment 
+dim: 539 274000 
+metadata(1): Samples
+assays(2): counts logcounts
+rownames(539): ABCC8 ACP5 ... UnassignedCodeword_0330
+  UnassignedCodeword_0338
+rowData names(3): ID Symbol Type
+colnames(274000): aaaadchh-1 aaaaglla-1 ... oinihnka-1 oiniiibd-1
+colData names(10): transcript_counts control_probe_counts ... sample_id
+  sizeFactor
+reducedDimNames(1): PCA
+mainExpName: NULL
+altExpNames(0):
+spatialCoords names(2) : x_centroid y_centroid
+imgData names(4): sample_id image_id data scaleFactor
+
+unit: micron
+Geometries:
+colGeometries: centroids (POINT), cellSeg (MULTIPOLYGON), nucSeg (MULTIPOLYGON) 
+
+Graphs:
+p5: </code></pre>
+<pre class="r"><code># getter 
+reducedDimNames(se)</code></pre>
+<pre><code>[1] &quot;PCA&quot;</code></pre>
+<pre class="r"><code># plot PCA results
+spatialReducedDim(se, &quot;PCA&quot;, 4, colGeometryName = &quot;centroids&quot;, divergent = TRUE,
+                  diverge_center = 0, ncol = 2, scattermore = TRUE, pointsize = 1.5)</code></pre>
+<p><img src="figure/Xenium_Part2.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="clustering-and-dimensionality-reduction"
+class="section level1">
+<h1>Clustering and Dimensionality reduction</h1>
+<ul>
+<li>Clustering is an unsupervised learning procedure that is used to
+empirically define groups of cells with similar gene expression
+profiles.</li>
+<li>This will make cell identify annotation easier as it will group
+cells into distinct clusters.</li>
+<li>Clustering is just a tool to explore the data. Many different
+clustering algorithms and resolutions can be used to explore the
+clustering of the data.</li>
+<li>Run the Leiden clustering algorithm using the function
+<code>bluster::clusterRows()</code></li>
+<li>Examine the clustering results using the
+<code>plotSpatialFeature</code> function.</li>
+<li>We can further arrange our cells in low dimensional space with the
+UMAP algorithm. UMAP will project gene expression down to 2 dimensions.
+It has more freedom in how it arranges cells in 2D space and aims to
+preserve relationships between neighbouring cells.</li>
+<li>Run UMAP with the <code>runUMAP</code> function and plot.</li>
+<li>Clustering analysis is an important step for understanding cellular
+structure in the dataset.</li>
+<li>The Leiden algorithm is a method for detecting communities in large
+networks. Leiden creates clusters by taking into account the number of
+links between cells in a cluster versus the overall expected number of
+links in the dataset.</li>
+</ul>
+<pre class="r"><code>set.seed(29)
+# run clustering
+colData(se)$cluster &lt;- clusterRows(reducedDim(se, &quot;PCA&quot;)[,1:15],
+                                    BLUSPARAM = SNNGraphParam(
+                                        cluster.fun = &quot;leiden&quot;,
+                                        cluster.args = list(
+                                            resolution_parameter = 0.5,
+                                            objective_function = &quot;modularity&quot;)))
+
+# examine results
+# This will make a new column called cluster in the colData slot
+colData(se)</code></pre>
+<pre><code>DataFrame with 274000 rows and 11 columns
+           transcript_counts control_probe_counts control_codeword_counts
+                   &lt;integer&gt;            &lt;integer&gt;               &lt;integer&gt;
+aaaadchh-1                56                    0                       0
+aaaaglla-1                51                    0                       0
+aaaanjng-1                45                    0                       0
+aaabakie-1                37                    0                       0
+aaabalkl-1               112                    0                       0
+...                      ...                  ...                     ...
+oiniccld-1                20                    0                       0
+oinicmgd-1                 8                    0                       0
+oiniecfb-1                44                    0                       0
+oinihnka-1                 6                    0                       0
+oiniiibd-1                56                    0                       0
+           unassigned_codeword_counts deprecated_codeword_counts total_counts
+                            &lt;integer&gt;                  &lt;integer&gt;    &lt;integer&gt;
+aaaadchh-1                          0                          0           56
+aaaaglla-1                          0                          0           51
+aaaanjng-1                          0                          0           45
+aaabakie-1                          0                          0           37
+aaabalkl-1                          0                          0          112
+...                               ...                        ...          ...
+oiniccld-1                          0                          0           20
+oinicmgd-1                          0                          0            8
+oiniecfb-1                          0                          0           44
+oinihnka-1                          0                          0            6
+oiniiibd-1                          0                          0           56
+           cell_area nucleus_area   sample_id sizeFactor  cluster
+           &lt;numeric&gt;    &lt;numeric&gt; &lt;character&gt;  &lt;numeric&gt; &lt;factor&gt;
+aaaadchh-1   49.9880      31.3384          p5   0.796549        1
+aaaaglla-1   44.5241      25.8294          p5   0.709483        1
+aaaanjng-1   54.0069      33.6866          p5   0.860590        1
+aaabakie-1   49.4461      31.3384          p5   0.787915        1
+aaabalkl-1   74.2369      35.7638          p5   1.182951        1
+...              ...          ...         ...        ...      ...
+oiniccld-1  20.81703     16.57234          p5   0.331716        2
+oinicmgd-1  18.73984     18.73984          p5   0.298616        2
+oiniecfb-1  42.58235     42.58235          p5   0.678542        5
+oinihnka-1   7.54109      7.54109          p5   0.120166        4
+oiniiibd-1 177.96079     21.17828          p5   2.835773        2</code></pre>
+<pre class="r"><code>table(se$cluster)</code></pre>
+<pre><code>
+    1     2     3     4     5     6     7     8     9    10    11    12    13 
+29026 24961   184 16497 17341 16349 21933 21270  8870 23819 54965 23998 14787 </code></pre>
+<pre class="r"><code># plot clusters
+plotSpatialFeature(se, &quot;cluster&quot;, colGeometryName = &quot;cellSeg&quot;, pointsize = 1.4) + ggtitle(&quot;Leiden gene expression clustering&quot;)</code></pre>
+<p><img src="figure/Xenium_Part2.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># bbox
+plotSpatialFeature(se, &quot;cluster&quot;, colGeometryName = &quot;cellSeg&quot;, bbox = bbox)</code></pre>
+<p><img src="figure/Xenium_Part2.Rmd/unnamed-chunk-8-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># UMAP
+se &lt;- runUMAP(se, dimred=&quot;PCA&quot;)
+
+plotUMAP(object = se, dimred = &quot;UMAP&quot;, colour_by = &quot;cluster&quot;) + ggtitle(&quot;UMAP representation of Leiden gene expression clusters&quot;)</code></pre>
+<p><img src="figure/Xenium_Part2.Rmd/unnamed-chunk-8-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#, text_by = &quot;cluster&quot;
+
+# choose a gene from rowData
+
+# plotSpatialFeature(se, &quot;ACP5&quot;, colGeometryName = &quot;cellSeg&quot;, 
+#                   image_id = &quot;morphology_focus&quot;,
+#                    fill = NA, aes_use = &quot;color&quot;, linewidth = 0.15,
+#                    tx_fixed = list(color = &quot;lightgray&quot;),
+#                    channel = 3:1, dark = TRUE, normalize_channels = TRUE)</code></pre>
+<p>Checkpoint</p>
+<pre class="r"><code>saveRDS(object = se, file = &quot;xenium/data/se_clust.rds&quot;)</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.4.0 (2024-04-24)
+Platform: aarch64-apple-darwin20
+Running under: macOS Sonoma 14.7.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: Australia/Adelaide
+tzcode source: internal
+
+attached base packages:
+[1] stats4    stats     graphics  grDevices utils     datasets  methods  
+[8] base     
+
+other attached packages:
+ [1] plotly_4.10.4                  scales_1.3.0                  
+ [3] terra_1.7-78                   EBImage_4.48.0                
+ [5] sf_1.0-19                      bluster_1.16.0                
+ [7] fs_1.6.5                       scran_1.34.0                  
+ [9] BiocParallel_1.40.0            scater_1.34.0                 
+[11] ggplot2_3.5.1                  scuttle_1.16.0                
+[13] SingleCellExperiment_1.28.1    SummarizedExperiment_1.36.0   
+[15] Biobase_2.66.0                 GenomicRanges_1.58.0          
+[17] GenomeInfoDb_1.42.0            IRanges_2.40.0                
+[19] S4Vectors_0.44.0               BiocGenerics_0.52.0           
+[21] MatrixGenerics_1.18.0          matrixStats_1.4.1             
+[23] RBioFormats_1.6.0              Voyager_1.8.1                 
+[25] SpatialFeatureExperiment_1.8.2 workflowr_1.7.1               
+
+loaded via a namespace (and not attached):
+  [1] RcppAnnoy_0.0.22          later_1.3.2              
+  [3] bitops_1.0-9              tibble_3.2.1             
+  [5] R.oo_1.27.0               lifecycle_1.0.4          
+  [7] edgeR_4.4.0               rprojroot_2.0.4          
+  [9] processx_3.8.4            lattice_0.22-6           
+ [11] magrittr_2.0.3            limma_3.62.1             
+ [13] sass_0.4.9                rmarkdown_2.29           
+ [15] jquerylib_0.1.4           yaml_2.3.10              
+ [17] metapod_1.14.0            httpuv_1.6.15            
+ [19] sp_2.1-4                  cowplot_1.1.3            
+ [21] DBI_1.2.3                 abind_1.4-8              
+ [23] zlibbioc_1.52.0           purrr_1.0.2              
+ [25] R.utils_2.12.3            RCurl_1.98-1.16          
+ [27] git2r_0.35.0              GenomeInfoDbData_1.2.13  
+ [29] ggrepel_0.9.6             irlba_2.3.5.1            
+ [31] units_0.8-5               RSpectra_0.16-2          
+ [33] dqrng_0.4.1               DelayedMatrixStats_1.28.0
+ [35] codetools_0.2-20          DropletUtils_1.26.0      
+ [37] DelayedArray_0.32.0       xml2_1.3.6               
+ [39] tidyselect_1.2.1          UCSC.utils_1.2.0         
+ [41] memuse_4.2-3              farver_2.1.2             
+ [43] ScaledMatrix_1.14.0       viridis_0.6.5            
+ [45] jsonlite_1.8.9            BiocNeighbors_2.0.0      
+ [47] e1071_1.7-16              tools_4.4.0              
+ [49] ggnewscale_0.5.0          Rcpp_1.0.13-1            
+ [51] glue_1.8.0                gridExtra_2.3            
+ [53] SparseArray_1.6.0         xfun_0.49                
+ [55] dplyr_1.1.4               HDF5Array_1.34.0         
+ [57] withr_3.0.2               fastmap_1.2.0            
+ [59] boot_1.3-31               rhdf5filters_1.18.0      
+ [61] fansi_1.0.6               spData_2.3.3             
+ [63] callr_3.7.6               digest_0.6.37            
+ [65] rsvd_1.0.5                R6_2.5.1                 
+ [67] colorspace_2.1-1          wk_0.9.4                 
+ [69] scattermore_1.2           jpeg_0.1-10              
+ [71] R.methodsS3_1.8.2         utf8_1.2.4               
+ [73] tidyr_1.3.1               generics_0.1.3           
+ [75] data.table_1.16.2         class_7.3-22             
+ [77] httr_1.4.7                htmlwidgets_1.6.4        
+ [79] S4Arrays_1.6.0            whisker_0.4.1            
+ [81] spdep_1.3-6               uwot_0.2.2               
+ [83] pkgconfig_2.0.3           scico_1.5.0              
+ [85] rJava_1.0-11              gtable_0.3.6             
+ [87] XVector_0.46.0            htmltools_0.5.8.1        
+ [89] fftwtools_0.9-11          png_0.1-8                
+ [91] SpatialExperiment_1.16.0  knitr_1.49               
+ [93] rstudioapi_0.17.1         rjson_0.2.23             
+ [95] proxy_0.4-27              cachem_1.1.0             
+ [97] rhdf5_2.50.0              stringr_1.5.1            
+ [99] KernSmooth_2.23-24        parallel_4.4.0           
+[101] vipor_0.4.7               arrow_17.0.0.1           
+[103] s2_1.1.7                  pillar_1.9.0             
+[105] grid_4.4.0                vctrs_0.6.5              
+[107] promises_1.3.0            BiocSingular_1.22.0      
+[109] beachmat_2.22.0           sfheaders_0.4.4          
+[111] cluster_2.1.6             beeswarm_0.4.0           
+[113] evaluate_1.0.1            zeallot_0.1.0            
+[115] magick_2.8.5              cli_3.6.3                
+[117] locfit_1.5-9.10           compiler_4.4.0           
+[119] rlang_1.1.4               crayon_1.5.3             
+[121] labeling_0.4.3            classInt_0.4-10          
+[123] ps_1.8.1                  getPass_0.2-4            
+[125] ggbeeswarm_0.7.2          stringi_1.8.4            
+[127] viridisLite_0.4.2         deldir_2.0-4             
+[129] assertthat_0.2.1          munsell_0.5.1            
+[131] lazyeval_0.2.2            tiff_0.1-12              
+[133] Matrix_1.7-1              patchwork_1.3.0          
+[135] sparseMatrixStats_1.18.0  bit64_4.5.2              
+[137] Rhdf5lib_1.28.0           statmod_1.5.0            
+[139] igraph_2.1.1              bslib_0.8.0              
+[141] bit_4.5.0                </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
