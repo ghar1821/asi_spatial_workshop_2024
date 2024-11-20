@@ -22,3 +22,31 @@ The Spatial Transcriptomics Analysis Workshop will be run on the 22nd November 2
 
 # Analysis Overview {-}
 1. [Setup](setup.html)
+
+
+## STOmics
+
+(expect approx. 30 minutes per Rmd file)
+
+| Rmd file                                        | Topics                       |
+|:---------                                       |:-----------------------------|
+| [stomics_01_intro](stomics_01_intro.html)       | Stereo-seq overview          |
+|                                                 | SAW overview                 |
+|                                                 | SAW report                   |
+|                                                 | StereoMap                    |
+|                                                 | StereoPy                     |
+|                                                 | Open discussion              |
+|                                                 |                              |
+| [stomics_02_basics](stomics_02_basics.html)     | Discussing formats           |
+|                                                 | Examining output files       |
+|                                                 | Creating a SpatialExperiment |
+|                                                 | Using geometric annotations  |
+|                                                 | Performing DE analysis       |
+|                                                 | Open discussion              |
+|                                                 |                              |
+| [stomics_03_analysis](stomics_03_analysis.html) | Introduction to LISTA data   |
+|                                                 | Basic QC steps               |
+|                                                 | Single cell annotations      |
+|                                                 | Running RCTD                 |
+|                                                 | Plotting our results         |
+|                                                 | Open discussion              |
