@@ -279,9 +279,17 @@ download.file(
     extra = '-L'
 )
 
+download.file(
+  "https://filesender.aarnet.edu.au/download.php?token=2fd67792-4292-427f-b450-9ef2ed2b42f7&files_ids=23642652",
+    destfile = "stomics/raw/C04042E3_20241117151457.lasso.geojson",
+    method = "curl",
+    extra = '-L'
+)
+
 # check md5sum of the downloaded files.
 md5sum_str <- c(
-    "stomics/raw/visualization.tar.gz" = "7d3daa224de7ca1244711531270546d3"
+    "stomics/raw/visualization.tar.gz" = "7d3daa224de7ca1244711531270546d3",
+    "stomics/raw/C04042E3_20241117151457.lasso.geojson" = "791c46c79909a500f5b6169efe69b430"
 )
 check_md5(md5sum_str)
 ```
