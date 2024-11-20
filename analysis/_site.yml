@@ -9,6 +9,14 @@ navbar:
     menu:
       - text: "Setup"
         href: setup.html
+      # - text: "Visium part 1"
+      #   href: visium_01.html
+      # - text: "Visium part 2"
+      #   href: visium_02.html
+      - text: "Visium part 3"
+        href: visium_03.html
+      # - text: "Visium part 4"
+      #   href: visium_04.html
       - text: "STOmics intro"
         href: stomics_01_intro.html
       - text: "STOmics basics"

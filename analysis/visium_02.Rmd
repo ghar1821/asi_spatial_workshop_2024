@@ -1,7 +1,6 @@
 ---
 title: "Visium part 2"
-author: "Givanna Putri"
-date: "2024-11-20"
+author: "Givanna Putri, Thomas O'neil"
 output: workflowr::wflow_html
 editor_options:
   chunk_output_type: console
