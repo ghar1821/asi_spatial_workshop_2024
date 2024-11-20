@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="John Salamon" />
+
+<meta name="date" content="2024-11-20" />
+
+<title>STOmics basics</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">ASI Spatial Workshop 2024</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Analysis Files
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="setup.html">Setup</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/ghar1821/asi_spatial_workshop_2024">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">STOmics basics</h1>
+<h4 class="author">John Salamon</h4>
+<h4 class="date">2024-11-20</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2024-11-20
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>asi_spatial_workshop_2024/</code>
+<span class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.1). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20240925code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20240925)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20240925code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20240925)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024treed159369db7afd7d2b68b6afd118f5eba5dc4dbaetargetblankd159369a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/d159369db7afd7d2b68b6afd118f5eba5dc4dbae" target="_blank">d159369</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024treed159369db7afd7d2b68b6afd118f5eba5dc4dbaetargetblankd159369a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/d159369db7afd7d2b68b6afd118f5eba5dc4dbae" target="_blank">d159369</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    xenium/
+
+Untracked files:
+    Untracked:  stomics/
+    Untracked:  visium/
+
+Unstaged changes:
+    Modified:   analysis/index.Rmd
+    Modified:   analysis/stomics_01_intro.Rmd
+    Modified:   analysis/stomics_02_basics.Rmd
+    Modified:   analysis/stomics_03_analysis.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/stomics_02_basics.Rmd</code>) and
+HTML (<code>docs/stomics_02_basics.html</code>) files. If you’ve
+configured a remote Git repository (see <code>?wflow_git_remote</code>),
+click on the hyperlinks in the table below to view the files as they
+were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/818a4e90cdf0df2cef9767e7cfe678afa408c38a/analysis/stomics_02_basics.Rmd" target="_blank">818a4e9</a>
+</td>
+<td>
+John Salamon
+</td>
+<td>
+2024-11-18
+</td>
+<td>
+changes to make html more readable
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/e9213d994393dd19c224e3de9c1067ef73446e1c/analysis/stomics_02_basics.Rmd" target="_blank">e9213d9</a>
+</td>
+<td>
+John Salamon
+</td>
+<td>
+2024-11-18
+</td>
+<td>
+Merge stomics commits
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/0a0195c9daf56f96dfa6df818a6674bb21d19098/analysis/stomics_02_basics.Rmd" target="_blank">0a0195c</a>
+</td>
+<td>
+John Salamon
+</td>
+<td>
+2024-11-18
+</td>
+<td>
+more details
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/35f3e03692b0dd653271b9fdb3fed44b47c313e7/analysis/stomics_02_basics.Rmd" target="_blank">35f3e03</a>
+</td>
+<td>
+John Salamon
+</td>
+<td>
+2024-11-17
+</td>
+<td>
+some more explainations
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/e71a46b0e60920161d0f08049e17cd6d48b45778/analysis/stomics_02_basics.Rmd" target="_blank">e71a46b</a>
+</td>
+<td>
+John Salamon
+</td>
+<td>
+2024-11-17
+</td>
+<td>
+add some geometry manipulation
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/ff451dc02d76584c47614fe9aec8b3d04d1b8c81/analysis/stomics_02_basics.Rmd" target="_blank">ff451dc</a>
+</td>
+<td>
+John Salamon
+</td>
+<td>
+2024-11-17
+</td>
+<td>
+updates
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/997618e43a1d359b4b30ac99cf5f5d0b65569784/analysis/stomics_02_basics.Rmd" target="_blank">997618e</a>
+</td>
+<td>
+John Salamon
+</td>
+<td>
+2024-11-16
+</td>
+<td>
+making some adjustments
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<pre class="r"><code># object for holding spatial / single cell data
+
+# hide some output
+suppressMessages(library(SpatialExperiment))
+library(SpatialExperiment)
+library(SpatialFeatureExperiment)</code></pre>
+<pre><code>
+Attaching package: &#39;SpatialFeatureExperiment&#39;</code></pre>
+<pre><code>The following object is masked from &#39;package:base&#39;:
+
+    scale</code></pre>
+<pre class="r"><code># read HDF5 archives
+library(rhdf5)
+
+# single-cell tools
+library(scran) </code></pre>
+<pre><code>Loading required package: scuttle</code></pre>
+<pre class="r"><code>library(scater) </code></pre>
+<pre><code>Loading required package: ggplot2</code></pre>
+<pre><code>
+Attaching package: &#39;ggplot2&#39;</code></pre>
+<pre><code>The following object is masked from &#39;package:SpatialFeatureExperiment&#39;:
+
+    unit</code></pre>
+<pre class="r"><code># plotting
+library(ggplot2) 
+library(patchwork)
+
+# geospatial simple features
+library(sf)</code></pre>
+<pre><code>Linking to GEOS 3.12.2, GDAL 3.9.3, PROJ 9.4.1; sf_use_s2() is TRUE</code></pre>
+<pre class="r"><code># custom functions
+source(&quot;code/stomicsFunctions.R&quot;)</code></pre>
+<pre><code>
+Attaching package: &#39;Matrix&#39;</code></pre>
+<pre><code>The following object is masked from &#39;package:S4Vectors&#39;:
+
+    expand</code></pre>
+<div id="loading-data-into-r" class="section level1">
+<h1>Loading data into R</h1>
+<p>One of the first hurdles to analyse STOmics data in R getting it into
+a suitable format. Our SAW outputs use the <a
+href="https://anndata.readthedocs.io/en/stable/">AnnData</a> format,
+which is more commonly used with Python. For use in R, we will need to
+convert it into a different format - the two that we’ll be considering
+here are a Seurat or SpatialExperiment object.</p>
+<p>Seurat is an very popular library for single cell and spatial
+transcriptomics, which we’ve been using extensively this morning.</p>
+<p><a
+href="https://www.bioconductor.org/packages/release/bioc/vignettes/SpatialExperiment/inst/doc/SpatialExperiment.html">SpatialExperiment</a>
+(SPE) is a package for management of spatial transcriptomicsdata, which
+integrates well with the Bioconductor ecosystem.</p>
+<p>It is an extension of SingleCellExperiment (SCE), and is extended by
+SpatialFeatureExperiment (SFE), which also adds advanced geometric
+operations and integration with geospatial libraries.</p>
+<div id="conversion-methods" class="section level2">
+<h2>Conversion methods</h2>
+<p>Unfortunately, there are many options, none of them quite perfect.
+Here are the ones that I know of:</p>
+<ul>
+<li>Use the StereoPy R script to create a Seurat object <a
+href="https://stereopy.readthedocs.io/en/latest/Tutorials/Format_Conversion.html">format
+conversion</a>
+<ul>
+<li>This method is pretty reliable, but it’s a command line script
+rather than a library, and only gives you Seurat objects</li>
+</ul></li>
+<li>Use a <code>reticulate</code> based package (calls into Python from
+R)
+<ul>
+<li>For example, <a
+href="https://cran.r-project.org/web/packages/anndata/readme/README.html"><code>anndata</code>
+from CRAN</a></li>
+<li>This gets you the data, but you still have to convert it
+somehow</li>
+</ul></li>
+<li>Use <a
+href="https://github.com/cellgeni/schard"><code>schard</code></a>
+<ul>
+<li>This is a nice little library I’ve only recently discovered</li>
+<li>It will get you most of the way, but can’t quite deal with
+Stereo-seq h5ad quirks yet</li>
+</ul></li>
+<li>Use some custom <code>rhdf5</code> code
+<ul>
+<li>This is what I’ve done for this tutorial. It’s probably good to
+understand how the formats differ.</li>
+</ul></li>
+</ul>
+<p>For this workshop, I’ve put all the loading code into an external
+script, <code>stomicsFunctions.R</code>. You don’t need to worry too
+much about the details, and this should work with the current versions
+of SAW.</p>
+</div>
+<div id="inspecting-our-files" class="section level2">
+<h2>Inspecting our files</h2>
+<p>Even if you’re just going to use a library to handle opening these
+files, it’s useful to have a general understanding of what they contain.
+Let’s take a look at some of the most common SAW outputs.</p>
+<p>We’ll be going through the outputs of
+<code>visualization.tar.gz</code>. If you haven’t downloaded this file,
+don’t worry,</p>
+<div id="gef" class="section level3">
+<h3>gef</h3>
+<p><code>.gef</code> files contain the original expression matrix, and
+are typically large. They will contain both the raw (non-binned)
+expression matrices, and multiple binned matrices.</p>
+<p>While these are just HDF5 files (so you can inspect it with
+<code>h5ls</code>), it is difficult to process directly in R.</p>
+<pre class="r"><code># Note, this is only in the optional downloads. Don&#39;t worry if you didn&#39;t download it.
+input_file &lt;- &quot;stomics/raw/visualization/C04042E3.tissue.gef&quot;
+
+# We can look inside the gef. However, it&#39;s not in a format we can directly use.
+counts &lt;- h5read(input_file, &quot;/geneExp/bin50/gene&quot;)
+
+# We can just sort through the features (noting the prevalence of mitochondrial genes).
+head(counts[order(counts$count, decreasing=T),])</code></pre>
+<pre><code>                     geneID  geneName   offset count
+35774  ENSMUSG00000119584.1 Rn18s-rs5 53367288 83857
+16677  ENSMUSG00000064339.1   mt-Rnr2 47245621 83237
+11737 ENSMUSG00000040828.11  Catsperd 36698772 82066
+13975 ENSMUSG00000049775.17    Tmsb4x 41052367 78277
+11377  ENSMUSG00000039883.6    Lrrc17 35692930 76977
+16675  ENSMUSG00000064337.1   mt-Rnr1 47135308 76552</code></pre>
+</div>
+<div id="h5ad" class="section level3">
+<h3>h5ad</h3>
+<p>The main SAW outputs we can access easily from R or Python are
+<code>.h5ad</code> files. These files are in AnnData format, and contain
+both a binned count matrix, plus other analysis outputs created by SAW
+(such as cluster annotations, UMAP embeddings, etc).</p>
+<p>I’ve just used the <code>rhdf5</code> library to read in these files.
+Pre-normalisation matrices can be found under “/raw/X”, and are usually
+in a compressed format. This is fairly easy to convert into a format R
+can read. (Check the <code>code/stomicsFunctions.R</code> file to see
+how <code>h5adMatrixLoad</code> was implemented).</p>
+<p>Try using the <code>h5ls</code> function to see the names of the
+subgroups in this input.</p>
+<pre class="r"><code># We can free up memory by removing those counts
+rm(counts)
+
+# Let&#39;s load an h5ad instead
+h5ad_file &lt;- &quot;stomics/raw/visualization/C04042E3.bin50_1.0.h5ad&quot;
+
+# Read in the matrix data (CSR format)
+matrix_data &lt;- h5adMatrixLoad(h5ad_file, &quot;/raw/X&quot;)</code></pre>
+<pre><code>Matrix is in CSR format, performing conversion</code></pre>
+<pre class="r"><code># Check shape of matrix
+dim(matrix_data)</code></pre>
+<pre><code>[1] 52825 84193</code></pre>
+<p>AnnData files also contain extra metadata that can map nicely onto
+the SpatialExperiment object.</p>
+<pre class="r"><code># in anndata features (here, genes) are stored as &quot;var&quot;, and are columns
+rowdata &lt;- anndataDataframe(h5ad_file, &quot;var&quot;)
+head(rowdata)</code></pre>
+<pre><code>                      dispersions dispersions_norm highly_variable mean_umi
+ENSMUSG00000000001.5     5.709944        6.2306051            TRUE 1.176044
+ENSMUSG00000000003.16    2.465295       -0.6087178           FALSE 1.022222
+ENSMUSG00000000028.16    2.666915       -0.1491199           FALSE 1.016949
+ENSMUSG00000000031.20    3.788633        2.4078556            TRUE 1.294118
+ENSMUSG00000000037.18    4.178954        3.2975990            TRUE 1.105263
+ENSMUSG00000000049.12    2.980576        0.5658757           FALSE 1.188889
+                           means n_cells n_counts real_gene_name
+ENSMUSG00000000001.5  0.38339630    2755     3240          Gnai3
+ENSMUSG00000000003.16 0.00549083      45       46           Pbsn
+ENSMUSG00000000028.16 0.01603542     118      120          Cdc45
+ENSMUSG00000000031.20 0.01207459      34       44            H19
+ENSMUSG00000000037.18 0.01337080      76       84          Scml2
+ENSMUSG00000000049.12 0.01391005      90      107           Apoh</code></pre>
+<pre class="r"><code># in anndata observations (here, spots) are stored as &quot;obs&quot;, and are rows
+coldata &lt;- anndataDataframe(h5ad_file, &quot;obs&quot;)
+head(coldata)</code></pre>
+<pre><code>               leiden n_genes_by_counts orig.ident pct_counts_mt total_counts
+15461882273150     15                23     sample             0           26
+15461882273200     15                53     sample             0           61
+15461882273250     15                84     sample             0          106
+15461882273300     15                98     sample             0          118
+15461882273350     15               125     sample             0          145
+15461882273400     15               109     sample             0          119</code></pre>
+<p>We can see that the umap and PCA embeddings are stored under
+/obsm:</p>
+<pre class="r"><code># h5ls(h5ad_file)
+
+# Let&#39;s extract the umap
+umap &lt;- h5adMatrixLoad(h5ad_file, &quot;/obsm/X_umap&quot;, sparse=F)</code></pre>
+<pre><code>Matrix already in dense format</code></pre>
+<pre class="r"><code>umap &lt;- data.frame(umap1 = umap[1,], umap2 = umap[2,], row.names = rownames(coldata))</code></pre>
+<p>Importantly, the actual spatial coordinates are also stored here:</p>
+<pre class="r"><code># Read in spatial information, convert to the way SpatialExperiment prefers
+spatial_coords &lt;- h5read(h5ad_file, &quot;/obsm/spatial&quot;)
+spatial_coords &lt;- data.matrix(data.frame(
+  x=spatial_coords[1,],
+  y=spatial_coords[2,],
+  row.names = rownames(coldata)
+))</code></pre>
+<p>Putting it all together, we can create a SpatialExperiment
+object:</p>
+<pre class="r"><code>spe &lt;- SpatialExperiment(
+  assays = list(counts = matrix_data),
+  reducedDims = list(umap = umap),
+  colData = coldata, # spatial bins
+  rowData = rowdata, # features
+  spatialCoords = spatial_coords
+)</code></pre>
+<p>Now we can use any tools compatible with this ecosystem. For example,
+some basic quick log normalisation:</p>
+<pre class="r"><code>spe &lt;- logNormCounts(spe)</code></pre>
+<p>We can plot with ggplot:</p>
+<pre class="r"><code>ggplot(spatialCoords(spe), aes(x, y, color = colData(spe)$total_counts)) +
+  geom_point(size = 0.1) +
+  theme(aspect.ratio=1) +
+  scale_color_viridis_c() +
+  labs(
+    title = &quot;Raw data&quot;,
+    color = &quot;total counts&quot;
+  )</code></pre>
+<p><img src="figure/stomics_02_basics.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Let’s try plotting the UMAP embeddings side by side with the spatial
+plot. We can also highlight the Leiden clusters.</p>
+<pre class="r"><code># Let&#39;s plot the UMAP
+spatial_plot &lt;- ggplot(spatialCoords(spe), aes(x, y, color = colData(spe)$leiden)) +
+  geom_point(size = 0.1) +
+  theme(aspect.ratio=1) +
+  scale_color_discrete(guide = &quot;none&quot;) +
+  ggtitle(&quot;Spatial plot&quot;)
+
+umap_plot &lt;- ggplot(reducedDims(spe)$umap, aes(umap1, umap2, color = colData(spe)$leiden)) +
+  geom_point(size = 0.1) +
+  theme(aspect.ratio=1) +
+  scale_color_discrete() +
+  labs(
+    title = &quot;UMAP&quot;,
+    color = &quot;Leiden clusters&quot;
+  )
+
+spatial_plot + umap_plot</code></pre>
+<p><img src="figure/stomics_02_basics.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="loading-geojson" class="section level2">
+<h2>Loading geoJSON</h2>
+<p>In StereoMap (and other spatial software), we can annotate regions
+and export as GeoJSON. The <code>sf</code> library can be used to read
+these into R.</p>
+<pre class="r"><code>geojson &lt;- &quot;stomics/raw/C04042E3_20241117151457.lasso.geojson&quot;
+sf_object &lt;- read_sf(geojson, crs = NA)</code></pre>
+<pre><code>Warning in CPL_read_ogr(dsn, layer, query, as.character(options), quiet, : GDAL
+Message 1: Non closed ring detected. To avoid accepting it, set the
+OGR_GEOMETRY_ACCEPT_UNCLOSED_RING configuration option to NO
+Warning in CPL_read_ogr(dsn, layer, query, as.character(options), quiet, : GDAL
+Message 1: Non closed ring detected. To avoid accepting it, set the
+OGR_GEOMETRY_ACCEPT_UNCLOSED_RING configuration option to NO</code></pre>
+<pre class="r"><code>polygons &lt;- st_collection_extract(sf_object)
+polygons$sample_id &lt;- &quot;sample01&quot;
+
+# Can just plot these normally too
+# plot(sf_object$geometry, col = &quot;grey&quot;)
+
+ggplot(polygons) +
+  geom_sf(fill = &quot;#69b3a2&quot;, color = &quot;white&quot;) +
+  coord_sf(datum=NA) +
+  theme_void()</code></pre>
+<p><img src="figure/stomics_02_basics.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Unfortunately, the polygons we export from SAW aren’t “closed”, i.e.,
+the first and last points are not the same. This causes some issues with
+the <code>sf</code> library so I’m just going to clean these up slightly
+(see the source for <code>closePolygon</code> in the file
+<code>code/stomicsFunctions.R</code>).</p>
+<pre class="r"><code>region_1 &lt;- closePolygon(polygons[1,])
+region_2 &lt;- closePolygon(polygons[2,])</code></pre>
+<p>In case that didn’t work, here’s an example of generating a valid
+polygonal region (just a simple square):</p>
+<pre class="r"><code># Make a test square region using the sf library
+
+st &lt;- 10000
+si &lt;- 5000
+en &lt;- st + si
+geom &lt;- st_polygon(list(matrix(
+  c(st, st,  # Bottom-left
+    en, st,  # Bottom-right
+    en, en,  # Top-right
+    st, en,  # Top-left
+    st, st), # Back to Bottom-left to close
+  ncol = 2, byrow = TRUE
+)))
+
+polygon_data &lt;- data.frame(
+  sample_id = &quot;sample01&quot;
+)
+
+polygon_sf &lt;- st_sf(polygon_data, geometry = st_sfc(geom))
+
+plot(polygon_sf)</code></pre>
+<p><img src="figure/stomics_02_basics.Rmd/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" />
+## SpatialFeatureExperiment</p>
+<p>Next, let’s upgrade to a <a
+href="https://www.bioconductor.org/packages/release/bioc/vignettes/SpatialFeatureExperiment/inst/doc/SFE.html">SpatialFeatureExperiment</a>,
+which includes functions to manipulate our data with geometries.</p>
+<pre class="r"><code># Our SpatialExperiment can just be with some region annotations.
+sfe &lt;- toSpatialFeatureExperiment(spe, 
+  annotGeometries = list(
+    region_1 = region_1,
+    region_2 = region_2
+  ),
+)
+sfe</code></pre>
+<pre><code>class: SpatialFeatureExperiment 
+dim: 52825 84193 
+metadata(0):
+assays(2): counts logcounts
+rownames(52825): ENSMUSG00000000001.5 ENSMUSG00000000003.16 ...
+  ENSMUSG00002076984.1 ENSMUSG00002076988.1
+rowData names(8): dispersions dispersions_norm ... n_counts
+  real_gene_name
+colnames(84193): 15461882273150 15461882273200 ... 89550068136200
+  89550068136250
+colData names(7): leiden n_genes_by_counts ... sample_id sizeFactor
+reducedDimNames(1): umap
+mainExpName: NULL
+altExpNames(0):
+spatialCoords names(2) : x y
+imgData names(1): sample_id
+
+unit:
+Geometries:
+colGeometries: centroids (POINT) 
+annotGeometries: region_1 (POLYGON), region_2 (POLYGON) 
+
+Graphs:
+sample01: </code></pre>
+<p>Let’s plot those regions:</p>
+<pre class="r"><code>ggplot() +
+  geom_point(data = spatialCoords(spe), aes(x, y, color = colData(spe)$leiden)) +
+  geom_sf(data = annotGeometry(sfe, &quot;region_1&quot;), fill = NA) +
+  geom_sf(data = annotGeometry(sfe, &quot;region_2&quot;), fill = NA) +
+  coord_sf(datum=NA) +
+  scale_color_discrete() +
+  theme(aspect.ratio=1)</code></pre>
+<p><img src="figure/stomics_02_basics.Rmd/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Sometimes we might want to extract those regions out into separate
+objects. Noe that we have a SpatialFeatureExperiment object, one way to
+accomplish this is with the <code>crop</code> function.</p>
+<pre class="r"><code># Crop our sfe by each annotated region
+sfe_r1 &lt;- crop(sfe, annotGeometry(sfe, &quot;region_1&quot;))</code></pre>
+<pre><code>Warning in min(bb[, 1L], na.rm = TRUE): no non-missing arguments to min;
+returning Inf</code></pre>
+<pre><code>Warning in min(bb[, 2L], na.rm = TRUE): no non-missing arguments to min;
+returning Inf</code></pre>
+<pre><code>Warning in max(bb[, 3L], na.rm = TRUE): no non-missing arguments to max;
+returning -Inf</code></pre>
+<pre><code>Warning in max(bb[, 4L], na.rm = TRUE): no non-missing arguments to max;
+returning -Inf</code></pre>
+<pre class="r"><code>sfe_r2 &lt;- crop(sfe, annotGeometry(sfe, &quot;region_2&quot;))</code></pre>
+<pre><code>Warning in min(bb[, 1L], na.rm = TRUE): no non-missing arguments to min;
+returning Inf</code></pre>
+<pre><code>Warning in min(bb[, 2L], na.rm = TRUE): no non-missing arguments to min;
+returning Inf</code></pre>
+<pre><code>Warning in max(bb[, 3L], na.rm = TRUE): no non-missing arguments to max;
+returning -Inf</code></pre>
+<pre><code>Warning in max(bb[, 4L], na.rm = TRUE): no non-missing arguments to max;
+returning -Inf</code></pre>
+<pre class="r"><code># Visualise the two regions
+r1_plot &lt;- ggplot() +
+  geom_point(data = spatialCoords(sfe_r1), aes(x, y, color = colData(sfe_r1)$leiden)) +
+  scale_color_discrete(guide = &quot;none&quot;) +
+  theme(aspect.ratio=1)
+
+r2_plot &lt;- ggplot() +
+  geom_point(data = spatialCoords(sfe_r2), aes(x, y, color = colData(sfe_r2)$leiden)) +
+  scale_color_discrete(guide = &quot;none&quot;) +
+  theme(aspect.ratio=1)
+
+r1_plot + r2_plot</code></pre>
+<p><img src="figure/stomics_02_basics.Rmd/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="differential-expression" class="section level2">
+<h2>Differential expression</h2>
+<p>While SAW does have a feature to perform differential expression
+analysis with these regions, it’s nice to be able to do the same
+analysis in R.</p>
+<p>First, let’s just do a simple t-test using the
+<code>findMarkers</code> function:</p>
+<pre class="r"><code># Create a &quot;region&quot; group for analysis
+colData(sfe)$region &lt;- 0 # 0 will be default, no region
+colData(sfe)$region[annotPred(sfe, annotGeometryName = &quot;region_1&quot;)] &lt;- 1
+colData(sfe)$region[annotPred(sfe, annotGeometryName = &quot;region_2&quot;)] &lt;- 2
+
+# Subset the sfe 
+sfe_regions &lt;- sfe[, colData(sfe)$region != 0]
+
+# Test for marker genes
+markers &lt;- findMarkers(sfe_regions, test = &quot;t&quot;, groups = sfe_regions$region)
+
+# Show table
+head(markers[[1]])</code></pre>
+<pre><code>DataFrame with 6 rows and 5 columns
+                            Top      p.value          FDR summary.logFC
+                      &lt;integer&gt;    &lt;numeric&gt;    &lt;numeric&gt;     &lt;numeric&gt;
+ENSMUSG00000005583.17         1 1.15665e-314 6.10998e-310     -0.498215
+ENSMUSG00000033161.11         2 4.31883e-267 1.14071e-262     -0.646273
+ENSMUSG00000036815.18         3 3.06313e-198 5.39366e-194     -0.379140
+ENSMUSG00000028785.14         4 5.64265e-198 7.45183e-194      0.510118
+ENSMUSG00000027273.14         5 1.00848e-196 1.06546e-192     -0.525824
+ENSMUSG00000054459.9          6 1.70954e-194 1.50510e-190     -0.398229
+                        logFC.2
+                      &lt;numeric&gt;
+ENSMUSG00000005583.17 -0.498215
+ENSMUSG00000033161.11 -0.646273
+ENSMUSG00000036815.18 -0.379140
+ENSMUSG00000028785.14  0.510118
+ENSMUSG00000027273.14 -0.525824
+ENSMUSG00000054459.9  -0.398229</code></pre>
+<p>We might then want to plot the expression of a selected gene in these
+regions</p>
+<pre class="r"><code># check
+# hist(colSums(assays(sfe_r1[rownames(markers[[1]])[1], ])$counts))
+
+# Function to return the counts of a particular gene
+geneCount &lt;- function(spe_obj, gene, assay=&quot;counts&quot;) {
+  m &lt;- assays(spe_obj)[[assay]]
+  return( m[gene,] )
+}
+
+gene &lt;- rownames(markers[[1]])[1]
+
+ggplot() +
+  geom_point(data = spatialCoords(sfe_regions), 
+             aes(x, y, color = geneCount(sfe_regions, gene, assay=&quot;logcounts&quot;))) +
+  scale_color_viridis_c() +
+  theme(aspect.ratio=1) + 
+  labs(
+    title = &quot;Top DE gene between regions&quot;,
+    color = rowData(sfe[gene,])$real_gene_name
+  )</code></pre>
+<p><img src="figure/stomics_02_basics.Rmd/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.4.2 (2024-10-31 ucrt)
+Platform: x86_64-w64-mingw32/x64
+Running under: Windows 11 x64 (build 22631)
+
+Matrix products: default
+
+
+locale:
+[1] LC_COLLATE=English_Australia.utf8  LC_CTYPE=English_Australia.utf8   
+[3] LC_MONETARY=English_Australia.utf8 LC_NUMERIC=C                      
+[5] LC_TIME=English_Australia.utf8    
+
+time zone: Australia/Adelaide
+tzcode source: internal
+
+attached base packages:
+[1] stats4    stats     graphics  grDevices utils     datasets  methods  
+[8] base     
+
+other attached packages:
+ [1] Matrix_1.7-1                   sf_1.0-19                     
+ [3] patchwork_1.3.0                scater_1.34.0                 
+ [5] ggplot2_3.5.1                  scran_1.34.0                  
+ [7] scuttle_1.16.0                 rhdf5_2.50.0                  
+ [9] SpatialFeatureExperiment_1.8.2 SpatialExperiment_1.16.0      
+[11] SingleCellExperiment_1.28.1    SummarizedExperiment_1.36.0   
+[13] Biobase_2.66.0                 GenomicRanges_1.58.0          
+[15] GenomeInfoDb_1.42.0            IRanges_2.40.0                
+[17] S4Vectors_0.44.0               BiocGenerics_0.52.0           
+[19] MatrixGenerics_1.18.0          matrixStats_1.4.1             
+[21] workflowr_1.7.1               
+
+loaded via a namespace (and not attached):
+  [1] rstudioapi_0.17.1         jsonlite_1.8.9           
+  [3] wk_0.9.4                  magrittr_2.0.3           
+  [5] ggbeeswarm_0.7.2          magick_2.8.5             
+  [7] farver_2.1.2              rmarkdown_2.29           
+  [9] fs_1.6.5                  zlibbioc_1.52.0          
+ [11] vctrs_0.6.5               spdep_1.3-6              
+ [13] DelayedMatrixStats_1.28.0 RCurl_1.98-1.16          
+ [15] terra_1.7-83              htmltools_0.5.8.1        
+ [17] S4Arrays_1.6.0            BiocNeighbors_2.0.0      
+ [19] Rhdf5lib_1.28.0           s2_1.1.7                 
+ [21] SparseArray_1.6.0         sass_0.4.9               
+ [23] spData_2.3.3              KernSmooth_2.23-24       
+ [25] bslib_0.8.0               htmlwidgets_1.6.4        
+ [27] cachem_1.1.0              whisker_0.4.1            
+ [29] igraph_2.1.1              lifecycle_1.0.4          
+ [31] pkgconfig_2.0.3           rsvd_1.0.5               
+ [33] R6_2.5.1                  fastmap_1.2.0            
+ [35] GenomeInfoDbData_1.2.13   digest_0.6.37            
+ [37] colorspace_2.1-1          ps_1.8.1                 
+ [39] rprojroot_2.0.4           dqrng_0.4.1              
+ [41] irlba_2.3.5.1             beachmat_2.22.0          
+ [43] labeling_0.4.3            fansi_1.0.6              
+ [45] httr_1.4.7                abind_1.4-8              
+ [47] compiler_4.4.2            proxy_0.4-27             
+ [49] withr_3.0.2               tiff_0.1-12              
+ [51] BiocParallel_1.40.0       viridis_0.6.5            
+ [53] DBI_1.2.3                 HDF5Array_1.34.0         
+ [55] R.utils_2.12.3            DelayedArray_0.32.0      
+ [57] rjson_0.2.23              classInt_0.4-10          
+ [59] bluster_1.16.0            tools_4.4.2              
+ [61] units_0.8-5               vipor_0.4.7              
+ [63] beeswarm_0.4.0            httpuv_1.6.15            
+ [65] R.oo_1.27.0               glue_1.8.0               
+ [67] callr_3.7.6               EBImage_4.48.0           
+ [69] rhdf5filters_1.18.0       promises_1.3.0           
+ [71] grid_4.4.2                getPass_0.2-4            
+ [73] cluster_2.1.6             generics_0.1.3           
+ [75] gtable_0.3.6              R.methodsS3_1.8.2        
+ [77] class_7.3-22              data.table_1.16.2        
+ [79] BiocSingular_1.22.0       ScaledMatrix_1.14.0      
+ [81] metapod_1.14.0            sp_2.1-4                 
+ [83] utf8_1.2.4                XVector_0.46.0           
+ [85] ggrepel_0.9.6             pillar_1.9.0             
+ [87] stringr_1.5.1             limma_3.62.1             
+ [89] later_1.3.2               dplyr_1.1.4              
+ [91] lattice_0.22-6            deldir_2.0-4             
+ [93] tidyselect_1.2.1          locfit_1.5-9.10          
+ [95] sfheaders_0.4.4           knitr_1.49               
+ [97] git2r_0.35.0              gridExtra_2.3            
+ [99] edgeR_4.4.0               xfun_0.49                
+[101] statmod_1.5.0             DropletUtils_1.26.0      
+[103] stringi_1.8.4             UCSC.utils_1.2.0         
+[105] fftwtools_0.9-11          yaml_2.3.10              
+[107] boot_1.3-31               evaluate_1.0.1           
+[109] codetools_0.2-20          tibble_3.2.1             
+[111] cli_3.6.3                 munsell_0.5.1            
+[113] processx_3.8.4            jquerylib_0.1.4          
+[115] Rcpp_1.0.13-1             zeallot_0.1.0            
+[117] png_0.1-8                 parallel_4.4.2           
+[119] jpeg_0.1-10               sparseMatrixStats_1.18.0 
+[121] bitops_1.0-9              viridisLite_0.4.2        
+[123] scales_1.3.0              e1071_1.7-16             
+[125] crayon_1.5.3              rlang_1.1.4              </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
