@@ -21,7 +21,14 @@ The Spatial Transcriptomics Analysis Workshop will be run on the 22nd November 2
 - [Thomas O'Neil](https://github.com/DrThomasOneil)
 
 # Analysis Overview {-}
-1. [Setup](setup.html)
+
+## Setup
+
+| Rmd file                                        | Topics                       |
+|:---------                                       |:-----------------------------|
+| [setup](setup.html)                             | Downloading data and packages|
+
+Please run codes in the Rmd file before coming to the workshop.
 
 
 ## STOmics
