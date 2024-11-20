@@ -1,6 +1,6 @@
 ---
 title: "Visium part 3"
-author: "Givanna Putri"
+author: "Givanna Putri, Thomas O'neil"
 output: workflowr::wflow_html
 editor_options:
   chunk_output_type: console
