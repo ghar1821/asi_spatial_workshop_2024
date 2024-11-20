@@ -30,6 +30,26 @@ The Spatial Transcriptomics Analysis Workshop will be run on the 22nd November 2
 
 Please run codes in the Rmd file before coming to the workshop.
 
+## Visium
+
+| Rmd file                                        | Topics                          |
+|:---------                                       |:--------------------------------|
+| [visium_01](visium_01.html) ~ 20 mins           | Introduction to data            |   
+|                                                 | Loading data into Seurat object |
+|                                                 | Interacting with Seurat object  |
+|                                                 |                                 |
+| [visium_02](visium_02.html) ~ 20 mins           | QC and Normalisation            | 
+|                                                 |                                 |
+| [visium_03](visium_03.html) ~ 20 mins           | Visualising spatial data        |
+|                                                 |                                 |
+| [visium_04](visium_04.html) ~ 30 mins           | Module score                    |
+|                                                 | Deconvolution                   |
+|                                                 | Find Spatially Variable genes   |
+|                                                 | Other spatial based analyses    |
+|                                                 |                                 |
+| NA ~ 60 mins                                    | Practice time                   |
+| NA ~ 30 mins                                    | Open discussion                 |
+
 
 ## STOmics
 
