@@ -142,6 +142,7 @@ For the reference scRNAseq data, we will use one of the scRNAseq data that accom
 visium data.
 
 ```{r}
+# Download from onedrive
 sc_data <- qread("visium/data/sc_seurat_object_10x.qs")
 DimPlot(sc_data, reduction = "umap", group.by = c("Level1", "Level2", "Patient"), ncol=2)
 ```
