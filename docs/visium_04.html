@@ -345,7 +345,16 @@ div.tocify {
       <a href="setup.html">Setup</a>
     </li>
     <li>
+      <a href="visium_01.html">Visium part 1</a>
+    </li>
+    <li>
+      <a href="visium_02.html">Visium part 2</a>
+    </li>
+    <li>
       <a href="visium_03.html">Visium part 3</a>
+    </li>
+    <li>
+      <a href="visium_04.html">Visium part 4</a>
     </li>
     <li>
       <a href="stomics_01_intro.html">STOmics intro</a>
@@ -412,7 +421,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-11-21
+<strong>Last updated:</strong> 2024-11-22
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -543,15 +552,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024treebe1f1f7580a993c9e95280a4d83336fb24241491targetblankbe1f1f7a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree125ce95c69c368da94c90e344a087d6de9d869d4targetblank125ce95a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/be1f1f7580a993c9e95280a4d83336fb24241491" target="_blank">be1f1f7</a>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/125ce95c69c368da94c90e344a087d6de9d869d4" target="_blank">125ce95</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024treebe1f1f7580a993c9e95280a4d83336fb24241491targetblankbe1f1f7a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree125ce95c69c368da94c90e344a087d6de9d869d4targetblank125ce95a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -561,7 +570,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/be1f1f7580a993c9e95280a4d83336fb24241491" target="_blank">be1f1f7</a>.
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/125ce95c69c368da94c90e344a087d6de9d869d4" target="_blank">125ce95</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -589,6 +598,9 @@ Untracked files:
     Untracked:  code/visium_03.R
     Untracked:  code/visium_04.R
     Untracked:  visium/
+
+Unstaged changes:
+    Modified:   analysis/_site.yml
 
 </code></pre>
 <p>
@@ -634,6 +646,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/125ce95c69c368da94c90e344a087d6de9d869d4/analysis/visium_04.Rmd" target="_blank">125ce95</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-22
+</td>
+<td>
+wflow_publish("analysis/visium_04.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/ghar1821/asi_spatial_workshop_2024/a96a0da9c5e796cbc94d1a5967974a41ff8f6c9c/docs/visium_04.html" target="_blank">a96a0da</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-22
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -927,6 +973,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/a96a0da9c5e796cbc94d1a5967974a41ff8f6c9c/docs/figure/visium_04.Rmd/unnamed-chunk-6-1.png" target="_blank">a96a0da</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/9d57766bb497d0029933ca1c6aa323fb3bfdc5a7/docs/figure/visium_04.Rmd/unnamed-chunk-6-1.png" target="_blank">9d57766</a>
 </td>
 <td>
@@ -960,7 +1017,8 @@ deconvolution algorithm</a> provided by the <a
 href="https://github.com/dmcable/spacexr">spacexr package</a>. For the
 reference scRNAseq data, we will use one of the scRNAseq data that
 accompanies the visium data.</p>
-<pre class="r"><code>sc_data &lt;- qread(&quot;visium/data/sc_seurat_object_10x.qs&quot;)
+<pre class="r"><code># Download from onedrive
+sc_data &lt;- qread(&quot;visium/data/sc_seurat_object_10x.qs&quot;)
 DimPlot(sc_data, reduction = &quot;umap&quot;, group.by = c(&quot;Level1&quot;, &quot;Level2&quot;, &quot;Patient&quot;), ncol=2)</code></pre>
 <pre><code>Rasterizing points since number of points exceeds 100,000.
 To disable this behavior set `raster=FALSE`
@@ -969,6 +1027,43 @@ To disable this behavior set `raster=FALSE`
 Rasterizing points since number of points exceeds 100,000.
 To disable this behavior set `raster=FALSE`</code></pre>
 <p><img src="figure/visium_04.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
+Past versions of unnamed-chunk-7-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/a96a0da9c5e796cbc94d1a5967974a41ff8f6c9c/docs/figure/visium_04.Rmd/unnamed-chunk-7-1.png" target="_blank">a96a0da</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Prepare the data - note that: RCTD requires raw counts.</p>
 <pre class="r"><code># Prepare the single cell data
 sc_counts &lt;- sc_data[[&#39;RNA&#39;]]$counts
@@ -1193,6 +1288,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/a96a0da9c5e796cbc94d1a5967974a41ff8f6c9c/docs/figure/visium_04.Rmd/unnamed-chunk-11-1.png" target="_blank">a96a0da</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/9d57766bb497d0029933ca1c6aa323fb3bfdc5a7/docs/figure/visium_04.Rmd/unnamed-chunk-11-1.png" target="_blank">9d57766</a>
 </td>
 <td>
@@ -1212,20 +1318,20 @@ types:</p>
 <pre><code>Warning: The default method for RunUMAP has changed from calling Python UMAP via reticulate to the R-native UWOT using the cosine metric
 To use Python UMAP via reticulate, set umap.method to &#39;umap-learn&#39; and metric to &#39;correlation&#39;
 This message will be shown once per session</code></pre>
-<pre><code>00:00:32 UMAP embedding parameters a = 0.9922 b = 1.112</code></pre>
-<pre><code>00:00:32 Read 3959 rows and found 10 numeric columns</code></pre>
-<pre><code>00:00:32 Using Annoy for neighbor search, n_neighbors = 30</code></pre>
-<pre><code>00:00:32 Building Annoy index with metric = cosine, n_trees = 50</code></pre>
+<pre><code>00:11:23 UMAP embedding parameters a = 0.9922 b = 1.112</code></pre>
+<pre><code>00:11:23 Read 3959 rows and found 10 numeric columns</code></pre>
+<pre><code>00:11:23 Using Annoy for neighbor search, n_neighbors = 30</code></pre>
+<pre><code>00:11:23 Building Annoy index with metric = cosine, n_trees = 50</code></pre>
 <pre><code>0%   10   20   30   40   50   60   70   80   90   100%</code></pre>
 <pre><code>[----|----|----|----|----|----|----|----|----|----|</code></pre>
 <pre><code>**************************************************|
-00:00:32 Writing NN index file to temp file /var/folders/7q/lqx0fzgn1zqfmlc5tx1c0n0r0004z0/T//RtmpETojD5/file76f85785c87b
-00:00:32 Searching Annoy index using 1 thread, search_k = 3000
-00:00:33 Annoy recall = 100%
-00:00:33 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30
-00:00:33 Initializing from normalized Laplacian + noise (using RSpectra)
-00:00:33 Commencing optimization for 500 epochs, with 152802 positive edges
-00:00:36 Optimization finished</code></pre>
+00:11:23 Writing NN index file to temp file /var/folders/7q/lqx0fzgn1zqfmlc5tx1c0n0r0004z0/T//Rtmp3xvp1T/file871d5954593d
+00:11:23 Searching Annoy index using 1 thread, search_k = 3000
+00:11:24 Annoy recall = 100%
+00:11:24 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30
+00:11:24 Initializing from normalized Laplacian + noise (using RSpectra)
+00:11:24 Commencing optimization for 500 epochs, with 152802 positive edges
+00:11:27 Optimization finished</code></pre>
 <pre class="r"><code>FeaturePlot(dat, features = colnames(norm_weights))</code></pre>
 <p><img src="figure/visium_04.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
@@ -1250,6 +1356,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/a96a0da9c5e796cbc94d1a5967974a41ff8f6c9c/docs/figure/visium_04.Rmd/unnamed-chunk-12-1.png" target="_blank">a96a0da</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/9d57766bb497d0029933ca1c6aa323fb3bfdc5a7/docs/figure/visium_04.Rmd/unnamed-chunk-12-1.png" target="_blank">9d57766</a>
@@ -1327,6 +1444,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/a96a0da9c5e796cbc94d1a5967974a41ff8f6c9c/docs/figure/visium_04.Rmd/unnamed-chunk-13-1.png" target="_blank">a96a0da</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/9d57766bb497d0029933ca1c6aa323fb3bfdc5a7/docs/figure/visium_04.Rmd/unnamed-chunk-13-1.png" target="_blank">9d57766</a>
 </td>
 <td>
@@ -1390,6 +1518,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/a96a0da9c5e796cbc94d1a5967974a41ff8f6c9c/docs/figure/visium_04.Rmd/unnamed-chunk-14-1.png" target="_blank">a96a0da</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/9d57766bb497d0029933ca1c6aa323fb3bfdc5a7/docs/figure/visium_04.Rmd/unnamed-chunk-14-1.png" target="_blank">9d57766</a>
 </td>
 <td>
@@ -1418,6 +1557,43 @@ module scoring.</p>
   ncol = 5
 )</code></pre>
 <p><img src="figure/visium_04.Rmd/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-15-1">
+Past versions of unnamed-chunk-15-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-15-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/a96a0da9c5e796cbc94d1a5967974a41ff8f6c9c/docs/figure/visium_04.Rmd/unnamed-chunk-15-1.png" target="_blank">a96a0da</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>We have high and medium expression of CDH1 which means the epithelial
 cells are retaining their cell-cell adhesion molecules. VIM and CD44 are
 commonly associated with EMT, but they are lowly expressed. KRT8, KRT19,
@@ -1480,6 +1656,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/a96a0da9c5e796cbc94d1a5967974a41ff8f6c9c/docs/figure/visium_04.Rmd/unnamed-chunk-17-1.png" target="_blank">a96a0da</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/9d57766bb497d0029933ca1c6aa323fb3bfdc5a7/docs/figure/visium_04.Rmd/unnamed-chunk-17-1.png" target="_blank">9d57766</a>
 </td>
 <td>
@@ -1530,6 +1717,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/a96a0da9c5e796cbc94d1a5967974a41ff8f6c9c/docs/figure/visium_04.Rmd/unnamed-chunk-18-1.png" target="_blank">a96a0da</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/9d57766bb497d0029933ca1c6aa323fb3bfdc5a7/docs/figure/visium_04.Rmd/unnamed-chunk-18-1.png" target="_blank">9d57766</a>
 </td>
 <td>
@@ -1560,6 +1758,43 @@ genes:</p>
   pt.size.factor = 5
 )</code></pre>
 <p><img src="figure/visium_04.Rmd/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-19-1">
+Past versions of unnamed-chunk-19-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-19-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/a96a0da9c5e796cbc94d1a5967974a41ff8f6c9c/docs/figure/visium_04.Rmd/unnamed-chunk-19-1.png" target="_blank">a96a0da</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>This plot indicates that not all tumour regions may be equal. The top
 and right regions seem to express CXCL2, CXCL3, GPX2, and SPINK1. The
 one in the left middle, are lacking CXCL2, CXCL3, and SPINK1. Notably,
@@ -1642,6 +1877,43 @@ immune mechanism employed by tumour cells.</p>
   image.alpha = 0.3
 )</code></pre>
 <p><img src="figure/visium_04.Rmd/unnamed-chunk-21-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-1">
+Past versions of unnamed-chunk-21-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/a96a0da9c5e796cbc94d1a5967974a41ff8f6c9c/docs/figure/visium_04.Rmd/unnamed-chunk-21-1.png" target="_blank">a96a0da</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>From the plot, we can infer that there are regions where macrophages
 and tumour cells co-exist SIRPA and CD47 are expressed, which shows that
 macrophages’ inhibitory receptor is activated, signalling it against
