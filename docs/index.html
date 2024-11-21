@@ -13,7 +13,7 @@
 
 <title>ASI Spatial Workshop 2024</title>
 
-<script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -32,8 +32,8 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
 
 <link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
 <!-- Add a small amount of space between sections. -->
@@ -288,6 +288,15 @@ $(document).ready(function () {
     <li>
       <a href="stomics_03_analysis.html">STOmics analysis</a>
     </li>
+    <li>
+      <a href="Xenium_Part1.html">Xenium analysis part 1</a>
+    </li>
+    <li>
+      <a href="Xenium_Part2.html">Xenium analysis part 2</a>
+    </li>
+    <li>
+      <a href="Xenium_Part3.html">Xenium analysis part 3</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -474,15 +483,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree26b7cc29d118ff8d51a7b891aeca755db4c33817targetblank26b7cc2a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree34833d010da03e02b0db0794acc39a02dc75ca23targetblank34833d0a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/26b7cc29d118ff8d51a7b891aeca755db4c33817" target="_blank">26b7cc2</a>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/34833d010da03e02b0db0794acc39a02dc75ca23" target="_blank">34833d0</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree26b7cc29d118ff8d51a7b891aeca755db4c33817targetblank26b7cc2a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree34833d010da03e02b0db0794acc39a02dc75ca23targetblank34833d0a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -492,7 +501,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/26b7cc29d118ff8d51a7b891aeca755db4c33817" target="_blank">26b7cc2</a>.
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/34833d010da03e02b0db0794acc39a02dc75ca23" target="_blank">34833d0</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -507,17 +516,13 @@ were generated:
 </p>
 <pre><code>
 Ignored files:
-    Ignored:    .DS_Store
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    analysis/.DS_Store
-    Ignored:    code/visium_03.R
-    Ignored:    code/visium_04.R
-    Ignored:    data/.DS_Store
-    Ignored:    data/single_cell/
-    Ignored:    data/visium/
-    Ignored:    output/visium/
     Ignored:    visium/
+    Ignored:    xenium/
+
+Untracked files:
+    Untracked:  stomics/
 
 </code></pre>
 <p>
@@ -532,7 +537,6 @@ have uncommitted changes.
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
-
 <p>
 These are the previous versions of the repository in which changes were
 made to the R Markdown (<code>analysis/index.Rmd</code>) and HTML
@@ -562,6 +566,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/ghar1821/asi_spatial_workshop_2024/f53c3277f609eb990093c776edbf4361868fa3e3/docs/index.html" target="_blank">f53c327</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-21
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1185,18 +1206,19 @@ Session information
 </p>
 <div id="workflowr-sessioninfo" class="collapse">
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>R version 4.4.1 (2024-06-14)
-Platform: aarch64-apple-darwin20
-Running under: macOS Sonoma 14.6
+<pre><code>R version 4.4.2 (2024-10-31 ucrt)
+Platform: x86_64-w64-mingw32/x64
+Running under: Windows 11 x64 (build 22631)
 
 Matrix products: default
-BLAS:   /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRblas.0.dylib 
-LAPACK: /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0
+
 
 locale:
-[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+[1] LC_COLLATE=English_Australia.utf8  LC_CTYPE=English_Australia.utf8   
+[3] LC_MONETARY=English_Australia.utf8 LC_NUMERIC=C                      
+[5] LC_TIME=English_Australia.utf8    
 
-time zone: Australia/Sydney
+time zone: Australia/Adelaide
 tzcode source: internal
 
 attached base packages:
@@ -1206,17 +1228,22 @@ other attached packages:
 [1] workflowr_1.7.1
 
 loaded via a namespace (and not attached):
- [1] jsonlite_1.8.9    compiler_4.4.1    highr_0.11        promises_1.3.0   
- [5] Rcpp_1.0.13       stringr_1.5.1     git2r_0.33.0      callr_3.7.6      
- [9] later_1.3.2       jquerylib_0.1.4   yaml_2.3.10       fastmap_1.2.0    
-[13] R6_2.5.1          knitr_1.48        tibble_3.2.1      rprojroot_2.0.4  
-[17] bslib_0.8.0       pillar_1.9.0      rlang_1.1.4       utf8_1.2.4       
-[21] cachem_1.1.0      stringi_1.8.4     httpuv_1.6.15     xfun_0.47        
-[25] getPass_0.2-4     fs_1.6.5          sass_0.4.9        cli_3.6.3        
-[29] magrittr_2.0.3    ps_1.8.0          digest_0.6.37     processx_3.8.4   
-[33] rstudioapi_0.16.0 lifecycle_1.0.4   vctrs_0.6.5       evaluate_1.0.0   
-[37] glue_1.7.0        whisker_0.4.1     fansi_1.0.6       rmarkdown_2.28   
-[41] httr_1.4.7        tools_4.4.1       pkgconfig_2.0.3   htmltools_0.5.8.1</code></pre>
+ [1] vctrs_0.6.5       httr_1.4.7        cli_3.6.3         knitr_1.49       
+ [5] rlang_1.1.4       xfun_0.49         stringi_1.8.4     processx_3.8.4   
+ [9] promises_1.3.0    jsonlite_1.8.9    glue_1.8.0        rprojroot_2.0.4  
+[13] git2r_0.35.0      htmltools_0.5.8.1 httpuv_1.6.15     ps_1.8.1         
+[17] sass_0.4.9        fansi_1.0.6       rmarkdown_2.29    jquerylib_0.1.4  
+[21] tibble_3.2.1      evaluate_1.0.1    fastmap_1.2.0     yaml_2.3.10      
+[25] lifecycle_1.0.4   whisker_0.4.1     stringr_1.5.1     compiler_4.4.2   
+[29] fs_1.6.5          pkgconfig_2.0.3   Rcpp_1.0.13-1     rstudioapi_0.17.1
+[33] later_1.3.2       digest_0.6.37     R6_2.5.1          utf8_1.2.4       
+[37] pillar_1.9.0      callr_3.7.6       magrittr_2.0.3    bslib_0.8.0      
+[41] tools_4.4.2       cachem_1.1.0      getPass_0.2-4    </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
