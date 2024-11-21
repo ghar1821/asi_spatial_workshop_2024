@@ -23,6 +23,12 @@ navbar:
         href: stomics_02_basics.html
       - text: "STOmics analysis"
         href: stomics_03_analysis.html
+      - text: "Xenium analysis part 1"
+        href: Xenium_Part1.html
+      - text: "Xenium analysis part 2"
+        href: Xenium_Part2.html
+      - text: "Xenium analysis part 3"
+        href: Xenium_Part3.html
   - text: "About"
     href: about.html
   - text: License
