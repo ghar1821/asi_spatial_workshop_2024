@@ -543,15 +543,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree8d5c060a7c3b5d05bc1120ca82e6c2b2d108b371targetblank8d5c060a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree55e7a5033f0c35b427a83f51dbe2f3c15c6f2dd7targetblank55e7a50a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/8d5c060a7c3b5d05bc1120ca82e6c2b2d108b371" target="_blank">8d5c060</a>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/55e7a5033f0c35b427a83f51dbe2f3c15c6f2dd7" target="_blank">55e7a50</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree8d5c060a7c3b5d05bc1120ca82e6c2b2d108b371targetblank8d5c060a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree55e7a5033f0c35b427a83f51dbe2f3c15c6f2dd7targetblank55e7a50a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -561,7 +561,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/8d5c060a7c3b5d05bc1120ca82e6c2b2d108b371" target="_blank">8d5c060</a>.
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/55e7a5033f0c35b427a83f51dbe2f3c15c6f2dd7" target="_blank">55e7a50</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -579,17 +579,19 @@ Ignored files:
     Ignored:    .DS_Store
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+    Ignored:    analysis/.DS_Store
     Ignored:    data/.DS_Store
     Ignored:    data/single_cell/
     Ignored:    data/visium/
     Ignored:    output/visium/
-    Ignored:    visium/
+
+Untracked files:
+    Untracked:  code/visium_03.R
+    Untracked:  code/visium_04.R
+    Untracked:  visium/
 
 Unstaged changes:
-    Modified:   analysis/_site.yml
-    Modified:   analysis/visium_01.Rmd
-    Modified:   analysis/visium_02.Rmd
-    Modified:   analysis/visium_crc.Rmd
+    Modified:   analysis/visium_04.Rmd
 
 </code></pre>
 <p>
@@ -635,6 +637,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/430fd373867e79422366f9983976a9bb82d0a4d2/analysis/visium_03.Rmd" target="_blank">430fd37</a>
+</td>
+<td>
+DrThomasOneil
+</td>
+<td>
+2024-11-21
+</td>
+<td>
+adjust read and write files
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/ghar1821/asi_spatial_workshop_2024/396ba28246367b2f25060af0d90ac59e517307fb/docs/visium_03.html" target="_blank">396ba28</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-21
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -706,7 +742,7 @@ library(ggplot2)
 library(scales)</code></pre>
 <p>We will be using the Seurat object that we have QCed and normalised
 in <a href="visium_02.html">part 2</a>.</p>
-<pre class="r"><code>dat &lt;- qread(&quot;output/visium_seurat_qced_norm.qs&quot;)
+<pre class="r"><code>dat &lt;- qread(&quot;visium/data/visium_seurat_qced_norm.qs&quot;)
 dat</code></pre>
 <pre><code>An object of class Seurat 
 35982 features across 3959 samples within 2 assays 
@@ -1427,7 +1463,7 @@ Givanna Putri
 </div>
 <p>Since the plot is a ggplot object, we can export them using either
 the export button in Rstudio’s panel, or the ggsave function:</p>
-<pre class="r"><code>ggsave(filename=&quot;output/spatial_plot_darkbg.png&quot;, plot=plt_dark_bg)</code></pre>
+<pre class="r"><code>ggsave(filename=&quot;visium/data/spatial_plot_darkbg.png&quot;, plot=plt_dark_bg)</code></pre>
 <hr>
 <details>
 <summary>
