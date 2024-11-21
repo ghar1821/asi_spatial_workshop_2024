@@ -12,3 +12,6 @@ analysis/site_libs
 data/*
 
 /output
+/visium
+code/visium_03.R
+code/visium_04.R
