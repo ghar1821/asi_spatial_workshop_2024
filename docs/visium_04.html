@@ -391,7 +391,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+workflowr <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -402,8 +402,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> </a>
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -416,9 +416,9 @@ aria-hidden="true"></span> </a>
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong> <code>asi_spatial_workshop_2024/</code>
@@ -441,21 +441,18 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
-changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges"
+<div id="strongRMarkdownfilestronguptodate"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R
-Markdown file created these results, you’ll want to first commit it to
-the Git repo. If you’re still working on the analysis, you can ignore
-this warning. When you’re finished, you can run
-<code>wflow_publish</code> to commit the R Markdown file and build the
-HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
 </div>
 </div>
 </div>
@@ -546,15 +543,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree58ca9b12df602abb333c276a65decf5aa5cb4a6ftargetblank58ca9b1a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024treebe1f1f7580a993c9e95280a4d83336fb24241491targetblankbe1f1f7a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/58ca9b12df602abb333c276a65decf5aa5cb4a6f" target="_blank">58ca9b1</a>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/be1f1f7580a993c9e95280a4d83336fb24241491" target="_blank">be1f1f7</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024tree58ca9b12df602abb333c276a65decf5aa5cb4a6ftargetblank58ca9b1a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomghar1821asispatialworkshop2024treebe1f1f7580a993c9e95280a4d83336fb24241491targetblankbe1f1f7a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -564,7 +561,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/58ca9b12df602abb333c276a65decf5aa5cb4a6f" target="_blank">58ca9b1</a>.
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/tree/be1f1f7580a993c9e95280a4d83336fb24241491" target="_blank">be1f1f7</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -582,17 +579,16 @@ Ignored files:
     Ignored:    .DS_Store
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+    Ignored:    analysis/.DS_Store
     Ignored:    data/.DS_Store
     Ignored:    data/single_cell/
     Ignored:    data/visium/
     Ignored:    output/visium/
-    Ignored:    visium/
 
 Untracked files:
-    Untracked:  analysis/visium_04.Rmd
-
-Unstaged changes:
-    Modified:   analysis/visium_crc.Rmd
+    Untracked:  code/visium_03.R
+    Untracked:  code/visium_04.R
+    Untracked:  visium/
 
 </code></pre>
 <p>
@@ -607,20 +603,101 @@ have uncommitted changes.
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
+
 <p>
-There are no past versions. Publish this analysis with
-<code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/visium_04.Rmd</code>) and HTML
+(<code>docs/visium_04.html</code>) files. If you’ve configured a remote
+Git repository (see <code>?wflow_git_remote</code>), click on the
+hyperlinks in the table below to view the files as they were in that
+past version.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/be1f1f7580a993c9e95280a4d83336fb24241491/analysis/visium_04.Rmd" target="_blank">be1f1f7</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-21
+</td>
+<td>
+wflow_publish("analysis/visium_04.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/9d57766bb497d0029933ca1c6aa323fb3bfdc5a7/analysis/visium_04.Rmd" target="_blank">9d57766</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-21
+</td>
+<td>
+add part 4
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/ghar1821/asi_spatial_workshop_2024/9d57766bb497d0029933ca1c6aa323fb3bfdc5a7/docs/visium_04.html" target="_blank">9d57766</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-21
+</td>
+<td>
+add part 4
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
 </div>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>In this part of the workshop, we will learn how to use module scoring
-and deconvolution to resolve the cell types in each spot. From there, we
-will then explore what interesting biology visium data can offer,
-including finding spatially variable genes.</p>
+<p>In this part of the workshop, we will learn how to use module
+scoring, clustering, and deconvolution to resolve the cell types in each
+spot. From there, we will then explore what interesting biology visium
+data can offer, including finding spatially variable genes.</p>
 </div>
 <div id="load-packages-and-data" class="section level2">
 <h2>Load packages and data</h2>
@@ -631,7 +708,7 @@ library(scales)
 library(spacexr)</code></pre>
 <p>We will be using the Seurat object that we have QCed and normalised
 in <a href="visium_02.html">part 2</a>.</p>
-<pre class="r"><code>dat &lt;- qread(&quot;output/visium_seurat_qced_norm.qs&quot;)
+<pre class="r"><code>dat &lt;- qread(&quot;visium/data/visium_seurat_qced_norm.qs&quot;)
 dat</code></pre>
 <pre><code>An object of class Seurat 
 35982 features across 3959 samples within 2 assays 
@@ -765,6 +842,109 @@ AACAGCCTCCTGACTA-1 -0.38298954  0.007111593</code></pre>
   image.alpha = 0.5
 )</code></pre>
 <p><img src="figure/visium_04.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-1">
+Past versions of unnamed-chunk-5-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-5-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/9d57766bb497d0029933ca1c6aa323fb3bfdc5a7/docs/figure/visium_04.Rmd/unnamed-chunk-5-1.png" target="_blank">9d57766</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="cluster-spots" class="section level2">
+<h2>Cluster spots</h2>
+<p>We can also cluster the spots based on their gene expressions. This
+is especially handy if you are unsure what cell types you want to
+find.</p>
+<pre class="r"><code>dat &lt;- RunPCA(dat, assay = &quot;SCT&quot;, verbose = FALSE)
+dat &lt;- FindNeighbors(dat, reduction = &quot;pca&quot;, dims = 1:10, verbose = FALSE)
+# increase resolution to find more clusters
+dat &lt;- FindClusters(dat, verbose = FALSE, resolution = 0.5, random.seed = 42)
+
+SpatialDimPlot(
+  dat,
+  group.by = &quot;seurat_clusters&quot;,
+  label = TRUE,
+  pt.size.factor = 5,
+  image.alpha = 0.3,
+  label.size = 5
+) + scale_fill_viridis_d(option = &quot;turbo&quot;)</code></pre>
+<pre><code>Scale for fill is already present.
+Adding another scale for fill, which will replace the existing scale.
+Scale for fill is already present.
+Adding another scale for fill, which will replace the existing scale.</code></pre>
+<p><img src="figure/visium_04.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
+Past versions of unnamed-chunk-6-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/9d57766bb497d0029933ca1c6aa323fb3bfdc5a7/docs/figure/visium_04.Rmd/unnamed-chunk-6-1.png" target="_blank">9d57766</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Since visium is a spot based technology, a spot can contain multiple
+cell types that are commonly grouped into different clusters. Thus
+grouping spots into clusters are not ideal as within a cluster, you may
+get an assortment of cell types rather than just one. But, this is
+better than nothing.</p>
 </div>
 <div id="cell-type-deconvolution" class="section level2">
 <h2>Cell type deconvolution</h2>
@@ -780,7 +960,7 @@ deconvolution algorithm</a> provided by the <a
 href="https://github.com/dmcable/spacexr">spacexr package</a>. For the
 reference scRNAseq data, we will use one of the scRNAseq data that
 accompanies the visium data.</p>
-<pre class="r"><code>sc_data &lt;- qread(&quot;data/single_cell/seurat_object_10x.qs&quot;)
+<pre class="r"><code>sc_data &lt;- qread(&quot;visium/data/sc_seurat_object_10x.qs&quot;)
 DimPlot(sc_data, reduction = &quot;umap&quot;, group.by = c(&quot;Level1&quot;, &quot;Level2&quot;, &quot;Patient&quot;), ncol=2)</code></pre>
 <pre><code>Rasterizing points since number of points exceeds 100,000.
 To disable this behavior set `raster=FALSE`
@@ -788,7 +968,7 @@ Rasterizing points since number of points exceeds 100,000.
 To disable this behavior set `raster=FALSE`
 Rasterizing points since number of points exceeds 100,000.
 To disable this behavior set `raster=FALSE`</code></pre>
-<p><img src="figure/visium_04.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/visium_04.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Prepare the data - note that: RCTD requires raw counts.</p>
 <pre class="r"><code># Prepare the single cell data
 sc_counts &lt;- sc_data[[&#39;RNA&#39;]]$counts
@@ -846,27 +1026,27 @@ Warning in asMethod(object): sparse-&gt;dense coercion: allocating vector of siz
 1.3 GiB</code></pre>
 <pre><code>End: process_cell_type_info</code></pre>
 <pre><code>create.RCTD: getting regression differentially expressed genes: </code></pre>
-<pre><code>get_de_genes: B cells found DE genes: 110</code></pre>
-<pre><code>get_de_genes: Endothelial found DE genes: 343</code></pre>
+<pre><code>get_de_genes: B cells found DE genes: 112</code></pre>
+<pre><code>get_de_genes: Endothelial found DE genes: 344</code></pre>
 <pre><code>get_de_genes: Fibroblast found DE genes: 234</code></pre>
-<pre><code>get_de_genes: Intestinal Epithelial found DE genes: 304</code></pre>
-<pre><code>get_de_genes: Myeloid found DE genes: 367</code></pre>
-<pre><code>get_de_genes: Neuronal found DE genes: 252</code></pre>
-<pre><code>get_de_genes: Smooth Muscle found DE genes: 267</code></pre>
-<pre><code>get_de_genes: T cells found DE genes: 502</code></pre>
-<pre><code>get_de_genes: Tumor found DE genes: 242</code></pre>
-<pre><code>get_de_genes: total DE genes: 2207</code></pre>
+<pre><code>get_de_genes: Intestinal Epithelial found DE genes: 303</code></pre>
+<pre><code>get_de_genes: Myeloid found DE genes: 363</code></pre>
+<pre><code>get_de_genes: Neuronal found DE genes: 250</code></pre>
+<pre><code>get_de_genes: Smooth Muscle found DE genes: 268</code></pre>
+<pre><code>get_de_genes: T cells found DE genes: 495</code></pre>
+<pre><code>get_de_genes: Tumor found DE genes: 239</code></pre>
+<pre><code>get_de_genes: total DE genes: 2197</code></pre>
 <pre><code>create.RCTD: getting platform effect normalization differentially expressed genes: </code></pre>
-<pre><code>get_de_genes: B cells found DE genes: 241</code></pre>
-<pre><code>get_de_genes: Endothelial found DE genes: 660</code></pre>
-<pre><code>get_de_genes: Fibroblast found DE genes: 441</code></pre>
-<pre><code>get_de_genes: Intestinal Epithelial found DE genes: 655</code></pre>
-<pre><code>get_de_genes: Myeloid found DE genes: 697</code></pre>
-<pre><code>get_de_genes: Neuronal found DE genes: 562</code></pre>
-<pre><code>get_de_genes: Smooth Muscle found DE genes: 543</code></pre>
-<pre><code>get_de_genes: T cells found DE genes: 1114</code></pre>
-<pre><code>get_de_genes: Tumor found DE genes: 703</code></pre>
-<pre><code>get_de_genes: total DE genes: 4214</code></pre>
+<pre><code>get_de_genes: B cells found DE genes: 242</code></pre>
+<pre><code>get_de_genes: Endothelial found DE genes: 658</code></pre>
+<pre><code>get_de_genes: Fibroblast found DE genes: 433</code></pre>
+<pre><code>get_de_genes: Intestinal Epithelial found DE genes: 659</code></pre>
+<pre><code>get_de_genes: Myeloid found DE genes: 698</code></pre>
+<pre><code>get_de_genes: Neuronal found DE genes: 564</code></pre>
+<pre><code>get_de_genes: Smooth Muscle found DE genes: 540</code></pre>
+<pre><code>get_de_genes: T cells found DE genes: 1104</code></pre>
+<pre><code>get_de_genes: Tumor found DE genes: 686</code></pre>
+<pre><code>get_de_genes: total DE genes: 4192</code></pre>
 <pre class="r"><code># Note, full_mode option is reasonable for visium as we don&#39;t really want to restrict the
 # number of cell types per spot.
 # ‘doublet mode’ (at most 1-2 cell types per pixel), 
@@ -875,22 +1055,24 @@ Warning in asMethod(object): sparse-&gt;dense coercion: allocating vector of siz
 RCTD &lt;- run.RCTD(RCTD, doublet_mode = &quot;full&quot;)</code></pre>
 <pre><code>fitBulk: decomposing bulk</code></pre>
 <pre><code>chooseSigma: using initial Q_mat with sigma =  1</code></pre>
-<pre><code>Likelihood value: 5738467.83621614</code></pre>
+<pre><code>Likelihood value: 5698360.60189028</code></pre>
 <pre><code>Sigma value:  0.84</code></pre>
-<pre><code>Likelihood value: 5607917.30224369</code></pre>
+<pre><code>Likelihood value: 5572962.87820692</code></pre>
 <pre><code>Sigma value:  0.69</code></pre>
-<pre><code>Likelihood value: 5495530.44451824</code></pre>
+<pre><code>Likelihood value: 5466742.53636326</code></pre>
 <pre><code>Sigma value:  0.61</code></pre>
-<pre><code>Likelihood value: 5444226.35974223</code></pre>
+<pre><code>Likelihood value: 5419463.53769131</code></pre>
 <pre><code>Sigma value:  0.53</code></pre>
-<pre><code>Likelihood value: 5403328.10936985</code></pre>
+<pre><code>Likelihood value: 5383250.49200043</code></pre>
 <pre><code>Sigma value:  0.45</code></pre>
-<pre><code>Likelihood value: 5378205.55128649</code></pre>
-<pre><code>Sigma value:  0.41</code></pre>
-<pre><code>Likelihood value: 5373906.73229557</code></pre>
-<pre><code>Sigma value:  0.41</code></pre>
+<pre><code>Likelihood value: 5363627.31719367</code></pre>
+<pre><code>Sigma value:  0.43</code></pre>
+<pre><code>Likelihood value: 5362189.3396684</code></pre>
+<pre><code>Sigma value:  0.42</code></pre>
+<pre><code>Likelihood value: 5362096.60139005</code></pre>
+<pre><code>Sigma value:  0.42</code></pre>
 <pre class="r"><code># qsave the object
-qsave(RCTD, &quot;output/visium/rctd_decon_out.qs&quot;)</code></pre>
+qsave(RCTD, &quot;visium/data/rctd_decon_out.qs&quot;)</code></pre>
 <p>Results of RCTD are stored in <code>@results</code>. There are lots
 of information in there. Let’s focus on the <code>weights</code> which
 gives estimated proportions of each cell type in each spot. It needs to
@@ -899,27 +1081,27 @@ be normalised so they sum up to 1.</p>
 head(norm_weights)</code></pre>
 <pre><code>6 x 9 Matrix of class &quot;dgeMatrix&quot;
                         B cells  Endothelial   Fibroblast Intestinal Epithelial
-AACAATGTGCTCCGAG-1 7.823063e-05 7.823063e-05 7.823466e-05          7.823063e-05
-AACACCATTCGCATAC-1 8.735751e-02 5.150152e-02 3.932158e-01          2.359593e-03
-AACACGACAACGGAGT-1 7.020012e-05 2.057911e-03 7.020012e-05          1.471526e-04
-AACACGCAGATAACAA-1 2.110692e-04 3.183124e-01 3.336937e-01          4.281214e-03
-AACACTCGTGAGCTTC-1 9.750831e-05 7.962796e-03 3.004770e-01          9.750831e-05
-AACAGCCTCCTGACTA-1 4.867774e-05 2.294518e-02 4.867774e-05          5.190048e-05
+AACAATGTGCTCCGAG-1 7.899614e-05 7.899614e-05 7.899568e-05          7.899614e-05
+AACACCATTCGCATAC-1 8.889903e-02 4.923931e-02 3.953438e-01          2.440127e-03
+AACACGACAACGGAGT-1 7.026386e-05 4.284991e-04 7.026386e-05          1.418038e-04
+AACACGCAGATAACAA-1 2.112769e-04 3.151278e-01 3.357267e-01          4.432017e-03
+AACACTCGTGAGCTTC-1 9.755169e-05 6.672631e-03 2.993323e-01          9.755169e-05
+AACAGCCTCCTGACTA-1 4.880865e-05 2.108676e-02 4.880867e-05          5.332305e-05
                         Myeloid    Neuronal Smooth Muscle      T cells
-AACAATGTGCTCCGAG-1 7.823063e-05 0.001602927  7.823063e-05 7.823063e-05
-AACACCATTCGCATAC-1 2.737532e-01 0.020714188  3.778596e-02 1.087397e-01
-AACACGACAACGGAGT-1 7.020012e-05 0.000183992  7.020012e-05 7.020012e-05
-AACACGCAGATAACAA-1 1.098895e-01 0.073236796  1.265166e-01 3.364758e-02
-AACACTCGTGAGCTTC-1 3.956164e-03 0.010070445  3.451159e-02 6.982922e-02
-AACAGCCTCCTGACTA-1 1.198421e-02 0.002564929  4.867774e-05 4.867774e-05
+AACAATGTGCTCCGAG-1 7.899614e-05 0.001823021  7.899614e-05 7.899614e-05
+AACACCATTCGCATAC-1 2.710983e-01 0.019871147  3.770017e-02 1.114449e-01
+AACACGACAACGGAGT-1 7.026386e-05 0.000172045  7.026386e-05 7.026386e-05
+AACACGCAGATAACAA-1 1.100200e-01 0.073684066  1.255556e-01 3.503120e-02
+AACACTCGTGAGCTTC-1 3.939506e-03 0.010046186  3.475492e-02 7.216675e-02
+AACAGCCTCCTGACTA-1 1.243392e-02 0.002546567  4.880865e-05 4.880865e-05
                           Tumor
-AACAATGTGCTCCGAG-1 0.9978494547
-AACACCATTCGCATAC-1 0.0245724532
-AACACGACAACGGAGT-1 0.9972599437
-AACACGCAGATAACAA-1 0.0002110692
-AACACTCGTGAGCTTC-1 0.5729978100
-AACAGCCTCCTGACTA-1 0.9622590714</code></pre>
-<p>We can then attach it to our Seurat object and interrogate it.</p>
+AACAATGTGCTCCGAG-1 0.9976240064
+AACACCATTCGCATAC-1 0.0239632188
+AACACGACAACGGAGT-1 0.9989063327
+AACACGCAGATAACAA-1 0.0002112769
+AACACTCGTGAGCTTC-1 0.5728926037
+AACAGCCTCCTGACTA-1 0.9636841943</code></pre>
+<p>We can then attach it to our Seurat object and plot it.</p>
 <pre class="r"><code>colnames(norm_weights) &lt;- paste0(&quot;decon_&quot;, colnames(norm_weights))
 dat &lt;- AddMetaData(dat, metadata = norm_weights)
 head(dat[[]])</code></pre>
@@ -951,34 +1133,34 @@ AACACGACAACGGAGT-1 -0.377623635  0.22576106  1.09322111 -0.1339130 -0.30391066
 AACACGCAGATAACAA-1  0.504274609  1.21610364 -0.16191345  1.8153155 -0.23086647
 AACACTCGTGAGCTTC-1 -0.114673812 -0.03386751  0.45520543  1.6151196 -0.06641174
 AACAGCCTCCTGACTA-1  0.007111593  0.36436415  1.03264208  0.1069596 -0.17954790
-                         tcell      myeloid decon_B cells decon_Endothelial
-AACAATGTGCTCCGAG-1 -0.35567254 -0.913391613  7.823063e-05      7.823063e-05
-AACACCATTCGCATAC-1  0.11432363  0.179063881  8.735751e-02      5.150152e-02
-AACACGACAACGGAGT-1 -0.35184381 -0.377623635  7.020012e-05      2.057911e-03
-AACACGCAGATAACAA-1 -0.08703452  0.504274609  2.110692e-04      3.183124e-01
-AACACTCGTGAGCTTC-1  0.37234615 -0.114673812  9.750831e-05      7.962796e-03
-AACAGCCTCCTGACTA-1 -0.38298954  0.007111593  4.867774e-05      2.294518e-02
-                   decon_Fibroblast decon_Intestinal Epithelial decon_Myeloid
-AACAATGTGCTCCGAG-1     7.823466e-05                7.823063e-05  7.823063e-05
-AACACCATTCGCATAC-1     3.932158e-01                2.359593e-03  2.737532e-01
-AACACGACAACGGAGT-1     7.020012e-05                1.471526e-04  7.020012e-05
-AACACGCAGATAACAA-1     3.336937e-01                4.281214e-03  1.098895e-01
-AACACTCGTGAGCTTC-1     3.004770e-01                9.750831e-05  3.956164e-03
-AACAGCCTCCTGACTA-1     4.867774e-05                5.190048e-05  1.198421e-02
-                   decon_Neuronal decon_Smooth Muscle decon_T cells
-AACAATGTGCTCCGAG-1    0.001602927        7.823063e-05  7.823063e-05
-AACACCATTCGCATAC-1    0.020714188        3.778596e-02  1.087397e-01
-AACACGACAACGGAGT-1    0.000183992        7.020012e-05  7.020012e-05
-AACACGCAGATAACAA-1    0.073236796        1.265166e-01  3.364758e-02
-AACACTCGTGAGCTTC-1    0.010070445        3.451159e-02  6.982922e-02
-AACAGCCTCCTGACTA-1    0.002564929        4.867774e-05  4.867774e-05
-                    decon_Tumor
-AACAATGTGCTCCGAG-1 0.9978494547
-AACACCATTCGCATAC-1 0.0245724532
-AACACGACAACGGAGT-1 0.9972599437
-AACACGCAGATAACAA-1 0.0002110692
-AACACTCGTGAGCTTC-1 0.5729978100
-AACAGCCTCCTGACTA-1 0.9622590714</code></pre>
+                         tcell      myeloid SCT_snn_res.0.5 seurat_clusters
+AACAATGTGCTCCGAG-1 -0.35567254 -0.913391613               0               0
+AACACCATTCGCATAC-1  0.11432363  0.179063881               5               5
+AACACGACAACGGAGT-1 -0.35184381 -0.377623635               0               0
+AACACGCAGATAACAA-1 -0.08703452  0.504274609               5               5
+AACACTCGTGAGCTTC-1  0.37234615 -0.114673812               3               3
+AACAGCCTCCTGACTA-1 -0.38298954  0.007111593               0               0
+                   decon_B cells decon_Endothelial decon_Fibroblast
+AACAATGTGCTCCGAG-1  7.899614e-05      7.899614e-05     7.899568e-05
+AACACCATTCGCATAC-1  8.889903e-02      4.923931e-02     3.953438e-01
+AACACGACAACGGAGT-1  7.026386e-05      4.284991e-04     7.026386e-05
+AACACGCAGATAACAA-1  2.112769e-04      3.151278e-01     3.357267e-01
+AACACTCGTGAGCTTC-1  9.755169e-05      6.672631e-03     2.993323e-01
+AACAGCCTCCTGACTA-1  4.880865e-05      2.108676e-02     4.880867e-05
+                   decon_Intestinal Epithelial decon_Myeloid decon_Neuronal
+AACAATGTGCTCCGAG-1                7.899614e-05  7.899614e-05    0.001823021
+AACACCATTCGCATAC-1                2.440127e-03  2.710983e-01    0.019871147
+AACACGACAACGGAGT-1                1.418038e-04  7.026386e-05    0.000172045
+AACACGCAGATAACAA-1                4.432017e-03  1.100200e-01    0.073684066
+AACACTCGTGAGCTTC-1                9.755169e-05  3.939506e-03    0.010046186
+AACAGCCTCCTGACTA-1                5.332305e-05  1.243392e-02    0.002546567
+                   decon_Smooth Muscle decon_T cells  decon_Tumor
+AACAATGTGCTCCGAG-1        7.899614e-05  7.899614e-05 0.9976240064
+AACACCATTCGCATAC-1        3.770017e-02  1.114449e-01 0.0239632188
+AACACGACAACGGAGT-1        7.026386e-05  7.026386e-05 0.9989063327
+AACACGCAGATAACAA-1        1.255556e-01  3.503120e-02 0.0002112769
+AACACTCGTGAGCTTC-1        3.475492e-02  7.216675e-02 0.5728926037
+AACAGCCTCCTGACTA-1        4.880865e-05  4.880865e-05 0.9636841943</code></pre>
 <pre class="r"><code>SpatialFeaturePlot(
   object = dat, 
   features = colnames(norm_weights),
@@ -986,56 +1168,113 @@ AACAGCCTCCTGACTA-1 0.9622590714</code></pre>
   image.alpha = 0.3,
   ncol = 4
 )</code></pre>
-<p><img src="figure/visium_04.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/visium_04.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-1">
+Past versions of unnamed-chunk-11-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-11-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/9d57766bb497d0029933ca1c6aa323fb3bfdc5a7/docs/figure/visium_04.Rmd/unnamed-chunk-11-1.png" target="_blank">9d57766</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>We could also draw UMAP coloured by the proportion of different cell
 types:</p>
-<pre class="r"><code>dat &lt;- RunPCA(dat, assay = &quot;SCT&quot;, verbose = FALSE)
-dat &lt;- RunUMAP(dat, reduction = &quot;pca&quot;, dims = 1:10)</code></pre>
+<pre class="r"><code>dat &lt;- RunUMAP(dat, reduction = &quot;pca&quot;, dims = 1:10)</code></pre>
 <pre><code>Warning: The default method for RunUMAP has changed from calling Python UMAP via reticulate to the R-native UWOT using the cosine metric
 To use Python UMAP via reticulate, set umap.method to &#39;umap-learn&#39; and metric to &#39;correlation&#39;
 This message will be shown once per session</code></pre>
-<pre><code>17:48:03 UMAP embedding parameters a = 0.9922 b = 1.112</code></pre>
-<pre><code>17:48:03 Read 3959 rows and found 10 numeric columns</code></pre>
-<pre><code>17:48:03 Using Annoy for neighbor search, n_neighbors = 30</code></pre>
-<pre><code>17:48:03 Building Annoy index with metric = cosine, n_trees = 50</code></pre>
+<pre><code>00:00:32 UMAP embedding parameters a = 0.9922 b = 1.112</code></pre>
+<pre><code>00:00:32 Read 3959 rows and found 10 numeric columns</code></pre>
+<pre><code>00:00:32 Using Annoy for neighbor search, n_neighbors = 30</code></pre>
+<pre><code>00:00:32 Building Annoy index with metric = cosine, n_trees = 50</code></pre>
 <pre><code>0%   10   20   30   40   50   60   70   80   90   100%</code></pre>
 <pre><code>[----|----|----|----|----|----|----|----|----|----|</code></pre>
 <pre><code>**************************************************|
-17:48:04 Writing NN index file to temp file /var/folders/7q/lqx0fzgn1zqfmlc5tx1c0n0r0004z0/T//Rtmpjd23iu/file16884ab2f331
-17:48:04 Searching Annoy index using 1 thread, search_k = 3000
-17:48:04 Annoy recall = 100%
-17:48:05 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30
-17:48:05 Initializing from normalized Laplacian + noise (using RSpectra)
-17:48:05 Commencing optimization for 500 epochs, with 152802 positive edges
-17:48:08 Optimization finished</code></pre>
+00:00:32 Writing NN index file to temp file /var/folders/7q/lqx0fzgn1zqfmlc5tx1c0n0r0004z0/T//RtmpETojD5/file76f85785c87b
+00:00:32 Searching Annoy index using 1 thread, search_k = 3000
+00:00:33 Annoy recall = 100%
+00:00:33 Commencing smooth kNN distance calibration using 1 thread with target n_neighbors = 30
+00:00:33 Initializing from normalized Laplacian + noise (using RSpectra)
+00:00:33 Commencing optimization for 500 epochs, with 152802 positive edges
+00:00:36 Optimization finished</code></pre>
 <pre class="r"><code>FeaturePlot(dat, features = colnames(norm_weights))</code></pre>
-<p><img src="figure/visium_04.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/visium_04.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-1">
+Past versions of unnamed-chunk-12-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-12-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/9d57766bb497d0029933ca1c6aa323fb3bfdc5a7/docs/figure/visium_04.Rmd/unnamed-chunk-12-1.png" target="_blank">9d57766</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Where we can deduce that we have spots that contain mostly or wholly
 one cell type, but we also have regions that have a mix of cell
 types.</p>
-<p>We can assign labels to the spots if the majority of the cell types
-(&gt;80%) in the spot are made of one cell type:</p>
-<pre class="r"><code>dat[[]]$majority_decon_per_spot &lt;- apply(norm_weights, 1, function(x) {
-    # Find the maximum value in the row
-    max_prop &lt;- max(x)
-    if (max_prop &gt; 0.8) {
-      return(gsub(&quot;decon_&quot;, &quot;&quot;, names(which.max(x))))
-    } else {
-      return(&quot;mix&quot;)
-    }
-    
-})
-DimPlot(dat, group.by = &quot;majority_decon_per_spot&quot;)</code></pre>
-<p><img src="figure/visium_04.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>SpatialDimPlot(dat, group.by = &quot;majority_decon_per_spot&quot;, pt.size.factor = 5, image.alpha = 0.5)</code></pre>
-<p><img src="figure/visium_04.Rmd/unnamed-chunk-12-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-<div id="cross-checking-module-scoring-and-deconvolution"
+<div id="comparing-module-scoring-and-deconvolution"
 class="section level2">
-<h2>Cross checking module scoring and deconvolution</h2>
+<h2>Comparing module scoring and deconvolution</h2>
 <p>For cell types that we have matching module scoring for, let’s
 compare them against the results of RCTD:</p>
-<pre class="r"><code>SpatialFeaturePlot(
+<pre class="r"><code>feat_plt &lt;- SpatialFeaturePlot(
   object = dat, 
   features = c(
     &quot;endothelial&quot;, &quot;decon_Endothelial&quot;,
@@ -1049,21 +1288,125 @@ compare them against the results of RCTD:</p>
   ),
   pt.size.factor = 6,
   image.alpha = 0.3,
-  ncol = 4
-)</code></pre>
+  ncol = 6
+)
+
+clust_plt &lt;- SpatialDimPlot(
+  object = dat,
+  group.by = &quot;seurat_clusters&quot;,
+  label = TRUE,
+  label.size = 3,
+  pt.size.factor = 5,
+  image.alpha = 0.3
+) + NoLegend()</code></pre>
+<pre><code>Scale for fill is already present.
+Adding another scale for fill, which will replace the existing scale.</code></pre>
+<pre class="r"><code>feat_plt + clust_plt</code></pre>
 <p><img src="figure/visium_04.Rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>Comparing the two, we can see areas where concordance we get some
-concordance, in that areas that shows high module score tend to also
-estimated to contain corresponding cell types after deconvolution.</p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-13-1">
+Past versions of unnamed-chunk-13-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-13-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/9d57766bb497d0029933ca1c6aa323fb3bfdc5a7/docs/figure/visium_04.Rmd/unnamed-chunk-13-1.png" target="_blank">9d57766</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Comparing clusters and deconvolution, we can see clusters that
+correspond well to contain just one cell types, e.g., cluster 4 contains
+smooth muscle cells, cluster 0 and 1 are tumour cells. However, we also
+have cluster 3, 5, 6, 7 which have mix bag of immune cells, endothelial
+cells, epithelial cells, and fibroblasts.</p>
+<p>Comparing the module scoring and deconvolution, we can see areas
+where we get some concordance, in that areas that shows high module
+score tend to also estimated to contain corresponding cell types after
+deconvolution.</p>
 <p>However, we also see some differences. For example, we have a region
 on the bottom right that shows high score for tumour module but the
 deconvolution detected no tumour at all. Instead, they are deconvolved
 into endothelial cells. On the flip side, we also have a region at the
 bottom middle where deconvolution detected some T cells but module
 scoring showed low signals in T cells module.</p>
-<p>We can focus on one difference (say the tumour vs epithelial region)
-and investigate further. It is worth noting that we did not have any
-epithelial module in our module scoring.</p>
+<p>For T cells, we can check the deconvolution against CD3 genes:</p>
+<pre class="r"><code>SpatialFeaturePlot(
+  object = dat, 
+  features = c(
+    &quot;CD3E&quot;, &quot;CD3D&quot;, &quot;CD3G&quot;, &quot;decon_T cells&quot;
+  ),
+  pt.size.factor = 5,
+  image.alpha = 0.3,
+  ncol = 1
+)</code></pre>
+<p><img src="figure/visium_04.Rmd/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-14-1">
+Past versions of unnamed-chunk-14-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-14-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/9d57766bb497d0029933ca1c6aa323fb3bfdc5a7/docs/figure/visium_04.Rmd/unnamed-chunk-14-1.png" target="_blank">9d57766</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>For the tumour scoring vs epithelial deconvolution, we can look into
+some epithelial markers, including markers which denote EMT like CDH1.
+It is worth noting that we did not have any epithelial module in our
+module scoring.</p>
 <pre class="r"><code>SpatialFeaturePlot(
   object = dat, 
   features = c(
@@ -1074,7 +1417,7 @@ epithelial module in our module scoring.</p>
   image.alpha = 0.3,
   ncol = 5
 )</code></pre>
-<p><img src="figure/visium_04.Rmd/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/visium_04.Rmd/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>We have high and medium expression of CDH1 which means the epithelial
 cells are retaining their cell-cell adhesion molecules. VIM and CD44 are
 commonly associated with EMT, but they are lowly expressed. KRT8, KRT19,
@@ -1112,7 +1455,44 @@ SpatialFeaturePlot(
   image.alpha = 0.3,
   pt.size.factor = 5
 ) + ggtitle(&quot;Top 10 SVGs&quot;)</code></pre>
-<p><img src="figure/visium_04.Rmd/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/visium_04.Rmd/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-17-1">
+Past versions of unnamed-chunk-17-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-17-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/9d57766bb497d0029933ca1c6aa323fb3bfdc5a7/docs/figure/visium_04.Rmd/unnamed-chunk-17-1.png" target="_blank">9d57766</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>SVGs are different from highly variable genes (HVGs). HVGs are genes
 that show significant variability in expression across different cells
 or conditions, but this variability does not necessarily correlate with
@@ -1125,7 +1505,44 @@ not SVGs while SYNM, MGP are HVGs:</p>
   image.alpha = 0.3,
   pt.size.factor = 5
 )</code></pre>
-<p><img src="figure/visium_04.Rmd/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/visium_04.Rmd/unnamed-chunk-18-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-18-1">
+Past versions of unnamed-chunk-18-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-18-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/9d57766bb497d0029933ca1c6aa323fb3bfdc5a7/docs/figure/visium_04.Rmd/unnamed-chunk-18-1.png" target="_blank">9d57766</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>SVGs are good for finding genes which expression varies across
 different regions while HVGs are good for finding genes which
 distinguishes different cell types or groups regardless of the genes’
@@ -1142,7 +1559,7 @@ genes:</p>
   image.alpha = 0.3,
   pt.size.factor = 5
 )</code></pre>
-<p><img src="figure/visium_04.Rmd/unnamed-chunk-18-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/visium_04.Rmd/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>This plot indicates that not all tumour regions may be equal. The top
 and right regions seem to express CXCL2, CXCL3, GPX2, and SPINK1. The
 one in the left middle, are lacking CXCL2, CXCL3, and SPINK1. Notably,
@@ -1176,6 +1593,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/9d57766bb497d0029933ca1c6aa323fb3bfdc5a7/docs/assets/visium_metascape_go.png" target="_blank">9d57766</a>
+</td>
+<td>
+Givanna Putri
+</td>
+<td>
+2024-11-21
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/ghar1821/asi_spatial_workshop_2024/blob/051b760847b01faf5c93970eed5dbc49d28c741c/docs/assets/visium_metascape_go.png" target="_blank">051b760</a>
@@ -1213,7 +1641,7 @@ immune mechanism employed by tumour cells.</p>
   pt.size.factor = 5,
   image.alpha = 0.3
 )</code></pre>
-<p><img src="figure/visium_04.Rmd/unnamed-chunk-20-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/visium_04.Rmd/unnamed-chunk-21-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>From the plot, we can infer that there are regions where macrophages
 and tumour cells co-exist SIRPA and CD47 are expressed, which shows that
 macrophages’ inhibitory receptor is activated, signalling it against
