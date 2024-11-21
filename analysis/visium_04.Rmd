@@ -8,7 +8,7 @@ editor_options:
 
 ## Introduction
 
-In this part of the workshop, we will learn how to use module scoring and
+In this part of the workshop, we will learn how to use module scoring, clustering, and
 deconvolution to resolve the cell types in each spot.
 From there, we will then explore what interesting biology visium data can offer,
 including finding spatially variable genes.
@@ -26,7 +26,7 @@ library(spacexr)
 We will be using the Seurat object that we have QCed and normalised in [part 2](visium_02.html).
 
 ```{r}
-dat <- qread("output/visium_seurat_qced_norm.qs")
+dat <- qread("visium/data/visium_seurat_qced_norm.qs")
 dat
 ```
 
@@ -100,6 +100,33 @@ SpatialFeaturePlot(
 )
 ```
 
+## Cluster spots
+
+We can also cluster the spots based on their gene expressions.
+This is especially handy if you are unsure what cell types you want to find.
+
+```{r}
+dat <- RunPCA(dat, assay = "SCT", verbose = FALSE)
+dat <- FindNeighbors(dat, reduction = "pca", dims = 1:10, verbose = FALSE)
+# increase resolution to find more clusters
+dat <- FindClusters(dat, verbose = FALSE, resolution = 0.5, random.seed = 42)
+
+SpatialDimPlot(
+  dat,
+  group.by = "seurat_clusters",
+  label = TRUE,
+  pt.size.factor = 5,
+  image.alpha = 0.3,
+  label.size = 5
+) + scale_fill_viridis_d(option = "turbo")
+```
+
+Since visium is a spot based technology, a spot can contain multiple cell types
+that are commonly grouped into different clusters.
+Thus grouping spots into clusters are not ideal as within a cluster, you may get
+an assortment of cell types rather than just one.
+But, this is better than nothing.
+
 ## Cell type deconvolution
 
 Cell type deconvolution is very commonly used for analysing visium data to infer
@@ -115,7 +142,7 @@ For the reference scRNAseq data, we will use one of the scRNAseq data that accom
 visium data.
 
 ```{r}
-sc_data <- qread("data/single_cell/seurat_object_10x.qs")
+sc_data <- qread("visium/data/sc_seurat_object_10x.qs")
 DimPlot(sc_data, reduction = "umap", group.by = c("Level1", "Level2", "Patient"), ncol=2)
 ```
 
@@ -163,7 +190,7 @@ RCTD <- create.RCTD(
 RCTD <- run.RCTD(RCTD, doublet_mode = "full")
 
 # qsave the object
-qsave(RCTD, "output/visium/rctd_decon_out.qs")
+qsave(RCTD, "visium/data/rctd_decon_out.qs")
 ```
 
 Results of RCTD are stored in `@results`.
@@ -176,7 +203,7 @@ norm_weights <- normalize_weights(RCTD@results$weights)
 head(norm_weights)
 ```
 
-We can then attach it to our Seurat object and interrogate it.
+We can then attach it to our Seurat object and plot it.
 
 ```{r}
 colnames(norm_weights) <- paste0("decon_", colnames(norm_weights))
@@ -195,7 +222,6 @@ SpatialFeaturePlot(
 We could also draw UMAP coloured by the proportion of different cell types:
 
 ```{r}
-dat <- RunPCA(dat, assay = "SCT", verbose = FALSE)
 dat <- RunUMAP(dat, reduction = "pca", dims = 1:10)
 FeaturePlot(dat, features = colnames(norm_weights))
 ```
@@ -203,32 +229,13 @@ FeaturePlot(dat, features = colnames(norm_weights))
 Where we can deduce that we have spots that contain mostly or wholly one cell type,
 but we also have regions that have a mix of cell types.
 
-We can assign labels to the spots if the majority of the cell types (>80%) in the spot
-are made of one cell type:
-
-```{r}
-dat[[]]$majority_decon_per_spot <- apply(norm_weights, 1, function(x) {
-    # Find the maximum value in the row
-    max_prop <- max(x)
-    if (max_prop > 0.8) {
-      return(gsub("decon_", "", names(which.max(x))))
-    } else {
-      return("mix")
-    }
-    
-})
-DimPlot(dat, group.by = "majority_decon_per_spot")
-SpatialDimPlot(dat, group.by = "majority_decon_per_spot", pt.size.factor = 5, image.alpha = 0.5)
-```
-
-
-## Cross checking module scoring and deconvolution
+## Comparing module scoring and deconvolution
 
 For cell types that we have matching module scoring for, let's compare them against
 the results of RCTD:
 
 ```{r}
-SpatialFeaturePlot(
+feat_plt <- SpatialFeaturePlot(
   object = dat, 
   features = c(
     "endothelial", "decon_Endothelial",
@@ -242,11 +249,28 @@ SpatialFeaturePlot(
   ),
   pt.size.factor = 6,
   image.alpha = 0.3,
-  ncol = 4
+  ncol = 6
 )
+
+clust_plt <- SpatialDimPlot(
+  object = dat,
+  group.by = "seurat_clusters",
+  label = TRUE,
+  label.size = 3,
+  pt.size.factor = 5,
+  image.alpha = 0.3
+) + NoLegend()
+
+feat_plt + clust_plt
 ```
 
-Comparing the two, we can see areas where concordance we get some concordance,
+Comparing clusters and deconvolution, we can see clusters that correspond well
+to contain just one cell types, e.g., cluster 4 contains smooth muscle cells,
+cluster 0 and 1 are tumour cells.
+However, we also have cluster 3, 5, 6, 7 which have mix bag of immune cells,
+endothelial cells, epithelial cells, and fibroblasts.
+
+Comparing the module scoring and deconvolution, we can see areas where we get some concordance,
 in that areas that shows high module score tend to also estimated to contain
 corresponding cell types after deconvolution.
 
@@ -257,7 +281,22 @@ Instead, they are deconvolved into endothelial cells.
 On the flip side, we also have a region at the bottom middle where
 deconvolution detected some T cells but module scoring showed low signals in T cells module.
 
-We can focus on one difference (say the tumour vs epithelial region) and investigate further.
+For T cells, we can check the deconvolution against CD3 genes:
+
+```{r}
+SpatialFeaturePlot(
+  object = dat, 
+  features = c(
+    "CD3E", "CD3D", "CD3G", "decon_T cells"
+  ),
+  pt.size.factor = 5,
+  image.alpha = 0.3,
+  ncol = 1
+)
+```
+
+For the tumour scoring vs epithelial deconvolution, we can look into some epithelial
+markers, including markers which denote EMT like CDH1.
 It is worth noting that we did not have any epithelial module in our module scoring.
 
 ```{r}
