@@ -23,7 +23,7 @@ library(scales)
 We will be using the Seurat object that we have QCed and normalised in [part 2](visium_02.html).
 
 ```{r}
-dat <- qread("output/visium_seurat_qced_norm.qs")
+dat <- qread("visium/data/visium_seurat_qced_norm.qs")
 dat
 ```
 
@@ -214,7 +214,7 @@ Since the plot is a ggplot object, we can export them using either the
 export button in Rstudio's panel, or the ggsave function:
 
 ```{r eval=FALSE}
-ggsave(filename="output/spatial_plot_darkbg.png", plot=plt_dark_bg)
+ggsave(filename="visium/data/spatial_plot_darkbg.png", plot=plt_dark_bg)
 ```
 
 <hr>

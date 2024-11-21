@@ -160,14 +160,13 @@ In this example, they are stored in a "data" folder of our current working direc
 
 ```{r}
 dat <- Load10X_Spatial(
-  data.dir = 'data/visium',
+  data.dir = 'visium/raw',
   filename = 'Visium_V2_Human_Colon_Cancer_P2_filtered_feature_bc_matrix.h5'
 )
 ```
 
 ## Inspecting Seurat object
 
-***TODO***: add a diagram to show what seurat object looks like, if there is any? 
 
 We can inspect the object to see the number of spots and genes there are in the dataset. 
 
@@ -255,7 +254,7 @@ Here, each row is a spot.
 `orig.ident` refers to the "original identity" of the sample. 
 These information are all pre-filled and computed by the `Load10x_Spatial`function.
 
-The metadata in seurat object is actually stored as a data.frame.
+The metadata in Seurat object is actually stored as a data.frame.
 Thus, if you know the column you want to inspect, you can interact with it as
 if it is a data.frame, like so
 
@@ -289,6 +288,6 @@ QS object using the [qs package](https://cran.r-project.org/web/packages/qs/vign
 The latter is a lot quicker.
 
 ```{r}
-qsave(dat, "output/visium/visium_seurat.qs")
+qsave(dat, "visium/data/visium_seurat.qs")
 ```
 
