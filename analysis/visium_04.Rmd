@@ -91,7 +91,7 @@ head(dat[[]])
 
 We can visualise the scores using SpatialFeaturePlot:
 
-```{r}
+```{r fig.dim=c(10, 10)}
 SpatialFeaturePlot(
   dat,
   features = names(genes_to_score),
@@ -141,15 +141,15 @@ provided by the [spacexr package](https://github.com/dmcable/spacexr).
 For the reference scRNAseq data, we will use one of the scRNAseq data that accompanies the
 visium data.
 
-```{r}
+```{r fig.dim=c(15, 10)}
 # Download from onedrive
 sc_data <- qread("visium/data/sc_seurat_object_10x.qs")
 DimPlot(sc_data, reduction = "umap", group.by = c("Level1", "Level2", "Patient"), ncol=2)
 ```
 
-Prepare the data - note that: RCTD requires raw counts. 
+Run RCTD - this can take some time!:
 
-```{r}
+```{r warning=FALSE, message=FALSE}
 # Prepare the single cell data
 sc_counts <- sc_data[['RNA']]$counts
 lbls <- as.factor(sc_data$Level1)
@@ -172,11 +172,7 @@ query_spat <- SpatialRNA(
   counts = spat_counts,
   nUMI = spat_nUMI
 )
-```
 
-Run RCTD - this can take some time!:
-
-```{r}
 # set max_cores to a reasonable number, don't overdo it!
 RCTD <- create.RCTD(
   spatialRNA = query_spat, 
@@ -206,7 +202,7 @@ head(norm_weights)
 
 We can then attach it to our Seurat object and plot it.
 
-```{r}
+```{r fig.dim=c(15, 15)}
 colnames(norm_weights) <- paste0("decon_", colnames(norm_weights))
 dat <- AddMetaData(dat, metadata = norm_weights)
 head(dat[[]])
@@ -222,7 +218,7 @@ SpatialFeaturePlot(
 
 We could also draw UMAP coloured by the proportion of different cell types:
 
-```{r}
+```{r fig.dim=c(15, 15)}
 dat <- RunUMAP(dat, reduction = "pca", dims = 1:10)
 FeaturePlot(dat, features = colnames(norm_weights))
 ```
@@ -235,7 +231,7 @@ but we also have regions that have a mix of cell types.
 For cell types that we have matching module scoring for, let's compare them against
 the results of RCTD:
 
-```{r}
+```{r fig.dim=c(20, 20)}
 feat_plt <- SpatialFeaturePlot(
   object = dat, 
   features = c(
@@ -284,7 +280,7 @@ deconvolution detected some T cells but module scoring showed low signals in T c
 
 For T cells, we can check the deconvolution against CD3 genes:
 
-```{r}
+```{r fig.dim=c(5, 15)}
 SpatialFeaturePlot(
   object = dat, 
   features = c(
@@ -300,7 +296,7 @@ For the tumour scoring vs epithelial deconvolution, we can look into some epithe
 markers, including markers which denote EMT like CDH1.
 It is worth noting that we did not have any epithelial module in our module scoring.
 
-```{r}
+```{r fig.dim=c(10, 10)}
 SpatialFeaturePlot(
   object = dat, 
   features = c(
@@ -340,7 +336,7 @@ dat <- FindSpatiallyVariableFeatures(
 
 Let's visualise some of them:
 
-```{r}
+```{r fig.dim=c(10, 10)}
 # a bit of data wrangling to get SVGs
 svgs_meta <- dat[['SCT']][[]]
 svgs_meta <- subset(svgs_meta, moransi.spatially.variable == TRUE)
@@ -378,7 +374,7 @@ regardless of the genes' spatial context.
 We can inspect SVGs against the cell type deconvolution
 to see if there are relationship between the different cell types and the genes:
 
-```{r}
+```{r fig.dim=c(20, 20)}
 SpatialFeaturePlot(
   dat,
   features = c(
@@ -414,7 +410,7 @@ For example, SIRPA and CD47 is a common receptor ligand pair between macrophages
 CD47 ligand is commonly sent out by tumour cells to tell macrophages to not eat them.
 This is quite a well known immune mechanism employed by tumour cells.
 
-```{r}
+```{r fig.dim=c(10, 10)}
 SpatialFeaturePlot(
   dat,
   features = c(
