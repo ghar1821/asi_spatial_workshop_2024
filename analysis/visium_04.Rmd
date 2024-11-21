@@ -226,7 +226,7 @@ FeaturePlot(dat, features = colnames(norm_weights))
 Where we can deduce that we have spots that contain mostly or wholly one cell type,
 but we also have regions that have a mix of cell types.
 
-## Comparing module scoring and deconvolution
+## Comparing module scoring, clustering, and deconvolution
 
 For cell types that we have matching module scoring for, let's compare them against
 the results of RCTD:
@@ -292,8 +292,8 @@ SpatialFeaturePlot(
 )
 ```
 
-For the tumour scoring vs epithelial deconvolution, we can look into some epithelial
-markers, including markers which denote EMT like CDH1.
+For the tumour scoring vs epithelial deconvolution, we can look into some markers
+to see if we can determine whether they are epithelial or tumour or tumour epithelial?
 It is worth noting that we did not have any epithelial module in our module scoring.
 
 ```{r fig.dim=c(10, 10)}
