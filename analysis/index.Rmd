@@ -77,3 +77,10 @@ Please run codes in the Rmd file before coming to the workshop.
 |                                                 | Running RCTD                 |
 |                                                 | Plotting our results         |
 |                                                 | Open discussion              |
+
+
+## Xenium
+
+1. [Xenium_part1](Xenium_Part1.html)
+2. [Xenium_part2](Xenium_Part2.html)
+3. [Xenium_part3](Xenium_Part3.html)
